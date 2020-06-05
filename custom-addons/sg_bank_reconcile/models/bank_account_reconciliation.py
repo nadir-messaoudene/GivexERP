@@ -9,6 +9,7 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DSDF
 
 class BankAccRecStatement(models.Model):
     _name = "bank.acc.rec.statement"
+    _description = "Bank Account Statement Balance"
 
     def check_group(self):
         """Check group.
@@ -326,7 +327,7 @@ class BankAccRecStatement(models.Model):
 
     name = fields.Char(
         'Name', required=True,
-        size=64, states={'done': [('readonly', True)]},
+        states={'done': [('readonly', True)]},
         help="This is a unique name identifying the "
         "statement (e.g. Bank X January 2012).")
     account_id = fields.Many2one(
@@ -459,10 +460,10 @@ class BankAccRecStatementLine(models.Model):
     _name = "bank.acc.rec.statement.line"
     _description = "Statement Line"
 
-    name = fields.Char('Name', size=64,
+    name = fields.Char('Name',
                        help="Derived from the related Journal Item.",
                        required=True)
-    ref = fields.Char('Reference', size=64,
+    ref = fields.Char('Reference',
                       help="Derived from related Journal Item.")
     partner_id = fields.Many2one('res.partner', string='Partner',
                                  help="Derived from related Journal Item.")
