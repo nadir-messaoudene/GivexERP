@@ -232,9 +232,6 @@ class BankAccRecStatement(models.Model):
                 domain += [('date', '<=', obj.ending_date)]
             lines = self.env['account.move.line'].search(domain)
             for line in lines:
-                if obj.keep_previous_uncleared_entries:
-                    if not line.is_b_a_r_s_state_done():
-                        continue
                 res = (0, 0,
                        self._get_move_line_write(line,
                                                  to_write['multi_currency']))
