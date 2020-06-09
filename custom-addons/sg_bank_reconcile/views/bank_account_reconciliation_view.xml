@@ -157,7 +157,7 @@
                     <filter domain="[('verified_by_user_id','=',uid)]" help="Verified by me" name="terp-personal" icon="terp-personal"/>
                 </field>
                 <newline/>
-                <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
+                <group expand="0" string="Group By..." colspan="11" col="11">
                     <filter string="Account" name="terp-personal" icon="terp-personal" domain="[]" context="{'group_by':'account_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="State" name="terp-stock_effects-object-colorize" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>

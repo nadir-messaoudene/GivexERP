@@ -13,7 +13,6 @@ class BankAccRecStatement(models.Model):
 
     def check_group(self):
         """Check group.
-
         Check if following security constraints are implemented for groups:
         Bank Statement Preparer - they can create, view and delete any of the
         Bank Statements provided the Bank Statement is not in the DONE state,
@@ -23,8 +22,7 @@ class BankAccRecStatement(models.Model):
         NOTE: DONE Bank Statements  are only allowed to be deleted by a Bank
         Statement Verifier.
         """
-        user = self.env.user
-        is_user = user.has_group('sg_bank_reconcile.group_bank_stmt_verifier')
+        is_user = self.env.user.has_group('sg_bank_reconcile.group_bank_stmt_verifier')
         for statement in self:
             if statement.state != 'draft' and not is_user:
                 raise UserError(_(
@@ -34,7 +32,9 @@ class BankAccRecStatement(models.Model):
 
     def copy(self, default={}):
         """Override this method to set blank fields."""
-        default.update({'name': ''})
+        default.update({'credit_move_line_ids': False,
+                        'debit_move_line_ids': False,
+                        'name': ''})
         return super(BankAccRecStatement, self).copy(default=default)
 
     def write(self, vals):
@@ -95,10 +95,9 @@ class BankAccRecStatement(models.Model):
                 statement.debit_move_line_ids
             for statement_line in statement_lines:
                 if statement_line.move_line_id:
-                    vals = {'cleared_bank_account':
-                            statement_line.cleared_bank_account,
-                            'bank_acc_rec_statement_id': statement.id or False}
-                    statement_line.move_line_id.write(vals)
+                    statement_line.move_line_id.write({
+                        'cleared_bank_account': statement_line.cleared_bank_account,
+                        'bank_acc_rec_statement_id': statement.id or False})
             statement.write({'state': 'done',
                              'verified_by_user_id': self._uid,
                              'verified_date': time.strftime('%Y-%m-%d')})
@@ -186,23 +185,22 @@ class BankAccRecStatement(models.Model):
         return res
 
     def _get_exits_move_line(self, mv_line_rec):
-        domain = [('move_line_id', '=', mv_line_rec.id),
-                  ('statement_id', 'in', self.ids)]
         res = {}
         statemen_line_obj = self.env['bank.acc.rec.statement.line']
-        statmnt_mv_line_ids = statemen_line_obj.search(domain)
+        statmnt_mv_line_ids = statemen_line_obj.search([
+            ('move_line_id', '=', mv_line_rec.id),
+            ('statement_id', 'in', self.ids)])
         for statement_line in statmnt_mv_line_ids:
-            res.update({'cleared_bank_account':
-                        statement_line.cleared_bank_account,
-                        'ref': statement_line.ref or '',
-                        'date': statement_line.date or False,
-                        'partner_id': statement_line.partner_id.id or False,
-                        'currency_id': statement_line.currency_id.id or False,
-                        'amount': abs(statement_line.amount) or 0.0,
-                        'name': statement_line.name or '',
-                        'move_line_id':
-                        statement_line.move_line_id.id or False,
-                        'type': statement_line.type})
+            res.update({
+                'cleared_bank_account': statement_line.cleared_bank_account,
+                'ref': statement_line.ref or '',
+                'date': statement_line.date or False,
+                'partner_id': statement_line.partner_id.id or False,
+                'currency_id': statement_line.currency_id.id or False,
+                'amount': abs(statement_line.amount) or 0.0,
+                'name': statement_line.name or '',
+                'move_line_id': statement_line.move_line_id.id or False,
+                'type': statement_line.type})
         return res
 
     def refresh_record(self):
@@ -232,6 +230,10 @@ class BankAccRecStatement(models.Model):
                 domain += [('date', '<=', obj.ending_date)]
             lines = self.env['account.move.line'].search(domain)
             for line in lines:
+                if obj.keep_previous_uncleared_entries:
+                    if not obj.is_b_a_r_s_state_done(line.id):
+                        # if not line.is_b_a_r_s_state_done():
+                        continue
                 res = (0, 0,
                        self._get_move_line_write(line,
                                                  to_write['multi_currency']))
@@ -311,14 +313,22 @@ class BankAccRecStatement(models.Model):
                     val['value']['debit_move_line_ids'] = [(0, 0, res)]
         return val
 
-    def is_b_a_r_s_state_done(self):
-        """Check bank account reconcile statement is done or not."""
-        statement_line_obj = self.env['bank.acc.rec.statement.line']
+#     def is_b_a_r_s_state_done(self):
+#         """Check bank account reconcile statement is done or not."""
+#         statement_line_obj = self.env['bank.acc.rec.statement.line']
+#         for rec in self:
+#             statement_line_ids = statement_line_obj.search([('move_line_id',
+#                                                              '=', rec.id)])
+#             for state_line in statement_line_ids:
+#                 if state_line.statement_id.state not in ("done", "cancel"):
+#                     return False
+#             return True
+
+    def is_b_a_r_s_state_done(self, line):
         for rec in self:
-            statement_line_ids = statement_line_obj.search([('move_line_id',
-                                                             '=', rec.id)])
+            statement_line_ids = self.env['bank.acc.rec.statement.line'].search([('move_line_id', '=', line)])
             for state_line in statement_line_ids:
-                if state_line.statement_id.state not in ("done", "cancel"):
+                if state_line.statement_id and state_line.statement_id.state not in ("done", "cancel"):
                     return False
             return True
 
