@@ -5,7 +5,7 @@
     "license": "LGPL-3",
     "sequence": 1,
     'category': 'Accounting',
-    'description': """
+    'description':  """
 This module is designed to provide an easy method in which OpenERP accounting
 users can manually reconcile/validate their financial transactions from their
 financial institution/transaction providers (e.g. Paypal, A financial
