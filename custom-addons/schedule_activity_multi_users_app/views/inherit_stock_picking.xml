@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="inherit_saleorder" model="ir.ui.view">
+            <field name="name">inherit.saleorder</field>
+            <field name="model">mail.activity</field>
+            <field name="inherit_id" ref="mail.mail_activity_view_form_popup"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="assign_multi" widget="many2many_tags"/>
+                </xpath>
+            </field>
+    </record>
+
+
+</odoo>
