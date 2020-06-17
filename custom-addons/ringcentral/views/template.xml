@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_backend" name="Ringcentral Assets"
+              inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript"
+                    src="/ringcentral/static/src/js/sip.js"></script>
+            <script type="text/javascript"
+                    src="/ringcentral/static/src/js/fetch.js"></script>
+            <script type="text/javascript"
+                    src="/ringcentral/static/src/js/promise.js"></script>
+            <script type="text/javascript"
+                    src="/ringcentral/static/src/js/pubnub.js"></script>
+            <script type="text/javascript"
+                    src="/ringcentral/static/src/js/ringcentral.js"></script>
+            <script type="text/javascript"
+                    src="/ringcentral/static/src/js/ringcentral-web-phone.js"></script>
+            <link rel="stylesheet"
+                  href="/ringcentral/static/src/scss/slidemenu.scss"/>
+            <link rel="stylesheet"
+                  href="/ringcentral/static/src/scss/custom_ringcentral.scss"/>
+            <link rel="stylesheet"
+                  href="/ringcentral/static/src/css/rincentral.css"/>
+            <script type="text/javascript"
+                    src="/ringcentral/static/src/js/jquery.slidemenu.js"></script>
+            <script type="text/javascript"
+                    src="/ringcentral/static/src/js/custom_ringcentral.js"></script>
+            <script type="text/javascript"
+                    src="/ringcentral/static/src/js/ringcentral_portal_login.js"></script>
+        </xpath>
+    </template>
+    <template id="assets_backend_1" name="audio player" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script src="/ringcentral/static/src/js/audio_field.js" type="text/javascript" ></script>
+        </xpath>
+    </template>
+    <!-- </template> -->
+</odoo>
