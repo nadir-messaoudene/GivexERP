@@ -11,9 +11,9 @@
             <tree string="Bank Account Reconciliation Statements">
                 <field name="name"/>
                 <field name="ending_date"/>
+                <field name="state"/>
                 <field name="account_id"/>
                 <field name="verified_by_user_id"/>
-                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -25,12 +25,11 @@
         <field name="arch" type="xml">
             <form string="Bank Account Reconciliation Statement">
                 <header>
-                    <button name="action_cancel" type="object" states="draft,to_be_reviewed,process" string="Cancel" />
-                    <button name="action_review" type="object" states="draft" string="Ready for Review"/>
-                    <button name="action_process" type="object" states="process" string="Process" />
-                    <button name="action_cancel_draft" states="cancel,done" string="Set to Draft" type="object" />
-                    <button name='refresh_record' string='Refresh' type='object' />
-                    <button name='clear_bank_statement_line' string='Uncleared Statement Line' states='to_be_reviewed' type='object' class="oe_highlight"/>
+                    <button name="action_review" type="object" states="draft" string="Ready for Review" class="oe_highlight"/>
+                    <button name="action_process" type="object" states="to_be_reviewed" string="Process &amp; Verify" class="oe_highlight"/>
+                    <button name='refresh_record' string='Refresh' type='object' states="draft,to_be_reviewed"/>
+                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" />
+                    <button name="action_cancel" type="object" states="draft,to_be_reviewed,done" string="Cancel" />
                     <field name="state" widget="statusbar" nolabel="1"/>
                 </header>
                 <sheet>
@@ -39,25 +38,29 @@
                         <field name="name" placeholder="Enter Name"/>
                         <field name="ending_date" placeholder="Enter ending date"/>
                         <field name="starting_balance" placeholder="Enter Starting Balance"/>
+                        <field name="suppress_ending_date_filter"/>
                         <field name="ending_balance" placeholder="Enter Ending Balance"/>
                         <field name="company_id" groups="base.group_multi_company" placeholder="Enter Company Name"/>
-                        <field name="suppress_ending_date_filter"/>
-                        <field name="keep_previous_uncleared_entries" attrs="{'readonly':[('state','!=','draft')]}"/>
                     </group>
                     <notebook colspan="5">
                         <page string="Journal Items">
                             <label for='account_label' string='Deposits, Credits, and Interest'/>
-                            <field colspan="4" mode="tree" name="debit_move_line_ids" nolabel="1" widget="one2many_list" height="300">
+                            <field colspan="4" mode="tree" name="debit_move_line_ids" nolabel="1" widget="one2many_list" height="300" attrs="{'readonly': [('state','=','done')]}">
                                 <form string="Deposits, Credits, and Interest">
-                                    <group colspan="4">
-                                        <field name="cleared_bank_account"/>
-                                        <field name="date"/>
-                                        <field name="name"/>
-                                        <field name="ref"/>
-                                        <field name="partner_id"/>
-                                        <field name="amount"/>
-                                        <field name="currency_id"/>
-                                        <field name="research_required"/>
+                                    <group>
+		                                <group>
+                                            <field name="name"/>
+                                            <field name="ref"/>
+                                            <field name="amount"/>
+                                            <field name="currency_id"/>
+		                                </group>
+		                                <group>
+                                            <field name="partner_id"/>
+		                                    <field name="date"/>
+                                            <field name="cleared_bank_account"/>
+		                                    <field name="research_required" invisible="1"/>
+                                            <field name="type" invisible="1"/>
+		                                </group>
                                     </group>
                                 </form>
                                 <tree string="Deposits, Credits, and Interest" editable="top">
@@ -68,22 +71,28 @@
                                     <field name="partner_id"/>
                                     <field name="amount"/>
                                     <field name="currency_id"/>
-                                    <field name="research_required"/>
                                     <field name="move_line_id"/>
+                                    <field name="research_required" invisible="1"/>
+                                    <field name="type" invisible="1"/>
                                 </tree>
                             </field>
                             <label for='account_label2' string='Checks, Withdrawals, Debits, and Service Charges'/>
-                            <field colspan="4" mode="tree" name="credit_move_line_ids" nolabel="1" widget="one2many_list" height="300">
+                            <field colspan="4" name="credit_move_line_ids" nolabel="1" height="300" context="{'default_type': 'cr'}" attrs="{'readonly': [('state','=','done')]}">
                                 <form string="Checks, Withdrawals, Debits, and Service Charges">
-                                    <group colspan="4">
-                                        <field name="cleared_bank_account"/>
-                                        <field name="date"/>
-                                        <field name="name"/>
-                                        <field name="ref"/>
-                                        <field name="partner_id"/>
-                                        <field name="amount"/>
-                                        <field name="currency_id"/>
-                                        <field name="research_required"/>
+                                    <group>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="ref"/>
+                                            <field name="amount"/>
+                                            <field name="currency_id"/>
+                                        </group>
+                                        <group>
+                                            <field name="partner_id"/>
+                                            <field name="date"/>
+                                            <field name="cleared_bank_account"/>
+                                            <field name="research_required" invisible="1"/>
+                                            <field name="type" invisible="1"/>
+                                        </group>
                                     </group>
                                 </form>
                                 <tree string="Checks, Withdrawals, Debits, and Service Charges" editable="top">
@@ -94,13 +103,14 @@
                                     <field name="partner_id"/>
                                     <field name="amount"/>
                                     <field name="currency_id"/>
-                                    <field name="research_required"/>
                                     <field name="move_line_id"/>
+                                    <field name="research_required" invisible="1"/>
+                                    <field name="type" invisible="1"/>
                                 </tree>
                             </field>
                             <group col="2" colspan="1" groups="sg_bank_reconcile.group_bank_stmt_verifier">
-                                <button name="action_select_all" type="object" states="draft,to_be_reviewed" string="Select All" />
-                                <button name="action_unselect_all" type="object" states="draft,to_be_reviewed" string="Unselect All" />
+                                <button name="action_select_all" type="object" states="draft,to_be_reviewed" string="Select All" style="{'border-color': black;}"/>
+                                <button name="action_unselect_all" type="object" states="draft,to_be_reviewed" string="Unselect All" style="{'border-color': black;}"/>
                             </group>
                             <newline/>
                                 <group name="calculation1" string="Totals Area">
@@ -125,10 +135,10 @@
                         <page string="Other Information">
                              <separator string="Tracking Information" colspan="4"/>
                             <group colspan="2" col="2">
-                                <field name="verified_by_user_id" placeholder="Enter user whoever varified"/>
+                                <field name="verified_by_user_id" readonly="1"/>
                             </group>
                             <group colspan="2" col="2">
-                                <field name="verified_date" placeholder="Enter date of varification"/>
+                                <field name="verified_date" readonly="1"/>
                             </group>
                         </page>
                         <page string="Notes">
@@ -136,6 +146,10 @@
                         </page>
                     </notebook>
                  </sheet>
+	            <div class="oe_chatter">
+	                <field name="message_follower_ids" widget="mail_followers"/>
+	                <field name="message_ids" widget="mail_thread"/>
+	            </div>
             </form>
         </field>
     </record>
