@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: partner_view.xml,v 1.1 2020/08/20 18:33:31 skumar Exp $ -->
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_partner_form_merchant">
+            <field name="name">res.partner.billing.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+		<field eval="1" name="priority"/>
+            	<field name="arch" type="xml">
+		    <field name="property_account_payable_id" position="after">
+			<field name="x_studio_entity_type"/>
+		    	<field name="x_studio_entity_id" on_change="_onchange_x_studio_entity_id(x_studio_entity_id)"/>
+			<field name="x_studio_threshold"/>
+			<field name="x_studio_frequency"/>
+		    </field>
+            </field>
+        </record>
+	<record id="view_res_partner_filter" model="ir.ui.view">
+            <field name="name">res.partner.select</field>
+            <field name="model">res.partner</field>
+	    <field name="inherit_id" ref="base.view_res_partner_filter"/>
+	    <field name="arch" type="xml">
+	      <xpath expr="//filter[@name='inactive']" position="after">
+                  <field name="x_studio_entity_id" string="Entity Id" domain="[('x_studio_entity_id','=', self)]"/>
+		  <field name="x_studio_entity_type" string="Entity Type" domain="[('x_studio_entity_type','ilike', self)]"/>
+	      </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
