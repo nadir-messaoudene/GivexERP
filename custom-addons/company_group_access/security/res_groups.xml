@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="group_user_company_change" model="res.groups">
+            <field name="category_id">73</field>
+            <field name="name">Can select Multiple Companies</field>
+        </record>
+
+    </data>
+</odoo>
