@@ -1,4 +1,4 @@
-# $Id:  Exp $
+# $Id: account_aged_partner_balance.py,v 1.1 2020/08/31 15:17:28 skumar Exp $
 # Copyright Givex Corporation.  All rights reserved.
 
 import time
@@ -7,14 +7,16 @@ from odoo.exceptions import UserError
 from odoo.tools import float_is_zero
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from odoo.tools.misc import format_date
 
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class ReportAgedPartnerBalance(models.AbstractModel):
-
-    _name = 'report.account.report_agedpartnerbalance'
     _description = 'Aged Partner Balance Report'
     _inherit = 'report.account.report_agedpartnerbalance'
-
+    
     def _get_partner_move_lines(self, account_type, date_from, target_move, period_length):
         # This method can receive the context key 'include_nullified_amount' {Boolean}
         # Do an invoice and a payment and unreconcile. The amount will be nullified
@@ -57,33 +59,33 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         arg_list = (tuple(move_state), tuple(account_type), date_from, date_from,)
         if 'partner_ids' in ctx:
             if ctx['partner_ids']:
-                partner_clause = 'AND (l.partner_id IN %s)'
+                partner_clause = 'AND (am.partner_id IN %s)'
                 arg_list += (tuple(ctx['partner_ids'].ids),)
             else:
-                partner_clause = 'AND l.partner_id IS NULL'
+                partner_clause = 'AND am.partner_id IS NULL'
         if ctx.get('partner_categories'):
-            partner_clause += 'AND (l.partner_id IN %s)'
+            partner_clause += 'AND (am.partner_id IN %s)'
             partner_ids = self.env['res.partner'].search([('category_id', 'in', ctx['partner_categories'].ids)]).ids
             arg_list += (tuple(partner_ids or [0]),)
+        if ctx.get('account_ids'):
+            partner_clause += " AND (l.account_id IN %s)"
+            arg_list += (tuple(ctx['account_ids'].ids),)
         arg_list += (date_from, tuple(company_ids))
 
         # set the select clause based on the incoming account type
-        select_cl = ''
-        if account_type == ['receivable']:
-            select_cl = " || ' (' || m.x_studio_reference_dba_name || ')' "
-        elif account_type == ['payable']:
-            select_cl = " || ' (' || m.ref || ')' "
-        
+        select_cl = """ CASE WHEN am.x_studio_reference_dba_name IS NOT NULL 
+                          THEN res_partner.name || ' (' || am.x_studio_reference_dba_name || ')' 
+                          ELSE res_partner.name 
+                        END"""
         query = '''
-            SELECT DISTINCT l.partner_id, res_partner.name {0} AS name,
-                            UPPER(res_partner.name) AS UPNAME, CASE WHEN prop.value_text IS NULL THEN 'normal' ELSE prop.value_text END AS trust
-            FROM account_move_line AS l
-              JOIN account_move m ON l.move_id=m.id
-              LEFT JOIN res_partner ON l.partner_id = res_partner.id
+            SELECT DISTINCT am.partner_id, {0} AS name,
+                            UPPER({0}) AS UPNAME, CASE WHEN prop.value_text IS NULL THEN 'normal' ELSE prop.value_text END AS trust
+            FROM account_move am
+              JOIN account_move_line l ON am.id = l.move_id
+              LEFT JOIN res_partner ON am.partner_id = res_partner.id
               LEFT JOIN ir_property prop ON (prop.res_id = 'res.partner,'||res_partner.id AND prop.name='trust' AND prop.company_id=%s),
-              account_account, account_move am
+              account_account
             WHERE (l.account_id = account_account.id)
-                AND (l.move_id = am.id)
                 AND (am.state IN %s)
                 AND (account_account.internal_type IN %s)
                 AND (
@@ -97,7 +99,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                     '''.format(select_cl) + partner_clause + '''
                 AND (l.date <= %s)
                 AND l.company_id IN %s
-            ORDER BY UPPER(res_partner.name)'''
+            ORDER BY UPNAME'''
         arg_list = (self.env.company.id,) + arg_list
         cr.execute(query, arg_list)
 
@@ -108,7 +110,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
 
         # Build a string like (1,2,3) for easy use in SQL query
         partner_ids = [partner['partner_id'] for partner in partners]
-        lines = dict((partner['partner_id'], []) for partner in partners)
+        lines = dict((partner['partner_id'] or False, []) for partner in partners)
         if not partner_ids:
             return [], [], {}
 
@@ -167,6 +169,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 if not self.env.company.currency_id.is_zero(line_amount):
                     partners_amount[partner_id] += line_amount
                     lines.setdefault(partner_id, [])
+                    # Include the vendor bill reference
                     lines[partner_id].append({
                         'line': line,
                         'amount': line_amount,
@@ -249,3 +252,87 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             if at_least_one_amount or (self._context.get('include_nullified_amount') and lines[partner['partner_id']]):
                 res.append(values)
         return res, total, lines
+
+    
+class report_account_aged_partner(models.AbstractModel):
+    _description = "Aged Partner Balances"
+    _inherit = 'account.aged.partner'
+    
+    @api.model
+    def _get_lines(self, options, line_id=None):
+        sign = -1.0 if self.env.context.get('aged_balance') else 1.0
+        lines = []
+        account_types = [self.env.context.get('account_type')]
+        context = {'include_nullified_amount': True}
+        if line_id and 'partner_' in line_id:
+            # we only want to fetch data about this partner because we are expanding a line
+            partner_id_str = line_id.split('_')[1]
+            if partner_id_str.isnumeric():
+                partner_id = self.env['res.partner'].browse(int(partner_id_str))
+            else:
+                partner_id = False
+            context.update(partner_ids=partner_id)
+        results, total, amls = self.env['report.account.report_agedpartnerbalance'].with_context(**context)._get_partner_move_lines(account_types, self._context['date_to'], 'posted', 30)
+
+        for values in results:
+            vals = {
+                'id': 'partner_%s' % (values['partner_id'],),
+                'name': values['name'],
+                'level': 2,
+                'columns': [{'name': ''}] * 4 + [{'name': self.format_value(sign * v), 'no_format': sign * v}
+                                                 for v in [values['direction'], values['4'],
+                                                           values['3'], values['2'],
+                                                           values['1'], values['0'], values['total']]],
+                'trust': values['trust'],
+                'unfoldable': True,
+                'unfolded': 'partner_%s' % (values['partner_id'],) in options.get('unfolded_lines'),
+                'partner_id': values['partner_id'],
+            }
+            lines.append(vals)
+            if 'partner_%s' % (values['partner_id'],) in options.get('unfolded_lines'):
+                for line in amls[values['partner_id']]:
+                    aml = line['line']
+                    if aml.move_id.is_purchase_document():
+                        caret_type = 'account.invoice.in'
+                    elif aml.move_id.is_sale_document():
+                        caret_type = 'account.invoice.out'
+                    elif aml.payment_id:
+                        caret_type = 'account.payment'
+                    else:
+                        caret_type = 'account.move'
+
+                    move_line_name = aml.move_id.name
+                    if aml.move_id.type in ('in_refund', 'in_invoice', 'in_receipt'):
+                        move_line_name = self._format_aml_name(aml.name, aml.ref, aml.move_id.name)
+                    
+                    line_date = aml.date_maturity or aml.date
+                    if not self._context.get('no_format'):
+                        line_date = format_date(self.env, line_date)
+                    vals = {
+                        'id': aml.id,
+                        'name': move_line_name,
+                        'class': 'date',
+                        'caret_options': caret_type,
+                        'level': 4,
+                        'parent_id': 'partner_%s' % (values['partner_id'],),
+                        'columns': [{'name': v} for v in [format_date(self.env, aml.date_maturity or aml.date), aml.journal_id.code, aml.account_id.display_name, format_date(self.env, aml.expected_pay_date)]] +
+                                   [{'name': self.format_value(sign * v, blank_if_zero=True), 'no_format': sign * v} for v in [line['period'] == 6-i and line['amount'] or 0 for i in range(7)]],
+                        'action_context': {
+                            'default_type': aml.move_id.type,
+                            'default_journal_id': aml.move_id.journal_id.id,
+                        },
+                        'title_hover': self._format_aml_name(aml.name, aml.ref, aml.move_id.name),
+                    }
+                    lines.append(vals)
+        if total and not line_id:
+            total_line = {
+                'id': 0,
+                'name': _('Total'),
+                'class': 'total',
+                'level': 2,
+                'columns': [{'name': ''}] * 4 + [{'name': self.format_value(sign * v), 'no_format': sign * v} for v in [total[6], total[4], total[3], total[2], total[1], total[0], total[5]]],
+            }
+            lines.append(total_line)
+        return lines
+    
+    

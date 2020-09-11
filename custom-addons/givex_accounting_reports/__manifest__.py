@@ -1,4 +1,4 @@
-# $Id: __openerp__.py,v 1.19 2015/04/28 21:53:41 skumar Exp $
+# $Id: __manifest__.py,v 1.1 2020/08/31 15:17:26 skumar Exp $
 # Copyright Givex Corporation.  All rights reserved.
 {
     'name': 'Givex Accounting Reports',
@@ -6,8 +6,7 @@
     'summary': 'Reporting',
     'author': 'Givex',
     'description': """Customizing accounting reports""",
-    'depends': ['base_setup', 'product', 'analytic', 'portal', 'digest'],
-    ### DEBUG 'data': ['report/account_aged_partner_balance_view.xml'],
+    'depends': ['base_setup', 'product', 'analytic', 'portal', 'digest', 'account_reports'],
     'data': [],
     'demo': [],
     'installable' : True,
