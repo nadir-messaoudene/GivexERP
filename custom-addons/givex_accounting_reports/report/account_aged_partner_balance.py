@@ -243,7 +243,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             values['partner_id'] = partner['partner_id']
             if partner['partner_id']:
                 name = partner['name'] or ''
-                values['name'] = len(name) >= 45 and name[0:40] + '...' or name
+                values['name'] = len(name) >= 85 and name[0:80] + '...' or name
                 values['trust'] = partner['trust']
             else:
                 values['name'] = _('Unknown Partner')
