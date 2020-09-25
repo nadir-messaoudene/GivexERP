@@ -1,5 +1,14 @@
-# $Id: account_aged_partner_balance.py,v 1.1 2020/08/31 15:17:28 skumar Exp $
+# $Id: account_aged_partner_balance.py,v 1.3 2020/09/24 18:40:16 skumar Exp $
 # Copyright Givex Corporation.  All rights reserved.
+
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+# Copyright (C) 2020 (https://ingenieuxtech.odoo.com)
+# ingenieuxtechnologies@gmail.com
+# ingenieuxtechnologies
+#
+##############################################################################
 
 import time
 from odoo import api, fields, models, _
@@ -13,10 +22,122 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
+class AccountMove(models.Model):
+    _inherit = "account.move"
+
+    custom_ref = fields.Char('Custom Reference')
+
+
 class ReportAgedPartnerBalance(models.AbstractModel):
-    _description = 'Aged Partner Balance Report'
     _inherit = 'report.account.report_agedpartnerbalance'
-    
+
+    def _get_columns_name(self, options):
+        columns = [
+            {},
+            {'name': _("Due Date"), 'class': 'date', 'style': 'white-space:nowrap;'},
+            {'name': _("Customer"), 'class': 'date', 'style': 'white-space:nowrap;'},
+            {'name': _("Reference"), 'class': '', 'style': 'white-space:nowrap;'},
+            {'name': _("Journal"), 'class': '', 'style': 'text-align:center; white-space:nowrap;'},
+            {'name': _("Account"), 'class': '', 'style': 'text-align:center; white-space:nowrap;'},
+            {'name': _("Exp. Date"), 'class': 'date', 'style': 'white-space:nowrap;'},
+            {'name': _("As of: %s") % format_date(self.env, options['date']['date_to']), 'class': 'number sortable', 'style': 'white-space:nowrap;'},
+            {'name': _("1 - 30"), 'class': 'number sortable', 'style': 'white-space:nowrap;'},
+            {'name': _("31 - 60"), 'class': 'number sortable', 'style': 'white-space:nowrap;'},
+            {'name': _("61 - 90"), 'class': 'number sortable', 'style': 'white-space:nowrap;'},
+            {'name': _("91 - 120"), 'class': 'number sortable', 'style': 'white-space:nowrap;'},
+            {'name': _("Older"), 'class': 'number sortable', 'style': 'white-space:nowrap;'},
+            {'name': _("Total"), 'class': 'number sortable', 'style': 'white-space:nowrap;'},
+        ]
+        return columns
+
+    @api.model
+    def _get_lines(self, options, line_id=None):
+        sign = -1.0 if self.env.context.get('aged_balance') else 1.0
+        lines = []
+        account_types = [self.env.context.get('account_type')]
+        context = {'include_nullified_amount': True}
+        if line_id and 'partner_' in line_id:
+            # we only want to fetch data about this partner because we are expanding a line
+            context.update(partner_ids=self.env['res.partner'].browse(int(line_id.split('_')[1])))
+        if options.get('partner_account_receivable_ids'):
+            context.update(account_ids=options.get('partner_account_receivable_ids'))
+        results, total, amls = self.env['report.account.report_agedpartnerbalance'].with_context(
+            **context)._get_partner_move_lines(account_types, self._context['date_to'], 'posted', 30)
+
+        for values in results:
+            vals = {
+                'id': 'partner_%s' % (values['partner_id'],),
+                'name': values['name'],
+                'level': 2,
+                'columns': [{'name': ''}] * 6 + [{
+                    'name': self.format_value(sign * v),
+                    'no_format': sign * v} for v in [
+                    values['direction'], values['4'], values['3'], values[
+                        '2'], values['1'], values['0'], values['total']]],
+                'trust': values['trust'],
+                'unfoldable': True,
+                'unfolded': 'partner_%s' % (values['partner_id'],) in options.get('unfolded_lines'),
+                'partner_id': values['partner_id'],
+            }
+            lines.append(vals)
+            if 'partner_%s' % (values['partner_id'],) in options.get('unfolded_lines'):
+                for line in amls[values['partner_id']]:
+                    aml = line['line']
+                    if aml.move_id.is_purchase_document():
+                        caret_type = 'account.invoice.in'
+                    elif aml.move_id.is_sale_document():
+                        caret_type = 'account.invoice.out'
+                    elif aml.payment_id:
+                        caret_type = 'account.payment'
+                    else:
+                        caret_type = 'account.move'
+
+                    line_date = aml.date_maturity or aml.date
+                    if not self._context.get('no_format'):
+                        line_date = format_date(self.env, line_date)
+                    cust_name = aml.move_id.partner_id and \
+                                aml.move_id.partner_id.name or ''
+                    vals = {
+                        'id': aml.id,
+                        'name': aml.move_id.name,
+                        'class': 'date',
+                        'caret_options': caret_type,
+                        'level': 4,
+                        'parent_id': 'partner_%s' % (values['partner_id'],),
+                        'columns': [{'name': v} for v in [
+                            format_date(self.env, aml.date_maturity or aml.date),
+                            cust_name,
+                            aml.move_id.custom_ref,
+                            aml.journal_id.code,
+                            aml.account_id.display_name,
+                            format_date(self.env, aml.expected_pay_date)]] + [
+                                       {'name': self.format_value(sign * v, blank_if_zero=True),
+                                        'no_format': sign * v} for v in
+                                       [line['period'] == 6 - i and line['amount'] or 0 for i in range(7)]],
+                        'action_context': {
+                            'default_type': aml.move_id.type,
+                            'default_journal_id': aml.move_id.journal_id.id,
+                        },
+                        'title_hover': self._format_aml_name(aml.name, aml.ref, aml.move_id.name),
+                    }
+                    lines.append(vals)
+        if total and not line_id:
+            total_line = {
+                'id': 0,
+                'name': _('Total'),
+                'class': 'total',
+                'level': 2,
+                'columns': [{'name': ''}] * 6 + [{
+                    'name': self.format_value(sign * v),
+                    'no_format': sign * v} for v in [
+                    total[6], total[4], total[3], total[2], total[1],
+                    total[0], total[5]]],
+            }
+            lines.append(total_line)
+        return lines
+
+
     def _get_partner_move_lines(self, account_type, date_from, target_move, period_length):
         # This method can receive the context key 'include_nullified_amount' {Boolean}
         # Do an invoice and a payment and unreconcile. The amount will be nullified
@@ -29,6 +150,10 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         # 61 - 90  : 2018-12-09 - 2018-11-10
         # 91 - 120 : 2018-11-09 - 2018-10-11
         # +120     : 2018-10-10
+        """
+        if context get account_id then else call default
+        :return:
+        """
         ctx = self._context
         periods = {}
         date_from = fields.Date.from_string(date_from)
@@ -69,7 +194,8 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             arg_list += (tuple(partner_ids or [0]),)
         if ctx.get('account_ids'):
             partner_clause += " AND (l.account_id IN %s)"
-            arg_list += (tuple(ctx['account_ids'].ids),)
+            arg_list += (tuple(ctx['account_ids']),)
+
         arg_list += (date_from, tuple(company_ids))
 
         # set the select clause based on the incoming account type
@@ -109,7 +235,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             total.append(0)
 
         # Build a string like (1,2,3) for easy use in SQL query
-        partner_ids = [partner['partner_id'] for partner in partners]
+        partner_ids = [partner['partner_id'] for partner in partners if partner['partner_id']]
         lines = dict((partner['partner_id'] or False, []) for partner in partners)
         if not partner_ids:
             return [], [], {}
@@ -144,15 +270,9 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                     ORDER BY COALESCE(l.date_maturity, l.date)'''
             cr.execute(query, args_list)
             partners_amount = {}
-            aml_ids = [x[0] for x in cr.fetchall()]
-            # prefetch the fields that will be used; this avoid cache misses,
-            # which look up the cache to determine the records to read, and has
-            # quadratic complexity when the number of records is large...
-            move_lines = self.env['account.move.line'].browse(aml_ids)
-            move_lines._read(['partner_id', 'company_id', 'balance', 'matched_debit_ids', 'matched_credit_ids'])
-            move_lines.matched_debit_ids._read(['max_date', 'company_id', 'amount'])
-            move_lines.matched_credit_ids._read(['max_date', 'company_id', 'amount'])
-            for line in move_lines:
+            aml_ids = cr.fetchall()
+            aml_ids = aml_ids and [x[0] for x in aml_ids] or []
+            for line in self.env['account.move.line'].browse(aml_ids).with_context(prefetch_fields=False):
                 partner_id = line.partner_id.id or False
                 if partner_id not in partners_amount:
                     partners_amount[partner_id] = 0.0
@@ -169,7 +289,6 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 if not self.env.company.currency_id.is_zero(line_amount):
                     partners_amount[partner_id] += line_amount
                     lines.setdefault(partner_id, [])
-                    # Include the vendor bill reference
                     lines[partner_id].append({
                         'line': line,
                         'amount': line_amount,
@@ -272,6 +391,10 @@ class report_account_aged_partner(models.AbstractModel):
             else:
                 partner_id = False
             context.update(partner_ids=partner_id)
+        # add the account ids for filter
+        if options.get('partner_account_receivable_ids'):
+            context.update(account_ids=options.get('partner_account_receivable_ids'))
+
         results, total, amls = self.env['report.account.report_agedpartnerbalance'].with_context(**context)._get_partner_move_lines(account_types, self._context['date_to'], 'posted', 30)
 
         for values in results:
