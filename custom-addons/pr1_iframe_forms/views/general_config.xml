@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="view_general_config_form" model="ir.ui.view">
+            <field name="name">pr1_iframe_forms.general_config</field>
+            <field name="model">pr1_iframe_forms.general_config</field>
+            <field name="arch" type="xml">
+                <form string="website">
+                    <sheet>
+                        <group>
+							<field name="name" readonly="1"/>
+					 		<field name="add_links">
+						 		<tree string="Additional CSS Links" editable="bottom">
+							 		<field name="path_to_link"/>
+						 		</tree>
+					 		</field>
+						</group>
+                
+						 <group>
+					 		<field name="css_class_substitutes">
+						 		<tree string="Substitute css class names" editable="bottom">
+							 		<field name="class_to_replace"/>
+							 		<field name="class_to_replace_with"/>
+						 		</tree>
+					 		</field>
+					 </group>
+                    </sheet>
+                </form>
+            </field>
+        </record><!-- Tree View -->
+        <record id="view_general_config_tree" model="ir.ui.view">
+            <field name="name">pr1_iframe_forms.general_config.tree</field>
+            <field name="model">pr1_iframe_forms.general_config</field>
+            <field name="arch" type="xml">
+                <tree string="website">
+
+					<field name="name"/>
+					
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

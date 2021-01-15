@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="d_general_onfig" model="pr1_iframe_forms.general_config">
+            <field name="name">Default</field>
+            
+        </record>
+        	</data>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+      <menuitem id="menu_pr1_settings" 
+      name="PR1" parent="base.menu_administration" sequence="111" />
+
+
+   		<record id="action_pr1_settings" model="ir.actions.act_window">
+            <field name="name">IFrame Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pr1_iframe_forms.general_config</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+      <menuitem name="IFrame Settings" 
+	    	id="menu_pr1_iframe_settings" 
+	    	action="action_pr1_settings" 
+	    	parent="menu_pr1_settings" sequence="1"/>	    
+	    
+
+</data>
+</odoo>

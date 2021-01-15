@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+    
+    <record model="ir.module.category" id="pr1_iframe_group">
+            <field name="name">PR1 IFrame</field>
+        </record>
+        <record model="res.groups" id="g_pr1_iframe_reader">
+            <field name="name">PR1 IFrame Reader</field>
+            <field name="category_id" eval="ref('pr1_iframe_group')"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+        <record model="res.groups" id="g_pr1_iframe_admin">
+            <field name="name">PR1 IFrame Admin</field>
+            <field name="category_id" eval="ref('pr1_iframe_group')"/>
+            <field name="implied_ids" eval="[(4, ref('g_pr1_iframe_reader'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+      </data>
+  </openerp>

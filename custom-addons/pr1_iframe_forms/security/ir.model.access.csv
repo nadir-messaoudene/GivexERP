@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gc_writer_group,pr1_iframe_forms.general_config,model_pr1_iframe_forms_general_config,g_pr1_iframe_admin,1,1,1,1
+access_gc_reader,pr1_iframe_forms.general_config_read,model_pr1_iframe_forms_general_config,g_pr1_iframe_reader,1,0,0,0
+access_gc_writer_group_css,pr1_iframe_forms.general_css,model_pr1_iframe_forms_css_class_substitue,g_pr1_iframe_admin,1,1,1,1
+access_gc_reader_css,pr1_iframe_forms.general_css_read,model_pr1_iframe_forms_css_class_substitue,g_pr1_iframe_reader,1,0,0,0
+access_gc_writer_group_link,pr1_iframe_forms.general_css,model_pr1_iframe_forms_add_link,g_pr1_iframe_admin,1,1,1,1
+access_gc_reader_link,pr1_iframe_forms.general_css_read,model_pr1_iframe_forms_add_link,g_pr1_iframe_reader,1,0,0,0
+
