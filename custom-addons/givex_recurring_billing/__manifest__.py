@@ -1,8 +1,8 @@
-# $Id: __manifest__.py,v 1.1 2020/08/20 18:33:29 skumar Exp $
+# $Id: __manifest__.py,v 1.2 2020/11/17 20:08:35 skumar Exp $
 # Copyright Givex Corporation.  All rights reserved.
 {
     'name': 'Givex Billing Management',
-    'version': '0.1',
+    'version': '0.2',
     'summary': 'Invoicing',
     'author': 'Givex',
     'description': """Defining Method to handle XMLPRPC calls for Givex recurring billing.""",

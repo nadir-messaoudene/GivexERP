@@ -1,4 +1,4 @@
-# $Id: create_invoice.py,v 1.1 2020/08/20 18:33:29 skumar Exp $
+# $Id: create_invoice.py,v 1.3 2020/11/27 15:44:23 skumar Exp $
 # Copyright Givex Corporation.  All rights reserved.
 
 from odoo import api, fields, models, _
@@ -126,8 +126,6 @@ class AccountMoveXmlrpc(models.Model):
             product_id = pids[product_counter]
             product_description = pdescription[product_counter]
             product_rec = self.env['product.product'].sudo().browse(product_id)
-            if 'Per active store fees' in product_description:
-                product_description = "Per active store fees for month %s" % date.today().strftime('%Y-%m') 
             quantity = pquantity[product_counter]
 
             property_obj = self.env['ir.property'].sudo().with_context(force_company=company_id)
@@ -141,7 +139,7 @@ class AccountMoveXmlrpc(models.Model):
             else:
                 pricelist_id = partner.property_product_pricelist.id
             
-            pricelist = self.env['product.pricelist']
+            pricelist = self.env['product.pricelist'].search([('id', '=', pricelist_id)])
             price_unit = pricelist.price_get(product_id, quantity, customer_id)[pricelist_id]
 
             if not price_unit > 0:
@@ -150,7 +148,8 @@ class AccountMoveXmlrpc(models.Model):
                 continue
 
             res_id = str("product.template," + str(product_id))
-            property_id = property_obj.search([('name', '=', 'property_account_income_categ_id'),
+            # Check for the product level account
+            property_id = property_obj.search([('name', '=', 'property_account_income_id'),
                                                ('res_id', '=', res_id),
                                                ('company_id', '=', company_id)], limit=1)
 
@@ -159,11 +158,13 @@ class AccountMoveXmlrpc(models.Model):
                 product_template_id =  product_obj.product_tmpl_id.id
                 product_category = self.env['product.template'].sudo().browse(product_template_id).categ_id.id
                 res_id = str("product.category," + str(product_category))
+                # Check for the product category level account
                 property_id = property_obj.search([('name', '=', 'property_account_income_categ_id'),
                                                    ('res_id', '=', res_id),
                                                    ('company_id', '=', company_id)], limit=1)
 
             if not property_id:
+                # Check for the company level account
                 property_id = property_obj.search([('name', '=', 'property_account_income_categ_id'),
                                                    ('company_id', '=', company_id)], limit=1)[0]
             else:
@@ -198,6 +199,10 @@ class AccountMoveXmlrpc(models.Model):
             if str(product_rec.default_code).find('GVX-TRX-STORE') != -1:
                 date_invoice = date.today() + relativedelta(day=1)
                 move['invoice_date'] = move['invoice_date_due'] = date_invoice
+
+            # Set the product desc with the correct date its invoiced for
+            if 'Per active store' in product_description:
+                product_description += " for month %s" % date_invoice.strftime('%Y-%m') 
 
             # Calculate billing period
             ref = ''
