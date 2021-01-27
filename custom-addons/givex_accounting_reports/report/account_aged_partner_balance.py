@@ -1,4 +1,4 @@
-# $Id: account_aged_partner_balance.py,v 1.3 2020/09/24 18:40:16 skumar Exp $
+# $Id: account_aged_partner_balance.py,v 1.4 2020/10/20 21:17:40 skumar Exp $
 # Copyright Givex Corporation.  All rights reserved.
 
 # -*- encoding: utf-8 -*-
@@ -184,12 +184,12 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         arg_list = (tuple(move_state), tuple(account_type), date_from, date_from,)
         if 'partner_ids' in ctx:
             if ctx['partner_ids']:
-                partner_clause = 'AND (am.partner_id IN %s)'
+                partner_clause = 'AND (l.partner_id IN %s)'
                 arg_list += (tuple(ctx['partner_ids'].ids),)
             else:
-                partner_clause = 'AND am.partner_id IS NULL'
+                partner_clause = 'AND l.partner_id IS NULL'
         if ctx.get('partner_categories'):
-            partner_clause += 'AND (am.partner_id IN %s)'
+            partner_clause += 'AND (l.partner_id IN %s)'
             partner_ids = self.env['res.partner'].search([('category_id', 'in', ctx['partner_categories'].ids)]).ids
             arg_list += (tuple(partner_ids or [0]),)
         if ctx.get('account_ids'):
@@ -199,16 +199,20 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         arg_list += (date_from, tuple(company_ids))
 
         # set the select clause based on the incoming account type
-        select_cl = """ CASE WHEN am.x_studio_reference_dba_name IS NOT NULL 
-                          THEN res_partner.name || ' (' || am.x_studio_reference_dba_name || ')' 
-                          ELSE res_partner.name 
+        select_cl = """CASE WHEN am.partner_id = l.partner_id 
+                        THEN CASE WHEN am.x_studio_reference_dba_name IS NOT NULL 
+                               THEN res_partner.name || ' (' || am.x_studio_reference_dba_name || ')' 
+                             ELSE res_partner.name END
+                       ELSE CASE WHEN res_partner.ref is not null 
+                             THEN res_partner.name || ' (' || res_partner.ref || ')'
+                            ELSE res_partner.name END
                         END"""
         query = '''
-            SELECT DISTINCT am.partner_id, {0} AS name,
+            SELECT DISTINCT l.partner_id, {0} AS name,
                             UPPER({0}) AS UPNAME, CASE WHEN prop.value_text IS NULL THEN 'normal' ELSE prop.value_text END AS trust
             FROM account_move am
               JOIN account_move_line l ON am.id = l.move_id
-              LEFT JOIN res_partner ON am.partner_id = res_partner.id
+              LEFT JOIN res_partner ON l.partner_id = res_partner.id
               LEFT JOIN ir_property prop ON (prop.res_id = 'res.partner,'||res_partner.id AND prop.name='trust' AND prop.company_id=%s),
               account_account
             WHERE (l.account_id = account_account.id)

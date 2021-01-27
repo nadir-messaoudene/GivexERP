@@ -5,7 +5,7 @@
               inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <script type="text/javascript"
-                    src="/igt_account_reports/static/src/js/account_reports.js"/>
+                    src="/givex_accounting_reports/static/src/js/account_reports.js"/>
         </xpath>
     </template>
 
