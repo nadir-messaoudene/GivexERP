@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	
+	<data noupdate="0">
+
+		<record id="easy_reconciliation" model="res.groups">
+			<field name="name">Easy Reconciliation</field>
+			<field name="comment">Easy Reconciliation</field>
+		</record>
+		
+	</data>
+</openerp>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="easy_reconciliation_view" model="ir.ui.view">
+        <field name="name">Easy Reconciliation</field>
+        <field name="model">easy.reconciliation</field>
+        <field name="arch" type="xml">
+        <form string="Easy Reconciliation">
+            <group col="4">
+                <field name="partner_id" default_focus="1" />
+                <field name="journal_id" />
+            </group>
+            <group>
+                <field name="line_ids" nolabel="1" context="{'default_partner_id' : partner_id}">
+                    <tree editable="bottom">
+                        <field name="partner_id" invisible="1" />
+                        <field name="invoice_id" />
+                        <field name="amount_due" />
+                        <field name="outstanding_line_id" />
+                        <field name="outstanding_line_amount" />
+
+                        <field name="amount_reconcile" />
+                    </tree>
+                </field>
+            </group>
+
+            <footer>
+                <button name="make_reconciliations" string="Outstanding Credits" type="object"  class="oe_highlight"/>
+                <button string="Cancel" class="btn btn-secondary" special="cancel" />
+            </footer>
+        </form>
+        </field>
+    </record>
+
+    <record id="action_easy_reconciliation" model="ir.actions.act_window">
+        <field name="name">Easy Reconciliation</field>
+        <field name="res_model">easy.reconciliation</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="easy_reconciliation_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem action="action_easy_reconciliation" id="menu_action_easy_reconciliation" name="Easy Reconciliation" parent="account.menu_finance_receivables" sequence="15"/>
+
+</odoo>
