@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="generic_mail_template_settings_inherited_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='multi_company']" position="after">
+                <h2>Set Default Email Template</h2>
+                <div class="row mt16 o_settings_container">
+                    <div id="sales_settings_invoicing_policy"
+                         class="col-12 col-lg-6 o_setting_box"
+                         title="This default value is applied to any new product created. This can be changed in the product detail form.">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Sale Quotation Template</span>
+                            <div class="text-muted">
+                                Email template set here will be used to send Sale Quotation email.
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="sale_quatation_template" class="o_light_label" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="sales_settings_invoicing_policy"
+                         class="col-12 col-lg-6 o_setting_box"
+                         title="This default value is applied to any new product created. This can be changed in the product detail form.">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Sale Order Template</span>
+                            <div class="text-muted">
+                                Email template set here will be used to send Sale Order email.
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="sale_order_template" class="o_light_label" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="sales_settings_invoicing_policy"
+                         class="col-12 col-lg-6 o_setting_box"
+                         title="This default value is applied to any new product created. This can be changed in the product detail form.">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Request for Quotation Template</span>
+                            <div class="text-muted">
+                                Email template set here will be used to send Request for Quotation email.
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="purchase_quatation_template" class="o_light_label" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="sales_settings_invoicing_policy"
+                         class="col-12 col-lg-6 o_setting_box"
+                         title="This default value is applied to any new product created. This can be changed in the product detail form.">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Purchase Order Template</span>
+                            <div class="text-muted">
+                                Email template set here will be used to send Purchase Order email.
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="purchase_order_template" class="o_light_label" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Invoice Template</span>
+                            <div class="text-muted">
+                                Email template set here will be used to send Invoice email.
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="invoice_template" class="o_light_label" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
