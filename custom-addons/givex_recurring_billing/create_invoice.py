@@ -1,4 +1,4 @@
-# $Id: create_invoice.py,v 1.3 2020/11/27 15:44:23 skumar Exp $
+# $Id: create_invoice.py,v 1.4 2021/03/31 13:09:41 skumar Exp $
 # Copyright Givex Corporation.  All rights reserved.
 
 from odoo import api, fields, models, _
@@ -107,7 +107,7 @@ class AccountMoveXmlrpc(models.Model):
                 'extract_state': 'no_extract_requested',
                 'partner_shipping_id': invoice_address,
                 'fiscal_position_id': fiscal_position_id,
-                'date': datetime.now(),
+                'date': date_invoice,
                 'invoice_date': date_invoice,
                 'invoice_date_due': date_invoice,
                 'partner_id' : partner_id,
@@ -258,7 +258,7 @@ class AccountMoveXmlrpc(models.Model):
                                                              ('invoice_date', '=', date_invoice)])
 
             if q_move and q_move[0].id:
-                q_move[0].write({'date': datetime.now(),
+                q_move[0].write({'date': date_invoice,
                                  'invoice_date': date_invoice,
                                  'invoice_date_due': date_invoice,
                                  'invoice_line_ids': move['invoice_line_ids'],
