@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="sale_order_form_inherit">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_cancel']" position="replace">
+              <button name="action_cancel" states="draft,sent,sale,new" type="object" string="Cancel"/>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm']" position="after">
+              <button name="action_approve_price_approval" string="Approve" type="object" attrs="{'invisible': [('state', 'not in', ['pending_approval'])]}" groups="givex_sale_workflow.group_so_pending_approval" class="btn-primary" context="{'active_id': id}"/>
+              <button name="action_approve_ff_approval" string="Approve" type="object" attrs="{'invisible': [('state', 'not in', ['pending_ff_approval'])]}" groups="givex_sale_workflow.group_so_pending_ff_approval" class="btn-primary" context="{'active_id': id}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm']" position="after">
+              <button name="request_approval" string="Request for Approval" type="object" attrs="{'invisible': [('state', 'not in', ['new'])]}" class="btn-primary" context="{'active_id': id}"/>
+            </xpath>
+            <xpath expr="//sheet//notebook//page[@name='order_lines']//field[@name='order_line']//tree//field[@name='company_id']" position="after">
+              <field name="requires_ff_approval" invisible="1"/>
+              <field name="requires_price_approval" invisible="1"/>
+              <field name="is_ff_approved" invisible="1"/>
+              <field name="is_price_approved" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
