@@ -396,6 +396,9 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id')
     def _check_requires_ff_approval(self):
         for each in self:
+            each.requires_ff_approval = False
+            each.is_ff_approved = True
+
             if not each.product_id:
                 return
         
@@ -407,6 +410,9 @@ class SaleOrderLine(models.Model):
     @api.depends('price_unit', 'discount')
     def _check_requires_price_approval(self):
         for each in self:
+            each.requires_price_approval = False
+            each.is_price_approved = True
+            
             if not each.product_id:
                 return
 
