@@ -458,18 +458,19 @@ class SaleOrderLine(models.Model):
         vals = dict(values).copy()
         # if state not being updated here and if the state is not locked/cancelled, then check
         # for the product ff approval and price approval
-        if 'state' not in vals and self.state not in ('done', 'cancelled'):
-            if self.product_id.requires_ff_approval and self.state != 'pending_ff_approval' and self.requires_ff_approval is True:
-                # if product requires ff approval
-                vals['state'] = 'new'
-                vals['requires_ff_approval'] = True
-                vals['is_ff_approved'] = False
+        if 'state' not in vals and len(self.ids) == 1:
+            sol = self.env['sale.order.line'].sudo().browse(self.ids[0])
+            if sol.state not in ('done', 'cancelled'):
+                if sol.product_id.requires_ff_approval and sol.state != 'pending_ff_approval' and sol.requires_ff_approval is True:
+                    vals['state'] = 'new'
+                    vals['requires_ff_approval'] = True
+                    vals['is_ff_approved'] = False
 
-            if self.state != 'pending_approval' and self.requires_price_approval is True:
-                # if the price is manually changed
-                vals['state'] = 'new'
-                vals['requires_price_approval'] = True
-                vals['is_price_approved'] = False
-                        
+                if sol.state != 'pending_approval' and sol.requires_price_approval is True:
+                    # if the price is manually changed
+                    vals['state'] = 'new'
+                    vals['requires_price_approval'] = True
+                    vals['is_price_approved'] = False
+        
         return super(SaleOrderLine, self).write(vals)
     

@@ -3,7 +3,7 @@
 
 {
     'name': 'Givex Sale Workflow',
-    'version': '0.4',
+    'version': '0.5',
     'category': 'Sales/Sales',
     'summary': 'Givex Sale Workflow',
     'description': """This module contains custom workflow for Sales orders.""",
