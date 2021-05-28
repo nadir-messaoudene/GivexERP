@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.misc import formatLang, get_lang
+from odoo.tools import float_compare
 
 import logging
 
