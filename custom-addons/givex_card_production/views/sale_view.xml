@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="sale_order_form_card_inherit">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group/group/field[@name='partner_shipping_id']" position="after">
+                <field name="has_card_product" invisible="1"/>
+                <field name="partner_name" invisible="1"/>
+                <field name="partner_proofing_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'proofing', 'default_parent_id': partner_id, 'default_company_name': partner_name}" options="{'always_reload': True}" attrs="{'required':[('has_card_product','=',True)]}" domain="[('parent_id', '=', partner_id)]"/>
+            </xpath>
+            
+            <header position="after">
+                <div class="alert alert-warning text-center o_form_header" role="alert" attrs="{'invisible': [('proofing_address_incomplete','=',False)]}">
+                    <div name="avatar2" class="text-left">
+                        <field name="proofing_address_incomplete"/>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Hide the CONFIRM and SEND buttons if the proofing address is incomplete -->
+            <xpath expr="//button[@name='action_confirm'][1]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|',('proofing_address_incomplete','!=',False), ('state', 'not in', ['sent'])]}</attribute>
+            </xpath>
+            
+            <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|',('proofing_address_incomplete','!=',False), ('state', 'not in', ['draft'])]}</attribute>
+            </xpath>
+            
+            <xpath expr="//button[@name='action_quotation_send'][1]" position="attributes">
+                <attribute name="states"></attribute>
+                <attribute name="attrs">{'invisible': ['|',('proofing_address_incomplete','!=',False), ('state','not in',['draft'])]}</attribute>
+            </xpath>
+            
+            <xpath expr="//button[@name='action_quotation_send'][2]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|','|',('proofing_address_incomplete','!=',False), ('state', '!=', 'draft'), ('invoice_count','&gt;=',1)]}</attribute>
+            </xpath>
+            
+            <xpath expr="//button[@name='action_quotation_send'][3]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|','|',('proofing_address_incomplete','!=',False), ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}</attribute>
+            </xpath>
+            
+            <xpath expr="//button[@name='action_quotation_send'][4]" position="attributes">
+                <attribute name="states"></attribute>
+                <attribute name="attrs">{'invisible': ['|',('proofing_address_incomplete','!=',False), ('state','not in',['sent','sale'])]}</attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

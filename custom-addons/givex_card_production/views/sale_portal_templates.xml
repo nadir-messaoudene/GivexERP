@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="sale_order_portal_content" inherit_id="sale.sale_order_portal_content">
+    <xpath expr="//div/div[@id='informations']/div[4]" position="after">
+      <div class="row">
+        <t t-if="sale_order.partner_proofing_id">
+          <div id="proofing_address" class="col-lg-6">
+            <strong class="d-block mb-1">Card Proofing Address:</strong>
+            <address t-field="sale_order.partner_proofing_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+          </div>
+        </t>
+      </div>
+    </xpath>
+  </template>
+</odoo>

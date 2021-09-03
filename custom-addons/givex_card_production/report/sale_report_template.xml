@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="report_saleorder_document_card_proof" inherit_id="sale.report_saleorder_document">
+    <xpath expr="//t[@t-set='address']/div" position="after">
+        <t t-if="doc.partner_proofing_id">
+            <strong>Card Proofing Address:</strong>
+            <div t-field="doc.partner_proofing_id"
+                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+        </t>
+    </xpath>
+  </template>
+  <template id="report_saleorder">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="givex_card_production.report_saleorder_document_card_proof" t-lang="doc.partner_id.lang"/>
+        </t>
+    </t>
+  </template>
+</odoo>
