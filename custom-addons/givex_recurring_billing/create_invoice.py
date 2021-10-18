@@ -1,4 +1,4 @@
-# $Id: create_invoice.py,v 1.4 2021/03/31 13:09:41 skumar Exp $
+# $Id: create_invoice.py,v 1.6 2021/09/13 13:48:23 skumar Exp $
 # Copyright Givex Corporation.  All rights reserved.
 
 from odoo import api, fields, models, _
@@ -107,12 +107,10 @@ class AccountMoveXmlrpc(models.Model):
                 'extract_state': 'no_extract_requested',
                 'partner_shipping_id': invoice_address,
                 'fiscal_position_id': fiscal_position_id,
-                'date': date_invoice,
                 'invoice_date': date_invoice,
                 'invoice_date_due': date_invoice,
                 'partner_id' : partner_id,
                 'company_id': company_id,
-                'currency_id': currency_id,
                 'journal_id': journal_id,
         }
         
@@ -137,11 +135,14 @@ class AccountMoveXmlrpc(models.Model):
             if property_id and property_id.value_reference:
                 pricelist_id = int(str(property_id.value_reference).split(',')[1])
             else:
-                pricelist_id = partner.property_product_pricelist.id
+                pricelist_id = partner.with_context(force_company=company_id).property_product_pricelist.id
             
             pricelist = self.env['product.pricelist'].search([('id', '=', pricelist_id)])
             price_unit = pricelist.price_get(product_id, quantity, customer_id)[pricelist_id]
 
+            # Set the currency from the pricelist
+            move['currency_id'] = pricelist.currency_id
+            
             if not price_unit > 0:
                 _logger.info("Product {0} has $0 price. Skipping...".format(product_id))
                 product_counter += 1
@@ -258,8 +259,7 @@ class AccountMoveXmlrpc(models.Model):
                                                              ('invoice_date', '=', date_invoice)])
 
             if q_move and q_move[0].id:
-                q_move[0].write({'date': date_invoice,
-                                 'invoice_date': date_invoice,
+                q_move[0].write({'invoice_date': date_invoice,
                                  'invoice_date_due': date_invoice,
                                  'invoice_line_ids': move['invoice_line_ids'],
                                  })
