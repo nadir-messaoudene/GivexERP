@@ -126,7 +126,6 @@ class AccountInvoiceBatchPayment(models.Model):
                             record.name,#Reference number - An optional reference number of up to 19 digits. If you don't want a reference number, enter "0" (zero).
                             record.partner_id.name,#Recipient Name - Full name of the bank account holder
                         ]
-                    data = ["A","C","256072691","2025621034","PS",10000,0,"Patrick Star"]
                 _logger.info("DATA ===>>>{}".format(data))
                 return data
             except Exception as e:

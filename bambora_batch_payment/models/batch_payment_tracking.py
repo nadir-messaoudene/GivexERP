@@ -181,9 +181,11 @@ class BatchPaymentTracking(models.Model):
                         limit=1,
                     )
 
+                    ################################################
                     #Vendor Bill Testing
-                    if data["batchId"] in [	10000714]:
-                        data["stateName"] = "Complete"
+                    # if data["batchId"] in [10000024]:
+                    #     data["stateName"] = "Complete"
+                    ################################################
 
                     if rec and not rec.state == "complete":
                         sett_date = datetime.datetime.strptime(data["settlementDate"], "%Y-%m-%d")
