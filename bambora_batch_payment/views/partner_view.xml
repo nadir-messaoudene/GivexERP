@@ -19,9 +19,10 @@
                             <field name="sequence" widget="handle" />
                             <field name="bank_id" />
                             <field name="acc_number" />
+                            <field name="aba_routing" />
                             <field name="acc_holder_name" invisible="1" />
-                            <field name="bank_bic" />
-                            <field name="bank_transit_no" />
+                            <!-- <field name="bank_bic" />
+                            <field name="bank_transit_no" /> -->
                             <field name="bamboraeft_account_type" />
                             <field name="bamboraeft_country_type"/>
                             <!-- <field name="bamboraeft_customer_code"/> -->
@@ -61,6 +62,7 @@
                     </header>
                 </xpath> -->
                 <xpath expr="//field[@name='acc_number']" position="after">
+                    
                     <field name="bamboraeft_account_type" />
                     <field name="bamboraeft_country_type"/>
                 </xpath>

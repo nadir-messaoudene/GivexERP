@@ -61,14 +61,13 @@ class AccountInvoiceBatchPayment(models.Model):
         tx = pay_trx.search([("reference", "=", record.name)], limit=1)
         if tx:
             raise UserError(_("%s Record already in transaction process") % record.name)
-        # if (
-        #     not record.invoice_partner_bank_id.acc_number
-        #     or not record.bambora_bank_identifier_number
-        #     or not record.bambora_bank_transit_number
-        #     or not record.bambora_bank_identifier_number.isdigit()
-        #     or not record.bambora_bank_transit_number.isdigit()
-        # ):
-        #     raise UserError(_("Please Add Full Account Information for  %s") % record.name)
+        if (
+            not record.invoice_partner_bank_id.acc_number
+            or not record.invoice_partner_bank_id.bamboraeft_account_type
+            or not record.invoice_partner_bank_id.bamboraeft_country_type
+            or not record.invoice_partner_bank_id.aba_routing
+        ):
+            raise UserError(_("Please Add Full Account Information for  %s") % record.name)
         elif record.state == "draft":
             raise UserError(_("Please only sent posted entries!! %s") % record.name)
         elif record.invoice_payment_state == "paid":
@@ -121,8 +120,7 @@ class AccountInvoiceBatchPayment(models.Model):
                             transaction_type,#Transaction type
                             record.invoice_partner_bank_id.aba_routing,#Transit Routing Number - The 9-digit transit number
                             record.invoice_partner_bank_id.acc_number,#Account Number - The 5-15 digit account number
-                            # record.invoice_partner_bank_id.bamboraeft_account_type,#Account Code - Designates the type of bank account 
-                            "PC",
+                            record.invoice_partner_bank_id.bamboraeft_account_type,#Account Code - Designates the type of bank account 
                             round(record.amount_total * 100),#Amount - Transaction amount in pennies
                             record.name,#Reference number - An optional reference number of up to 19 digits. If you don't want a reference number, enter "0" (zero).
                             record.partner_id.name,#Recipient Name - Full name of the bank account holder
