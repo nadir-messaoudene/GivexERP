@@ -45,13 +45,11 @@ def get_random_string(length):
     result_str = "".join(random.choice(letters) for i in range(length))
     return result_str
 
-
 def get_authorization(merchant_id, api_key):
     message = merchant_id + ":" + api_key
     base64_bytes = base64.b64encode(message.encode("ascii"))
     base64_message = base64_bytes.decode("ascii")
     return base64_message
-
 
 def get_headers(merchant_id, api_key):
     headers = {
@@ -113,11 +111,17 @@ class AcquirerBamboraEft(models.Model):
             if rec.provider == "bamboraeft" and rec.payment_flow != "s2s":
                 raise UserError(_("Bambora EFT cannot be configured with `Redirection to the acquirer website`."))
 
-    @api.onchange("bamboraeft_create_profile")
-    def _onchange_bamboraeft_create_profile(self):
+    # @api.onchange("bamboraeft_create_profile")
+    # def _onchange_bamboraeft_create_profile(self):
+    #     for rec in self:
+    #         if rec.bamboraeft_create_profile:
+    #             raise UserError(_("Bambora EFT cannot be configured with `Create Profile.`."))
+
+    @api.onchange("bamboraeft_transaction_type")
+    def _onchange_bamboraeft_transaction_type(self):
         for rec in self:
-            if rec.bamboraeft_create_profile:
-                raise UserError(_("Bambora EFT cannot be configured with `Create Profile.`."))
+            if rec.bamboraeft_transaction_type != "A":
+                raise UserError(_("Bambora EFT can be only be configured with `ACH`."))
 
 
     batches_count = fields.Integer(string="Batch Count", compute="compute_batches")
@@ -229,17 +233,29 @@ class AcquirerBamboraEft(models.Model):
 
         values["bamboraeft_tran_type"] = "card" if data.get("bamboraTran") == "on" else "bank"
         if self.bamboraeft_create_profile:
-            pro_data = {
-                "language": "en",
-                "comments": comments,
-                "bank_account": {
-                    "bank_account_holder": data.get("acc_holder_name"),
-                    "account_number": data.get("acc_number"),
-                    "bank_account_type": data.get("bank_account_type"),
-                    "institution_number": data.get("institution_number"),
-                    "branch_number": data.get("branch_number"),
-                },
-            }
+            if self.bamboraeft_transaction_type == 'E':
+                pro_data = {
+                    "language": "en",
+                    "comments": comments,
+                    "bank_account": {
+                        "bank_account_holder": data.get("acc_holder_name"),
+                        "account_number": data.get("acc_number"),
+                        "bank_account_type": data.get("bank_account_type"),
+                        "institution_number": data.get("institution_number"),
+                        "branch_number": data.get("branch_number"),
+                    },
+                }
+            else:
+                pro_data = {
+                    "language": "en",
+                    "comments": comments,
+                    "bank_account": {
+                        "bank_account_holder": data.get("acc_holder_name"),
+                        "account_number": data.get("acc_number"),
+                        "bank_account_type": data.get("account_type"),
+                        "routing_number": data.get("aba_routing"),
+                    },
+                }
 
             headers = get_headers(data.get("bamboraeft_merchant_id"), data.get("bamboraeft_profile_api"))
             
@@ -275,7 +291,8 @@ class AcquirerBamboraEft(models.Model):
                 bank_account_vals["acc_number"] = data["acc_number"]
                 bank_account_vals["acc_type"] = "normal"
                 bank_account_vals["bank_bic"] = data["institution_number"]
-                bank_account_vals["bank_transit_no"] = data["branch_number"]
+                # bank_account_vals["bank_transit_no"] = data["branch_number"]
+                bank_account_vals["aba_routing"] = data["branch_number"]
                 bank_account_vals["partner_id"] = partner.id
                 bank_account_vals["bank_id"] = bank_id.id
                 invoice_partner_bank_id = (
@@ -385,33 +402,65 @@ class AcquirerBamboraEft(models.Model):
                 data["charge_total"] = order.amount_total
         error = {}
 
-        if data.get("bamboraTran") == "on":
-            _logger.info("\nPayment by Card")
-            mandatory_fields = [
-                "acquirer_id",
-                "acquirer_state",
-                "bamboraeft_merchant_id",
-                "bamboraeft_batch_api",
-                "bamboraeft_report_api",
-                "cc_number",
-                "cc_holder_name",
-                "cc_expiry",
-                "cvc",
-            ]
+        if self.bamboraeft_transaction_type == 'E':
+            if data.get("bamboraTran") == "on":
+                _logger.info("\nPayment by Card")
+                mandatory_fields = [
+                    "acquirer_id",
+                    "acquirer_state",
+                    "bamboraeft_merchant_id",
+                    "bamboraeft_batch_api",
+                    "bamboraeft_report_api",
+                    "cc_number",
+                    "cc_holder_name",
+                    "cc_expiry",
+                    "cvc",
+                ]
+            else:
+                mandatory_fields = [
+                    "acquirer_id",
+                    "acquirer_state",
+                    "bamboraeft_merchant_id",
+                    "bamboraeft_batch_api",
+                    "bamboraeft_report_api",
+                    "acc_holder_name",
+                    "acc_number",
+                    "bank_account_type",
+                    "institution_number",
+                    "branch_number",
+                    "bank_name",
+                ]
+
         else:
-            mandatory_fields = [
-                "acquirer_id",
-                "acquirer_state",
-                "bamboraeft_merchant_id",
-                "bamboraeft_batch_api",
-                "bamboraeft_report_api",
-                "acc_holder_name",
-                "acc_number",
-                "bank_account_type",
-                "institution_number",
-                "branch_number",
-                "bank_name",
-            ]
+            if data.get("bamboraTran") == "on":
+                _logger.info("\nPayment by Card")
+                mandatory_fields = [
+                    "acquirer_id",
+                    "acquirer_state",
+                    "bamboraeft_merchant_id",
+                    "bamboraeft_batch_api",
+                    "bamboraeft_report_api",
+                    "cc_number",
+                    "cc_holder_name",
+                    "cc_expiry",
+                    "cvc",
+                ]
+            else:
+                _logger.info("\nPayment by ACH")
+                mandatory_fields = [
+                    "acquirer_id",
+                    "acquirer_state",
+                    "bamboraeft_merchant_id",
+                    "bamboraeft_batch_api",
+                    "bamboraeft_report_api",
+                    "bank_name",
+                    "acc_holder_name",
+                    "acc_number",
+                    "aba_routing",
+                    "country_type",
+                    "account_type",
+                ]
+
 
         if "/payment_method" not in request.params.get("window_href"):
             mandatory_fields += ["order_name", "charge_total"]
@@ -852,7 +901,7 @@ class Txbambora(models.Model):
                 if self.payment_token_id.invoice_partner_bank_id:
                     ipb_id = self.payment_token_id.invoice_partner_bank_id
                     if not data.get('institution_number'):
-                        data["institution_number"] = ipb_id.bank_transit_no
+                        data["institution_number"] = ipb_id.aba_routing
                     if not data.get('branch_number'):
                         data["branch_number"] = ipb_id.bank_bic
                     if not data.get('acc_number'):

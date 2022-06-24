@@ -45,27 +45,66 @@
                         <input type="hidden" name="order_name" t-att-value="invoice_rec.name"/>
                     </t>
                 </t>
-                <div id="bamboraPayBank" t-attf-class="row mt8 #{'' if bootstrap_formatting else 'o_card_brand_detail'}">
-                    <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="bankName" >
-                        <input type="text" name="bank_name" id="bank_name" class="form-control bamboraeft_bank_name" placeholder="Bank Name" data-is-required="true"/>
+                <t t-if="acq.bamboraeft_transaction_type == 'E'">
+                    <div id="bamboraPayBank" t-attf-class="row mt8 #{'' if bootstrap_formatting else 'o_card_brand_detail'}">
+                        <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="bankName" >
+                            <input type="text" name="bank_name" id="bank_name" class="form-control bamboraeft_bank_name" placeholder="Bank Name" data-is-required="true"/>
+                        </div>
+                        <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="bankAccountHolder" >
+                            <input type="text" name="acc_holder_name" id="acc_holder_name" class="form-control bamboraeft_acc_holder_name" placeholder="Account Holder Name" data-is-required="true"/>
+                        </div>
+                        <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="accountNumber" >
+                            <input type="text" name="acc_number" id="acc_number" class="form-control bamboraeft_acc_number" placeholder="Bank Account No." data-is-required="true"/>
+                        </div>
+                        <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="bankAccountType" >
+                            <input type="text" name="bank_account_type" id="bank_account_type" class="form-control bamboraeft_bank_account_type" placeholder="Bank Account type(eg: Canadian)" data-is-required="true"/>
+                        </div>
+                        <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="institutionNumber" >
+                            <input type="text" name="institution_number" id="institution_number" class="form-control bamboraeft_institution_number" placeholder="Institution Number (3 Digits)" data-is-required="true"/>
+                        </div>
+                        <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="branchNumber" >
+                            <input type="text" name="branch_number" id="branch_number" class="form-control bamboraeft_branch_number" placeholder="Bank Transit number (5 Digits)" data-is-required="true"/>
+                        </div>
                     </div>
-                    <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="bankAccountHolder" >
-                        <input type="text" name="acc_holder_name" id="acc_holder_name" class="form-control bamboraeft_acc_holder_name" placeholder="Account Holder Name" data-is-required="true"/>
+                </t>
+                <t t-else="">
+                    <div id="bamboraPayBank" t-attf-class="row mt8 #{'' if bootstrap_formatting else 'o_card_brand_detail'}">
+                        <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="bankName" >
+                            <input type="text" name="bank_name" id="bank_name" class="form-control bamboraeft_bank_name" placeholder="Bank Name" data-is-required="true"/>
+                        </div>
+                        <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="bankAccountHolder" >
+                            <input type="text" name="acc_holder_name" id="acc_holder_name" class="form-control bamboraeft_acc_holder_name" placeholder="Account Holder Name" data-is-required="true"/>
+                        </div>
+                        <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="accountNumber" >
+                            <input type="text" name="acc_number" id="acc_number" class="form-control bamboraeft_acc_number" placeholder="Bank Account No.(eg: 256072691)" data-is-required="true"/>
+                        </div>
+                        <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="abaRouting" >
+                            <input type="text" name="aba_routing" id="aba_routing" class="form-control bamboraeft_aba_routing" placeholder="ABA/Routing .(eg: 2025463767)" data-is-required="true"/>
+                        </div>
+                        <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="countryType" >
+                            <input type="text" name="country_type" id="country_type" class="form-control bamboraeft_country_type" placeholder="Country Type(eg: American)" data-is-required="true"/>
+                        </div>
+                        <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="accountType" >
+                            <input type="text" name="account_type" id="account_type" class="form-control bamboraeft_account_type" placeholder="Bank Account Type(eg: PC)" data-is-required="true"/>
+                        </div>
+                        <!-- <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="bamboraeftCountryType" >
+                            <label for="country_type">Country Type(eg: American)</label>
+                            <select class='country_type' name="country_type" id="country_type" data-is-required="true">
+                                <option value="american">American</option>
+                                <option value="canadian">Canadian</option>
+                            </select>
+                        </div>
+                        <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="bankAccountType" >
+                            <label for="account_type">Bank Account Type(eg: PC)</label>
+                            <select class='country_type' name="account_type" id="account_type" data-is-required="true">
+                                <option value="PC">Personal Checking</option>
+                                <option value="PS">Personal Savings</option>
+                                <option value="CC">Corporate Checking</option>
+                                <option value="CS">Corporate Savings</option>
+                            </select>
+                        </div> -->
                     </div>
-                    <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="accountNumber" >
-                        <input type="text" name="acc_number" id="acc_number" class="form-control bamboraeft_acc_number" placeholder="Bank Account No." data-is-required="true"/>
-                    </div>
-                    <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="bankAccountType" >
-                        <input type="text" name="bank_account_type" id="bank_account_type" class="form-control bamboraeft_bank_account_type" placeholder="Bank Account type(eg: Canadian)" data-is-required="true"/>
-                    </div>
-                    <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="institutionNumber" >
-                        <input type="text" name="institution_number" id="institution_number" class="form-control bamboraeft_institution_number" placeholder="Institution Number (3 Digits)" data-is-required="true"/>
-                    </div>
-                    <div t-att-class="'form-group col-lg-6' if bootstrap_formatting else 'form-group'" id="branchNumber" >
-                        <input type="text" name="branch_number" id="branch_number" class="form-control bamboraeft_branch_number" placeholder="Bank Transit number (5 Digits)" data-is-required="true"/>
-                    </div>
-                </div>
-
+                </t>
             </div>
 		</template>
 	
@@ -193,7 +232,7 @@
                             <field name="bamboraeft_batch_api"  attrs="{'required':[('provider', '=', 'bamboraeft'), ('state', '!=', 'disabled')]}"/>
                             <field name="bamboraeft_report_api"  attrs="{'required':[('provider', '=', 'bamboraeft'), ('state', '!=', 'disabled')]}"/>
                             <field name="bamboraeft_transaction_type"  attrs="{'required':[('provider', '=', 'bamboraeft'), ('state', '!=', 'disabled')]}"/>
-                            <field name="bamboraeft_create_profile"  attrs="{'required':[('provider', '=', 'bamboraeft'), ('state', '!=', 'disabled')]}"/>
+                            <!-- <field name="bamboraeft_create_profile"  attrs="{'required':[('provider', '=', 'bamboraeft'), ('state', '!=', 'disabled')]}"/> -->
                         </group>
                     </group>
                 </xpath>

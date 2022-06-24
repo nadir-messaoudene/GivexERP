@@ -23,11 +23,12 @@ server_serie = version_info.get("server_serie")
 BATCH_API = "https://api.na.bambora.com/v1/batchpayments"
 REPORT_API = "https://api.na.bambora.com/scripts/reporting/report.aspx"
 PROFILE_URL = "https://api.na.bambora.com/v1/profiles"
-ACCOUNT_TYPE = [
+
+BAMBORAEFT_COUNTRY_TYPE = [
     ('canadian', 'Canadian'),
     ('american', 'American')
 ]
-ACCOUNT_CODE = [
+BANK_ACCOUNT_TYPE = [
     ('PC', 'Personal Checking'),
     ('PS', 'Personal Savings'),
     ('CC', 'Corporate Checking'),
@@ -90,23 +91,21 @@ class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
 
     partner_id = fields.Many2one('res.partner', 'Account Holder', ondelete='cascade', index=True, domain=[], required=True)
-    bamboraeft_account_code = fields.Selection(
-        string='Account Code',
-        selection=ACCOUNT_CODE,
+
+    bamboraeft_account_type = fields.Selection(
+        string='Bank Account Type',
+        selection=BANK_ACCOUNT_TYPE,
         default='PC'
     )
     bank_transit_no = fields.Char(
         string="Bank Transit No",
     )
     bamboraeft_customer_code = fields.Char(
-        string="Bamora Profile No",
+        string="Bambora Profile No",
     )
-    # bank_account_type = fields.Char(
-    #     string="Account Type",
-    # )
-    bank_account_type = fields.Selection(
+    bamboraeft_country_type = fields.Selection(
         string='Account Type',
-        selection=ACCOUNT_TYPE,
+        selection=BAMBORAEFT_COUNTRY_TYPE,
         default='american'
     )
     payment_token_id = fields.Many2one(
@@ -176,31 +175,44 @@ class ResPartnerBank(models.Model):
         for rec in self:
             if (
                 not rec.acc_number
-                or not rec.bank_transit_no
+                or not rec.bamboraeft_account_type
+                or not rec.bamboraeft_country_type
                 or not rec.bank_id
-                or not rec.bank_id.bic
-                or not rec.bank_account_type
+                or not rec.aba_routing
             ):
                 raise ValidationError(
-                    _("Please provide Account Number, Bank Transir Number, Bank Id , Bank BIC and Bank Account Type")
+                    _("Please provide Account Number, Account Type, Account Code, ABA/Routing and Bank ")
                 )
 
             domain = [("company_id", "in", rec.company_id.ids)]
             domain += [("provider", "=", "bamboraeft")]
             acq = self.env["payment.acquirer"].sudo().search(domain, limit=1)
             if acq and acq.bamboraeft_create_profile:
-                comments = "Create Token for Customer-%s, %s" % (rec.partner_id, "bank")
-                pro_data = {
-                    "language": "en",
-                    "comments": comments,
-                    "bank_account": {
-                        "bank_account_holder": rec.acc_holder_name,
-                        "account_number": rec.acc_number,
-                        "bank_account_type": rec.bank_account_type,
-                        "institution_number": rec.bank_id.bic,
-                        "branch_number": rec.bank_transit_no,
-                    },
-                }
+                comments = "Create Token for Customer-%s(%s), %s" % (rec.partner_id.name, rec.partner_id.id, "bank")
+                if acq.bamboraeft_transaction_type == 'E':
+                    pro_data = {
+                        "language": "en",
+                        "comments": comments,
+                        "bank_account": {
+                            "bank_account_holder": rec.acc_holder_name,
+                            "account_number": rec.acc_number,
+                            "bank_account_type": rec.bamboraeft_country_type,
+                            "institution_number": rec.bank_id.bic,
+                            "branch_number": rec.bank_transit_no,
+                        },
+                    }
+                else:
+                    pro_data = {
+                            "language": "en",
+                            "comments": comments,
+                            "bank_account": {
+                                "bank_account_holder": rec.acc_holder_name,
+                                "account_number": rec.acc_number,
+                                "routing_number": rec.aba_routing,
+                                "bank_account_type": rec.bamboraeft_country_type,
+                                "account_type": rec.bamboraeft_account_type,
+                            },
+                        }
 
                 _logger.info(pprint.pformat(pro_data))
                 headers = get_headers(acq.bamboraeft_merchant_id, acq.bamboraeft_profile_api)

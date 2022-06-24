@@ -313,7 +313,7 @@ class BamboraEftForm(BamboraEftCommon):
             "bank_name": "Royal Bank of Canada",
             "acc_holder_name": "Patricia C Gregg",
             "acc_number": "00001",
-            "bank_account_type": "Canadian",
+            "bamboraeft_account_type": "Canadian",
             "institution_number": "12773",
             "branch_number": "127",
         }

@@ -6,10 +6,7 @@
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
             <xpath expr="//page[last()]" position="after">
-                <page
-          string="Bambora Payment"
-          attrs="{ 'invisible':[('state','in',('draft','cancel'))] }"
-        >
+                <page string="Bambora Payment" attrs="{ 'invisible':[('state','in',('draft','cancel'))] }">
                     <group>
                         <field name="batch_id" readonly="1" />
                         <field name="bambora_batch_payment_id" readonly="1" />

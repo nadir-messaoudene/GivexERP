@@ -22,8 +22,8 @@
                             <field name="acc_holder_name" invisible="1" />
                             <field name="bank_bic" />
                             <field name="bank_transit_no" />
-                            <field name="bank_account_type" />
-                            <field name="bamboraeft_account_code"/>
+                            <field name="bamboraeft_account_type" />
+                            <field name="bamboraeft_country_type"/>
                             <!-- <field name="bamboraeft_customer_code"/> -->
                         </tree>
                     </field>
@@ -55,15 +55,14 @@
             <field name="model">res.partner.bank</field>
             <field name="inherit_id" ref="base.view_partner_bank_form" />
             <field name="arch" type="xml">
-                <xpath expr="//form//sheet" position="before">
+                <!-- <xpath expr="//form//sheet" position="before">
                     <header>
                         <button string="Create Bambora Profile" type="object" name="action_create_bamboraeft_token" class="btn btn-primary" attrs="{ 'invisible' : [('bamboraeft_status','=',False)] }" />
                     </header>
-                </xpath>
+                </xpath> -->
                 <xpath expr="//field[@name='acc_number']" position="after">
-                    <field name="bank_transit_no" />
-                    <field name="bank_account_type" />
-                    <field name="bamboraeft_account_code"/>
+                    <field name="bamboraeft_account_type" />
+                    <field name="bamboraeft_country_type"/>
                 </xpath>
                 <xpath expr="//field[@name='acc_holder_name']" position="after">
                     <field name="payment_token_id" domain="[('partner_id','=',partner_id)]" />
