@@ -183,8 +183,8 @@ class BatchPaymentTracking(models.Model):
 
                     ################################################
                     #Vendor Bill Testing
-                    # if data["batchId"] in [10000024]:
-                    #     data["stateName"] = "Complete"
+                    if data["batchId"] in [10000030]:
+                        data["stateName"] = "Complete"
                     ################################################
 
                     if rec and not rec.state == "complete":
