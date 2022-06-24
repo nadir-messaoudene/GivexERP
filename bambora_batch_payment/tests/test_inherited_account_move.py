@@ -169,17 +169,6 @@ class TestInheritedAccountMove(TransactionCase):
         # with self.assertRaises(Exception) as context:
         self.invoice.invoice_partner_bank_id.bank_bic = "123"
         self.invoice.action_register_bambora_batch_payment()
-
-        # ================== ALL TEST CASES =================
-        #     try:
-        #         if context.exception:
-        #             self.assertNotEqual('Please Add Full Account Information for %s'%invoice.name ,context.exception.name,msg="UserError")
-        #             self.assertNotEqual('Please only sent posted entries!! %s'%invoice.name ,context.exception.name,msg="UserError")
-        #             self.assertNotEqual('%s invoice Already Paid!!'%invoice.name ,context.exception.name,msg="UserError")
-        #             self.assertNotEqual('Bank identifier must be 3 digit and transit number is 5 digit!!. For %s'%invoice.name ,context.exception.name,msg="UserError")
-        #             self.assertNotEqual('Check Credentials !',context.exception.name,msg="UserError")
-        #             self.assertNotEqual('Internal Error.',context.exception.name,msg="UserError")
-        #     except:
         self.assertIsNotNone(self.invoice.bambora_batch_payment_id, msg="Not Pass")
         self.assertIsNotNone(self.invoice.batch_id, msg="Pass")
         self.assertIs(self.invoice.bambora_batch_state, "scheduled", msg="Not Pass")

@@ -61,14 +61,14 @@ class AccountInvoiceBatchPayment(models.Model):
         tx = pay_trx.search([("reference", "=", record.name)], limit=1)
         if tx:
             raise UserError(_("%s Record already in transaction process") % record.name)
-        if (
-            not record.invoice_partner_bank_id.acc_number
-            or not record.bambora_bank_identifier_number
-            or not record.bambora_bank_transit_number
-            or not record.bambora_bank_identifier_number.isdigit()
-            or not record.bambora_bank_transit_number.isdigit()
-        ):
-            raise UserError(_("Please Add Full Account Information for  %s") % record.name)
+        # if (
+        #     not record.invoice_partner_bank_id.acc_number
+        #     or not record.bambora_bank_identifier_number
+        #     or not record.bambora_bank_transit_number
+        #     or not record.bambora_bank_identifier_number.isdigit()
+        #     or not record.bambora_bank_transit_number.isdigit()
+        # ):
+        #     raise UserError(_("Please Add Full Account Information for  %s") % record.name)
         elif record.state == "draft":
             raise UserError(_("Please only sent posted entries!! %s") % record.name)
         elif record.invoice_payment_state == "paid":
