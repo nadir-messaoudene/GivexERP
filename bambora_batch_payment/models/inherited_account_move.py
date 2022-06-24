@@ -115,13 +115,14 @@ class AccountInvoiceBatchPayment(models.Model):
                     #     Entry Detail Addenda Record - Leave blank unless your account has SEC code permissions enabled.
                     ################################################################################
                     ################################################################################
-                    
+                    # print dict(self._fields['type'].selection).get(self.type)
                     data = [
                             "A",#Transaction type
                             transaction_type,#Transaction type
-                            record.invoice_partner_bank_id.bank_transit_no,#Transit Routing Number - The 9-digit transit number
+                            record.invoice_partner_bank_id.aba_routing,#Transit Routing Number - The 9-digit transit number
                             record.invoice_partner_bank_id.acc_number,#Account Number - The 5-15 digit account number
-                            record.invoice_partner_bank_id.bamboraeft_account_code,#Account Code - Designates the type of bank account 
+                            # record.invoice_partner_bank_id.bamboraeft_account_type,#Account Code - Designates the type of bank account 
+                            "PC",
                             round(record.amount_total * 100),#Amount - Transaction amount in pennies
                             record.name,#Reference number - An optional reference number of up to 19 digits. If you don't want a reference number, enter "0" (zero).
                             record.partner_id.name,#Recipient Name - Full name of the bank account holder

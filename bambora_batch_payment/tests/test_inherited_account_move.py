@@ -155,13 +155,11 @@ class TestInheritedAccountMove(TransactionCase):
         self.invoice.bambora_batch_payment_id._batch_data_update(
             response_dict, acquirers
         )
-
         self.assertEqual(
             self.invoice.bambora_batch_payment_id.state, "complete", msg="Not Pass"
         )
         self.assertEqual(self.invoice.invoice_payment_state, "paid", msg="Not Pass")
 
-        print("***********************************")
 
     def test_action_register_batch_vendor_reject_report(self):
 
@@ -173,17 +171,10 @@ class TestInheritedAccountMove(TransactionCase):
         self.assertIsNotNone(self.invoice.batch_id, msg="Pass")
         self.assertIs(self.invoice.bambora_batch_state, "scheduled", msg="Not Pass")
         self.assertEqual(self.invoice.invoice_payment_state, "not_paid", msg="Not Pass")
-
-        print("*******************BAMBORA REGISTER TEST COMPLETE****************")
-
-        print("*******************BAMBORA BATCH DATA UPDATE DONE****************")
-
         domain = [("provider", "=", "bamboraeft")]
         domain += [("state", "!=", "disabled")]
         acquirers = self.env["payment.acquirer"].sudo().search(domain)
         bambora_batch_payment = self.invoice.bambora_batch_payment_id
-
-        print("*******************Report API Cancel Data ****************")
 
         test_response = (
             '{"response": {"version": "1.0", "code": 1, "message": "Report generated", "records": {"total": 0}, "record": [{"rowId": 0, "merchantId": 383610231, "batchId": %s, "transId": 761, "itemNumber": 1, "payeeName": "Deco Addict", "reference": "%s", "operationType": "D", "amount": 78750, "stateId": 2, "stateName": "Rejected", "statusId": 1, "statusName": "Validated/Approved", "bankDescriptor": "", "messageId": "", "customerCode": "", "settlementDate": "2021-11-08", "returnedDate": "", "returnType": "", "eftId": 0}]}}'
