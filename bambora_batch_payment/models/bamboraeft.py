@@ -111,11 +111,11 @@ class AcquirerBamboraEft(models.Model):
             if rec.provider == "bamboraeft" and rec.payment_flow != "s2s":
                 raise UserError(_("Bambora EFT cannot be configured with `Redirection to the acquirer website`."))
 
-    # @api.onchange("bamboraeft_create_profile")
-    # def _onchange_bamboraeft_create_profile(self):
-    #     for rec in self:
-    #         if rec.bamboraeft_create_profile:
-    #             raise UserError(_("Bambora EFT cannot be configured with `Create Profile.`."))
+    @api.onchange("bamboraeft_create_profile")
+    def _onchange_bamboraeft_create_profile(self):
+        for rec in self:
+            if rec.bamboraeft_create_profile:
+                raise UserError(_("Bambora EFT cannot be configured with `Create Profile.`."))
 
     @api.onchange("bamboraeft_transaction_type")
     def _onchange_bamboraeft_transaction_type(self):
