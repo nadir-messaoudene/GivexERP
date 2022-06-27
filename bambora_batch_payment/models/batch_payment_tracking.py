@@ -62,6 +62,7 @@ class BatchPaymentTracking(models.Model):
     )
     acquirer_id = fields.Many2one("payment.acquirer", "Acquirer")
 
+
     def _create_payment_vals(self, move_id, acquirers):
         pay_mthd = self.env["account.payment.method"].sudo()
         if move_id.type == "out_invoice":
@@ -230,8 +231,6 @@ class BatchPaymentTracking(models.Model):
             rpt_version = rec_aq.bamboraeft_report_api_version
             merchant_id = rec_aq.bamboraeft_merchant_id
             cron_interval = rec_aq.bambora_record_interval
-            # current_datetime = datetime.datetime.today()
-            # previous_datetime = (current_datetime - datetime.timedelta(days=20)).replace(hour=00, minute=00, second=1)
 
             # -------------------- Cron Handle Part--------------------------------
             start, end, max_trasaction, min_trasaction,is_batch_id = self._cron_check(cron_interval)
