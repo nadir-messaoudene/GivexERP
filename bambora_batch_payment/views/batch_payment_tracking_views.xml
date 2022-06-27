@@ -70,12 +70,14 @@
             </field>
         </record>
 
-        <menuitem
-      id="batch_payment_configuration_menu"
-      action="action_batch_payment"
-      parent="account.menu_finance_payables"
-      sequence="30"
-    />
+        <menuitem id="batch_payment_configuration_menu"
+            action="action_batch_payment"
+            parent="account.menu_finance_payables"
+            sequence="19" />
+
+        <menuitem id="bambora_batch_customer_menu" name="Bambora Batch Payments"
+            parent="account.menu_finance_receivables"
+            action="action_batch_payment" sequence="19"/>
 
     </data>
 </odoo>

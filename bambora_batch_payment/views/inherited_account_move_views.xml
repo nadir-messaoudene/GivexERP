@@ -25,8 +25,9 @@
                     <field name="invoice_partner_bank_id" attrs="{'domain': [('partner_id', '=', partner_id)], 'readonly': [('state', '!=', 'draft')]}" />
                 </field> -->
                 <field name="invoice_partner_bank_id" position="after">
-                    <field name="bambora_bank_identifier_number" />
-                    <field name="bambora_bank_transit_number" />
+                    <field name="bambora_aba_routing"/>
+                    <!-- <field name="bambora_bank_identifier_number" attrs="{'invisible': [('partner_id', '=', partner_id)]= }" /> -->
+                    <!-- <field name="bambora_bank_transit_number" attrs="{'domain': [('partner_id', '=', partner_id)] }" /> -->
                     <field name="bambora_batch_payment_id" />
                 </field>
             </field>

@@ -50,6 +50,9 @@ class AccountInvoiceBatchPayment(models.Model):
     bambora_bank_transit_number = fields.Char(
         "Bank Transit No.", related="invoice_partner_bank_id.bank_transit_no", readonly=True
     )
+    bambora_aba_routing = fields.Char(
+        "ABA/Routing", related="invoice_partner_bank_id.aba_routing", readonly=True
+    )
 
     def check_conditions(self, record, acquirers):
         if record.type == "out_invoice":

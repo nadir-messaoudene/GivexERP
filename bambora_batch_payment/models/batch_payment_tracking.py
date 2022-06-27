@@ -62,9 +62,6 @@ class BatchPaymentTracking(models.Model):
     )
     acquirer_id = fields.Many2one("payment.acquirer", "Acquirer")
 
-    # Customers
-    # customer_rank = fields.Integer('Customer Rank', related='invoice_partner_id.customer_rank')
-
     def _create_payment_vals(self, move_id, acquirers):
         pay_mthd = self.env["account.payment.method"].sudo()
         if move_id.type == "out_invoice":
@@ -183,7 +180,7 @@ class BatchPaymentTracking(models.Model):
 
                     ################################################
                     #Vendor Bill Testing
-                    if data["batchId"] in [10000030]:
+                    if data["batchId"] in [	10000032]:
                         data["stateName"] = "Complete"
                     ################################################
 
@@ -241,16 +238,6 @@ class BatchPaymentTracking(models.Model):
 
             # -------------------- X Cron Handle Part X--------------------------------
 
-            # data = """<?xml version="1.0" encoding="utf-8"?><request><rptVersion>%s</rptVersion><serviceName>%s</serviceName><merchantId>%s</merchantId><passCode>%s</passCode><sessionSource>external</sessionSource><rptFormat>JSON</rptFormat><rptFilterBy1>trans_id</rptFilterBy1><rptOperationType1>GE</rptOperationType1><rptFilterValue1>1</rptFilterValue1><rptAddCondition1>AND</rptAddCondition1><rptFilterBy2>trans_id</rptFilterBy2><rptOperationType2>LE</rptOperationType2><rptFilterValue2>10</rptFilterValue2></request>""" % (
-            #     rpt_version,
-            #     service_name,
-            #     merchant_id,
-            #     pass_code,
-            #     # start,
-            #     # end,
-            #     # max_trasaction,
-            #     # max_trasaction + cron_interval,
-            # )
             if is_batch_id:
                 data = """<?xml version="1.0" encoding="utf-8"?><request><rptVersion>%s</rptVersion><serviceName>%s</serviceName><merchantId>%s</merchantId><passCode>%s</passCode><sessionSource>external</sessionSource><rptFormat>JSON</rptFormat><rptFilterBy1>batch_id</rptFilterBy1><rptOperationType1>GE</rptOperationType1><rptFilterValue1>%s</rptFilterValue1><rptAddCondition1>AND</rptAddCondition1><rptFilterBy2>batch_id</rptFilterBy2><rptOperationType2>LE</rptOperationType2><rptFilterValue2>%s</rptFilterValue2></request>""" % (
                     rpt_version,
@@ -259,8 +246,6 @@ class BatchPaymentTracking(models.Model):
                     pass_code,
                     start,
                     end,
-                    # max_trasaction,
-                    # max_trasaction + cron_interval,
                 )
             else:
 
@@ -275,6 +260,7 @@ class BatchPaymentTracking(models.Model):
                     max_trasaction + cron_interval,
                 )
             _logger.info(data)
+
             try:
                 response = requests.post(REPORT_API, headers=header, data=data)
                 response_dict = json.loads(response.text)
@@ -467,63 +453,32 @@ class BatchPaymentTracking(models.Model):
         if server_serie == "13.0":
             if not move_id.invoice_origin and move_id.invoice_payment_state == "not_paid":
                 if move_id.state == "posted":
-                    acc_pay = self.env["account.payment"].sudo()
-                    pay_id = acc_pay.search(
-                        [
-                            ("amount", "=", move_id.amount_total),
-                            ("payment_reference", "=", move_id.name),
-                        ],
-                        limit=1,
-                    )
-                    if len(pay_id) == 0:
-                        payment_vals = self._create_payment_vals(move_id, acquirers)
-                        pay_id = acc_pay.create(payment_vals)
-
-                    if len(pay_id) == 1:
-                        pay_id.write({"payment_reference": move_id.name}) if not pay_id.payment_reference else None
-
-                    if pay_id and pay_id.state == "draft":
-                        pay_id.post()
-
-                    if pay_id and pay_id.state == "posted":
-                        move_id.invoice_payment_state = (
-                            "paid" if move_id.invoice_payment_state != "paid" else move_id.invoice_payment_state
-                        )
-                        move_id.invoice_payment_ref = (
-                            move_id.name if not move_id.invoice_payment_ref else move_id.invoice_payment_ref
-                        )
+                    register_payment_wizard = self.env['account.payment.register'].with_context(
+                        active_model='account.move',
+                        active_ids=[move_id.id]).create({
+                        'journal_id': self.env.ref('bambora_batch_payment.bamboraeft_customer_journal').id,
+                        'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id
+                    })
+                    register_payment_wizard.create_payments()
+                    # pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.invoice', active_ids=caba_inv.ids).create({
+                    #     'payment_date': caba_inv.date,
+                    #     'journal_id': self.bank_journal_euro.id,
+                    #     'payment_method_id': self.inbound_payment_method.id,
+                    # })
+                    # pmt_wizard.create_payments()
                     _logger.info("------ Invoice Payment Success -----")
 
+
         if server_serie == "14.0":
-            if not move_id.invoice_origin and move_id.invoice_payment_state == "not_paid":
+            if not move_id.invoice_origin and move_id.payment_state == "not_paid":
                 if move_id.state == "posted":
-
-                    acc_pay = self.env["account.payment"].sudo()
-                    pay_id = acc_pay.search(
-                        [
-                            ("amount", "=", move_id.amount_total),
-                            ("payment_reference", "=", move_id.name),
-                        ],
-                        limit=1,
-                    )
-                    if len(pay_id) == 0:
-                        payment_vals = self._create_payment_vals(move_id, acquirers)
-                        pay_id = acc_pay.create(payment_vals)
-
-                    if len(pay_id) == 1:
-                        pay_id.write({"payment_reference": move_id.name}) if not pay_id.payment_reference else None
-
-                    if pay_id and pay_id.state == "draft":
-                        pay_id.action_post()
-
-                    if pay_id and pay_id.state == "posted":
-                        # move_id.payment_id = pay_id.id if len(
-                        #     move_id.payment_id) == 0 else move_id.payment_id
-                        move_id.invoice_payment_state = "paid" if move_id.invoice_payment_state != "paid" else move_id.invoice_payment_state
-                        move_id.payment_reference = (
-                            move_id.name if not move_id.payment_reference else move_id.payment_reference
-                        )
-
+                    register_payment_wizard = self.env['account.payment.register'].with_context(
+                        active_model='account.move',
+                        active_ids=[move_id.id]).create({
+                        'journal_id': self.env.ref('bambora_batch_payment.bamboraeft_customer_journal').id,
+                        'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id
+                    })
+                    register_payment_wizard._create_payments()
                     _logger.info("------ Invoice Payment Success -----")
 
     def batch_payment_cron_check_status(self):

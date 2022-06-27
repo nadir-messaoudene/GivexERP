@@ -325,6 +325,7 @@ class AcquirerBamboraEft(models.Model):
                         bank_account_vals["partner_id"] = partner.id
                         bank_account_vals["bank_id"] = bank_id.id
                         bank_account_vals["bamboraeft_customer_code"] = pro_res.json().get("customer_code")
+                        bank_account_vals["aba_routing"] = data.get('aba_routing')
                         if not invoice_partner_bank_id:
                             invoice_partner_bank_id = res_partner_bank.create(bank_account_vals)
                     else:
@@ -533,7 +534,6 @@ class Txbambora(models.Model):
     bambora_last_four = fields.Char("Last Four")
     bambora_avs_result = fields.Char("AVS Result")
     bambora_cvd_result = fields.Char("CVD Result")
-    # bamboraeft_batch_id = fields.Char(string='Batch Id')
     bamboraeft_batch_id = fields.Many2one(
         string="Batch Id",
         comodel_name="batch.payment.tracking",
@@ -784,12 +784,12 @@ class Txbambora(models.Model):
         partner_country_id = self.get_partner_id()
 
         if tree.get("code") == 1 and tree.get("batch_id"):
-            # if self.acquirer_id.debug_logging:
-            #     _logger.info("_bamboraeft_s2s_validate===>>>>>>>>")
-            #     _logger.info(pprint.pformat(tree))
-            #     _logger.info("partner_country_id===>>>>>>>>" + str(partner_country_id))
-            #     _logger.info("""Batch Payment************""")
-            #     _logger.info(str(tree.get("message")))
+            if self.acquirer_id.debug_logging:
+                _logger.info("_bamboraeft_s2s_validate===>>>>>>>>")
+                _logger.info(pprint.pformat(tree))
+                _logger.info("partner_country_id===>>>>>>>>" + str(partner_country_id))
+                _logger.info("""Batch Payment************""")
+                _logger.info(str(tree.get("message")))
 
             transaction = {}
             transaction["partner_country_id"] = self.partner_country_id or partner_country_id
@@ -1174,13 +1174,12 @@ class PaymentTokenEft(models.Model):
         ondelete="restrict",
     )
 
-class AccountPaymentRegister(models.TransientModel):
-    _inherit = "account.payment.register"
-
-    def _create_payments(self):
-        payments = super(AccountPaymentRegister, self)._create_payments()
-        if len(payments) == 1:
-            pay_txn = self.env["payment.transaction"].sudo().search([("payment_id", "=", payments.id)])
-            if pay_txn.acquirer_id.provider == "bamboraeft":
-                payments.state = "draft"
-        return payments
+# class AccountPaymentRegister(models.TransientModel):
+#     _inherit = "account.payment.register"
+#     def _create_payments(self):
+#         payments = super(AccountPaymentRegister, self)._create_payments()
+#         if len(payments) == 1:
+#             pay_txn = self.env["payment.transaction"].sudo().search([("payment_id", "=", payments.id)])
+#             if pay_txn.acquirer_id.provider == "bamboraeft":
+#                 payments.state = "draft"
+#         return payments
