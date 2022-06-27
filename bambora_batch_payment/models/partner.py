@@ -118,6 +118,7 @@ class ResPartnerBank(models.Model):
     @api.depends("company_id")
     def _compute_bamboraeft_status(self):
         for record in self:
+            record.bamboraeft_status = False
             if record.payment_token_id:
                 record.bamboraeft_status = True
             if record.company_id:
