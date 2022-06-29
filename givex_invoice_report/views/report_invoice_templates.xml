@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- report page template -->
+    <template id="invoice_print_document">
+        <t t-call="givex_invoice_report.custom_external_layout">
+            <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+            <div class="page">
+                <div class="oe_structure"/>
+
+                <div class="row">
+                    <div class="col-12">
+                        <h2 t-attf-class="text-uppercase" t-attf-style="color: #007de5; ">
+                            <span t-if="o.type == 'out_invoice' and o.state == 'posted'">Invoice</span>
+                            <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+                            <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+                            <span t-if="o.type == 'out_refund'">Credit Note</span>
+                            <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
+                            <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+                        </h2>
+                    </div>
+                </div>
+                <div t-attf-class="row pt-4">
+                    <div class="col-4">
+                        <table class="table table-sm table-borderless" t-attf-style="color: #000;">
+                            <tr>
+                                <th class="text-uppercase" t-attf-style="font-size:16px; font-weight: bold;">Bill to</th>
+                            </tr>
+                            <tr>
+                                <td class="pl-1 pt-0" t-attf-style="font-size: 16px; color: #000;">
+                                    <p class="mb-0">
+                                        <t t-if="o.partner_id.parent_id">
+                                            <span t-esc="o.partner_id.parent_id.name" />
+                                        </t>
+                                    </p>
+                                    <p class="mb-0">
+                                        <t t-if="o.partner_id.name">
+                                            Attn: <span t-esc="o.partner_id.name" />
+                                        </t>
+                                    </p>
+   
+                                    <p class="mb-0">
+                                        <span t-if="o.partner_id.street" t-esc="o.partner_id.street" /> 
+                                        <span t-if="o.partner_id.street2" t-esc="o.partner_id.street2"/>
+                                    </p>
+                                    <p class="mb-0">
+                                        <span t-if="o.partner_id.city" t-esc="o.partner_id.city"/>,  
+                                        <span t-if="o.partner_id.state_id.name" t-field="o.partner_id.state_id.name"/>, 
+                                        <span t-if="o.partner_id.zip" t-esc="o.partner_id.zip"/>
+                                    </p>
+                                    <p t-attf-class="m-0" t-if="o.partner_id.country_id.name" t-esc="o.partner_id.country_id.name"/>
+                                    <t t-if="o.partner_id.mobile">
+                                        <p t-attf-class="m-0">Mobile: <span t-field="o.partner_id.mobile"/> </p>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-if="o.partner_id.phone" >
+                                            <p t-attf-class="m-0">Phone: <span t-field="o.partner_id.phone"/> </p>
+                                        </t>
+                                    </t>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-4">
+                        <table class="table table-sm table-borderless" t-attf-style="color: #000;">
+                            <tr>
+                                <th class="text-uppercase" t-attf-style="font-size:16px; font-weight: bold;">SHIP TO</th>
+                            </tr>
+                            <tr>
+                                <td class="pl-1 pt-0" t-attf-style="font-size: 16px; color: #000;">
+                                    <t t-if="o.partner_shipping_id">
+                                
+                                        <p class="mb-0 mt-0" t-if="o.partner_shipping_id.parent_id" t-field="o.partner_shipping_id.parent_id.name"/>
+                                        
+                                        <p class="mb-0 mt-0">
+                                            <t t-if="o.partner_shipping_id.name">
+                                                Attn: <span t-esc="o.partner_shipping_id.name" />
+                                            </t>
+                                        </p>
+                                        
+                                        <p class="mb-0">
+                                            <span t-if="o.partner_shipping_id.street" t-field="o.partner_shipping_id.street" /> 
+                                            <span t-if="o.partner_shipping_id.street2" t-field="o.partner_shipping_id.street2"/>
+                                        </p>
+                                        <p class="mb-0">
+                                            <span t-if="o.partner_shipping_id.city" t-field="o.partner_shipping_id.city"/>,  
+                                            <span t-if="o.partner_shipping_id.state_id.name" t-field="o.partner_shipping_id.state_id.name"/>, 
+                                            <span t-if="o.partner_shipping_id.zip" t-field="o.partner_shipping_id.zip"/>
+                                        </p>
+                                        <p t-attf-class="m-0" t-if="o.partner_shipping_id.country_id.name" t-field="o.partner_shipping_id.country_id.name"/>
+                                        <t t-if="o.partner_shipping_id.mobile">
+                                            <p class="m-0">Mobile: <span t-field="o.partner_shipping_id.mobile"/> </p>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-if="o.partner_shipping_id.phone">
+                                                <p t-attf-class="m-0">Phone: <span t-field="o.partner_shipping_id.phone"/> </p>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <p class="mb-0">
+                                            <span t-if="o.partner_id.street" t-esc="o.partner_id.street" /> 
+                                            <span t-if="o.partner_id.street2" t-esc="o.partner_id.street2"/>
+                                        </p>
+                                        <p class="mb-0">
+                                            <span t-if="o.partner_id.city" t-esc="o.partner_id.city"/>,  
+                                            <span t-if="o.partner_id.state_id.name" t-field="o.partner_id.state_id.name"/>, 
+                                            <span t-if="o.partner_id.zip" t-esc="o.partner_id.zip"/>
+                                        </p>
+                                        <p t-attf-class="m-0" t-if="o.partner_id.country_id.name" t-esc="o.partner_id.country_id.name"/>
+                                        <t t-if="o.partner_id.mobile">
+                                            <p t-attf-class="m-0">Mobile: <span t-field="o.partner_id.mobile"/> </p>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-if="o.partner_id.phone" >
+                                                <p t-attf-class="m-0">Phone: <span t-field="o.partner_id.phone"/> </p>
+                                            </t>
+                                        </t>
+
+
+                                    </t>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-4">
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <th class="text-uppercase text-right font-weight-bolder">Invoice #</th>
+                                <td> <span t-field="o.name"/></td>
+                            </tr>
+                            <tr>
+                                <th class="text-uppercase text-right font-weight-bolder">Date</th>
+                                <td> <span t-field="o.invoice_date"/></td>
+                            </tr>
+                            <tr>
+                                <th class="text-uppercase text-right font-weight-bolder">Due Date</th>
+                                <td> <span t-field="o.invoice_date_due"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <hr t-attf-style="background: #007de5;" />
+
+                <div class="row mt-2 mb-3">
+                    <div class="col-12">
+                        <h3 t-attf-class="text-black font-weight-bolder text-uppercase" t-attf-style="font-size: 18px;">Sales Order</h3>
+                        <!-- <span t-esc="o.salesforce_so"/> -->
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
+                        <table class="table table-sm o_main_table table-borderless mb-2" name="invoice_line_table">
+                            <thead>
+                                <tr t-attf-class="text-uppercase" t-attf-style="background: #cce5fa; color: #007de5;">
+                                    <th name="th_description" class="text-left"><span>Description</span></th>
+                                    <th name="th_quantity" class="text-right"><span>Quantity</span></th>
+                                    <th name="th_priceunit" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Unit Price</span></th>
+                                    <th name="th_terms" class="text-right"><span>Term</span></th>
+                                    <th name="th_subtotal" class="text-right">
+                                        <span groups="account.group_show_line_subtotals_tax_excluded">Amount</span>
+                                        <span groups="account.group_show_line_subtotals_tax_included">Total Price</span>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="invoice_tbody">
+                                <t t-set="current_subtotal" t-value="0"/>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div t-attf-class="row mt-2">
+                    <div class="col-7">
+                        <t t-if="o.type == 'out_invoice'">
+                            <!-- <t t-if="o.sf_in_service_date">
+                                <p>In Service Date: <span t-field="o.sf_in_service_date"/></p>        
+                            </t>
+                            <t t-else="lead.sf_in_service_date">
+                                <p>In Service Date: <span t-field="lead.sf_in_service_date"/></p>
+                            </t> -->
+                        </t>
+                        <t t-if="o.type == 'out_refund'">
+                            <t t-if="o.invoice_doc_no">
+                                <t t-set="customer_invoice" t-value="request.env['account.move'].sudo().search([('name', '=', o.invoice_doc_no)], limit=1)" />
+                                <t t-if="customer_invoice">
+                                    <t t-if="customer_invoice.sf_in_service_date">
+                                        <p>In Service Date: <span t-field="customer_invoice.sf_in_service_date"/></p>        
+                                    </t>
+                                    <t t-else="customer_invoice.invoice_origin">
+                                        <t t-set="sale_order" t-value="request.env['sale.order'].sudo().search([('name', '=', customer_invoice.invoice_origin)], limit=1)" />
+                                        <p>In Service Date: <span t-field="sale_order.opportunity_id.sf_in_service_date"/></p>
+                                    </t>
+                                </t>
+                            </t>
+                        </t>
+                    </div>
+<!-- 
+                    <div class="col-5 mt-0 pt-0" t-attf-style="padding-right: 13px;">
+                        <table class="table table-sm table-borderless">
+                            <t t-set="tax_totals" t-value="json.loads(o.tax_totals_json)"/>
+                            <t t-call="account.document_tax_totals"/>
+                        </table>
+                    </div> -->
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="givex_invoice_report.invoice_print_document" t-lang="o.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>
+

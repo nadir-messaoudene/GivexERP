@@ -1,0 +1,73 @@
+<odoo>
+  <data>
+    <!-- Header template -->
+    <template id="custom_header_template">
+      <header class="invoice_header row" t-attf-style="font-family: 'Open Sans', sans-serif; font-size: 17px; font-weight: lighter;">
+        <!-- <t t-set="data" t-value="o._get_header_info()"/> -->
+        <div class="col-4">
+          <h1 class="website_name mb-0 mt-2" t-attf-style="font-size: 23px; font-weight: bold;" >Loyalty Lane, Inc.</h1>
+          <address class="warehouse_address" t-attf-style="font-size: 16px;">
+            <p class="mb-0">30082 Kountyside Road</p>
+            <p class="mb-0">Macon, MO 63552 US</p>
+            <p class="mb-0">(678) 6784291376</p>
+            <p class="mb-0"><a href="mailto:accounting@loyaltylane.com" t-attf-style="color: #000; text-decoration: none;">accounting@loyaltylane.com</a></p>
+          </address>
+        </div>
+        <div class="col-4 text-right" t-attf-style="color: #7b8dc5;">
+          <img class="logo img-responsive" t-attf-src="/givex_invoice_report/static/img/loyaltylane.png" t-attf-style="max-width: 250px;" />
+        </div>
+        <div class="col-4 text-right" t-attf-style="color: #7b8dc5;">
+          <t t-if="not o" t-set="o" t-value="doc"/>
+          <t t-if="o.name"><p t-field="o.name" t-attf-style="color: #5492BC;"/></t>
+        </div>
+      </header>
+    </template>
+
+    <!-- custom external layout template -->
+    <template id="custom_external_layout">
+      <t t-if="not o" t-set="o" t-value="doc"/>
+
+      <t t-if="not company">
+        <!-- Multicompany -->
+        <t t-if="company_id">
+          <t t-set="company" t-value="company_id"/>
+        </t>
+        <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+          <t t-set="company" t-value="o.company_id.sudo()"/>
+        </t>
+        <t t-else="else">
+          <t t-set="company" t-value="res_company"/>
+        </t>
+      </t>
+      <t t-call="givex_invoice_report.custom_external_layout_standard"><t t-raw="0"/></t>
+
+    </template>
+
+    <template id="custom_external_layout_standard">
+
+      <!-- support for custom header -->
+      <div t-attf-class="header o_company_#{company.id}_layout">
+        <t t-call="givex_invoice_report.custom_header_template" t-lang="lang"/>
+      </div>
+
+      <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+        <t t-raw="0"/>
+      </div>
+
+      <!-- support for custom footer -->
+      <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+        <div class="text-center">
+          <div t-if="report_type == 'pdf'">
+            <p>ACH Instructions | First Republic Bank | Acct # 80007852314 | Routing # 321081669 <br />
+              Bill Pay Network ID | 0156773717023664</p>
+            <p>
+              Page <span class="page"/> 
+                <!-- of <span class="topage"/> -->
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </template>
+  </data>
+</odoo>
