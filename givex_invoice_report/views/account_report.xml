@@ -5,7 +5,7 @@
         <report
             id="givex_account_invoices1"
             model="account.move"
-            string="Invoices[LL1]"
+            string="Invoices[Loyalty Lane]"
             report_type="qweb-pdf"
             name="givex_invoice_report.givex_report_invoice"
             file="givex_invoice_report.givex_report_invoice"

@@ -5,10 +5,10 @@
         <div class="col-4">
           <h1 class="website_name mb-0 mt-2" t-attf-style="font-size: 23px; font-weight: bold;" >Loyalty Lane, Inc.</h1>
           <address class="warehouse_address" t-attf-style="font-size: 16px;">
-            <p class="mb-0">30082 Kountyside Road</p>
             <p class="mb-0">3827 Roswell Road</p>
             <p class="mb-0">Suite 200C</p>
             <p class="mb-0">Marietta, GA 30062</p>
+            <p class="mb-0">678-668-7200 (Ext. 4)</p>
             <p class="mb-0"><a href="mailto:accounting@loyaltylane.com" t-attf-style="color: #000; text-decoration: none;">accounting@loyaltylane.com</a></p>
           </address>
         </div>
@@ -19,16 +19,15 @@
           <!-- <t t-if="not o" t-set="o" t-value="doc"/>
           <t t-if="o.name"><b>Invoice <p t-field="o.name" t-attf-style="color: #5492BC;"/></b></t> -->
           <h2>
-          <span t-if="o.type == 'out_invoice' and o.state == 'posted'">Invoice</span>
-          <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
-          <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
-          <span t-if="o.type == 'out_refund'">Credit Note</span>
-          <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
-          <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
-          <span t-if="o.name != '/'" t-field="o.name"/>
+            <span t-if="o.type == 'out_invoice' and o.state == 'posted'">Invoice</span>
+            <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+            <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+            <span t-if="o.type == 'out_refund'">Credit Note</span>
+            <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
+            <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+            <span t-if="o.name != '/'" t-field="o.name"/>
           </h2>
         </div>
-                       
       </header>
     </template>
 
@@ -59,33 +58,30 @@
       </div>
 
       <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+        <t t-call="web.address_layout"/>
         <t t-raw="0"/>
       </div>
-        <!-- <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout"/>
-            <t t-raw="0"/>
-      </div> -->
 
-        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
-            <div class="text-center" style="border-top: 1px solid black;">
-                <ul class="list-inline mb4">
-                    <!-- using the list-inline-item class from bootstrap causes weird behaviours in pdf report
-                         adding d-inline class fixes the problem-->
-                    <li t-if="company.phone" class="list-inline-item d-inline">Phone: <span class="o_force_ltr" t-field="company.phone"/></li>
-                    <li t-if="company.email" class="list-inline-item d-inline">Email: <span t-field="company.email"/></li>
-                    <li t-if="company.website" class="list-inline-item d-inline">Web: <span t-field="company.website"/></li>
-                    <li t-if="company.vat" class="list-inline-item d-inline"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
-                </ul>
+      <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+          <div class="text-center" style="border-top: 1px solid black;">
+              <ul class="list-inline mb4">
+                  <!-- using the list-inline-item class from bootstrap causes weird behaviours in pdf report
+                        adding d-inline class fixes the problem-->
+                  <li t-if="company.phone" class="list-inline-item d-inline">Phone: <span class="o_force_ltr" t-field="company.phone"/></li>
+                  <li t-if="company.email" class="list-inline-item d-inline">Email: <span t-field="company.email"/></li>
+                  <li t-if="company.website" class="list-inline-item d-inline">Web: <span t-field="company.website"/></li>
+                  <li t-if="company.vat" class="list-inline-item d-inline"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+              </ul>
 
-                <div name="financial_infos">
-                    <span t-field="company.report_footer"/>
-                </div>
+              <div name="financial_infos">
+                  <span t-field="company.report_footer"/>
+              </div>
 
-                <div t-if="report_type == 'pdf'" class="text-muted">
-                    Page: <span class="page"/> / <span class="topage"/>
-                </div>
-            </div>
-        </div>
+              <div t-if="report_type == 'pdf'" class="text-muted">
+                  Page: <span class="page"/> / <span class="topage"/>
+              </div>
+          </div>
+      </div>
 
     </template>
 
@@ -108,8 +104,70 @@
                     <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
                     <span t-if="o.name != '/'" t-field="o.name"/>
                 </h2> -->
+                <div t-attf-class="row pt-4">
+                    <div class="col-6">
+                        <table class="table table-sm table-borderless" t-attf-style="color: #000;">
+                            <tr>
+                                <th class="text-uppercase" t-attf-style="font-size:16px; font-weight: bold;">Bill to</th>
+                            </tr>
+                            <tr>
+                                <td class="pl-1 pt-0" t-attf-style="font-size: 16px; color: #000;">
+                                    <p class="mb-0">
+                                        <t t-if="o.partner_id.parent_id">
+                                            <span t-esc="o.partner_id.parent_id.name" />
+                                        </t>
+                                    </p>
+                                    <p class="mb-0">
+                                        <t t-if="o.partner_id.name">
+                                            Attn: <span t-esc="o.partner_id.name" />
+                                        </t>
+                                    </p>
+   
+                                    <p class="mb-0">
+                                        <span t-if="o.partner_id.street" t-esc="o.partner_id.street" /> 
+                                        <span t-if="o.partner_id.street2" t-esc="o.partner_id.street2"/>
+                                    </p>
+                                    <p class="mb-0">
+                                        <span t-if="o.partner_id.city" t-esc="o.partner_id.city"/>,  
+                                        <span t-if="o.partner_id.state_id.name" t-field="o.partner_id.state_id.name"/>, 
+                                        <span t-if="o.partner_id.zip" t-esc="o.partner_id.zip"/>
+                                    </p>
+                                    <p t-attf-class="m-0" t-if="o.partner_id.country_id.name" t-esc="o.partner_id.country_id.name"/>
+                                    <t t-if="o.partner_id.mobile">
+                                        <p t-attf-class="m-0">Mobile: <span t-field="o.partner_id.mobile"/> </p>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-if="o.partner_id.phone" >
+                                            <p t-attf-class="m-0">Phone: <span t-field="o.partner_id.phone"/> </p>
+                                        </t>
+                                    </t>
 
-                <div id="informations" class="row mt32 mb32">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-6">
+                        <table class="table table-sm table-borderless" t-attf-style="color: #000;">
+                            <tr>
+                                <td class="pl-1 pt-0 text-center" t-attf-style="font-size: 16px; color: #000;">
+                                    <strong>DATE</strong>
+                                    <p class="m-0" t-field="o.invoice_date"/>
+                                </td>
+                                <td class="pl-1 pt-0 text-center" t-attf-style="font-size: 16px; color: #000;">
+                                    <strong>PLEASE PAY</strong>
+                                    <p class="m-0" t-field="o.amount_total"/>
+                                </td>
+                                <td class="pl-1 pt-0 text-center" t-attf-style="font-size: 16px; color: #000;">
+                                    <strong>DUE DATE</strong>
+                                    <p class="m-0" t-field="o.invoice_date"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+                <!-- <div id="informations" class="row mt32 mb32">
                     <div class="col-auto mw-100 mb-2" t-if="o.invoice_date" name="invoice_date">
                         <strong>Invoice Date:</strong>
                         <p class="m-0" t-field="o.invoice_date"/>
@@ -130,7 +188,7 @@
                         <strong>Reference:</strong>
                         <p class="m-0" t-field="o.ref"/>
                     </div>
-                </div>
+                </div> -->
 
                 <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
 
