@@ -3,7 +3,7 @@
     <data>
         <!-- QWeb Reports -->
         <report
-            id="givex_account_invoices1"
+            id="givex_account_invoices"
             model="account.move"
             string="Invoices[Loyalty Lane]"
             report_type="qweb-pdf"
