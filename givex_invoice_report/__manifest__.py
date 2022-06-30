@@ -10,9 +10,8 @@
     'depends': ['base', 'account'],
     'data': [
         'views/custom_external_layout.xml',
-        'views/report_invoice_templates.xml',
-        'report/invoice_print_reports.xml',
         'views/report_invoice.xml',
+        'views/report_invoice_templates.xml',
         'views/account_report.xml',
     ],
     "license": "LGPL-3",

@@ -16,9 +16,19 @@
           <img class="logo img-responsive" t-attf-src="/givex_invoice_report/static/img/loyaltylane.png" t-attf-style="max-width: 250px;" />
         </div>
         <div class="col-4 text-right" t-attf-style="color: #7b8dc5;">
-          <t t-if="not o" t-set="o" t-value="doc"/>
-          <t t-if="o.name"><b>Invoice <p t-field="o.name" t-attf-style="color: #5492BC;"/></b></t>
+          <!-- <t t-if="not o" t-set="o" t-value="doc"/>
+          <t t-if="o.name"><b>Invoice <p t-field="o.name" t-attf-style="color: #5492BC;"/></b></t> -->
+          <h2>
+          <span t-if="o.type == 'out_invoice' and o.state == 'posted'">Invoice</span>
+          <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+          <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+          <span t-if="o.type == 'out_refund'">Credit Note</span>
+          <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
+          <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+          <span t-if="o.name != '/'" t-field="o.name"/>
+          </h2>
         </div>
+                       
       </header>
     </template>
 
@@ -80,7 +90,7 @@
     </template>
 
     <template id="customer_report_invoice_document">
-        <t t-call="web.custom_external_layout">
+        <t t-call="givex_invoice_report.custom_external_layout">
             <t t-set="o" t-value="o.with_context(lang=lang)" />
             <t t-set="address">
                 <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
@@ -89,7 +99,7 @@
                     <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/></div>
             </t>
             <div class="page">
-                <h2>
+                <!-- <h2>
                     <span t-if="o.type == 'out_invoice' and o.state == 'posted'">Invoice</span>
                     <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
                     <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
@@ -97,7 +107,7 @@
                     <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
                     <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
                     <span t-if="o.name != '/'" t-field="o.name"/>
-                </h2>
+                </h2> -->
 
                 <div id="informations" class="row mt32 mb32">
                     <div class="col-auto mw-100 mb-2" t-if="o.invoice_date" name="invoice_date">
