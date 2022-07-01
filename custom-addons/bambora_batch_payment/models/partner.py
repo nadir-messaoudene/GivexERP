@@ -95,7 +95,7 @@ class ResPartnerBank(models.Model):
     bamboraeft_account_type = fields.Selection(
         string='Bank Account Type',
         selection=BANK_ACCOUNT_TYPE,
-        default='PC'
+        default='CC'
     )
     bank_transit_no = fields.Char(
         string="Bank Transit No",

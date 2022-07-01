@@ -29,8 +29,30 @@ def bambora_payment(provider):
     return bamboraeft_rec
 
 
-class AccountInvoiceBatchPayment(models.Model):
+class AccountMove(models.Model):
     _inherit = "account.move"
+
+    # @api.model
+    # def create(self, values):
+    #     values = self.update_bank_info(values)
+    #     result = super(AccountMove, self).create(values)
+    #     return result
+    # def update_bank_info(self, values):
+    #     res_partner_bank = self.env['res.partner.bank']
+    #     if values.get('invoice_partner_bank_id'):
+    #         invoice_partner_bank_id = res_partner_bank.search([('partner_id', '=', int(values.get('partner_id')))], order='id desc', limit=1)
+    #         if invoice_partner_bank_id and int(values.get('invoice_partner_bank_id')) != invoice_partner_bank_id.id:
+    #             values['invoice_partner_bank_id'] = invoice_partner_bank_id.id
+    #         if not invoice_partner_bank_id and int(values.get('invoice_partner_bank_id')) != invoice_partner_bank_id.id:
+    #                del(values['invoice_partner_bank_id'])
+
+
+    #     if not values.get('invoice_partner_bank_id'):
+    #         invoice_partner_bank_id = res_partner_bank.search([('partner_id', '=', int(values.get('partner_id')))], order='id desc', limit=1)
+    #         if invoice_partner_bank_id:
+    #             values['invoice_partner_bank_id'] = invoice_partner_bank_id.id
+    #     return values
+
 
     @api.model
     def _get_authorization(self, merchant_id, api_key):
