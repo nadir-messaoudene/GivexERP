@@ -60,7 +60,7 @@
                     </div>
                 </t>
                 <div name="address" t-att-class="colclass">
-                    <p><b>BILL TO:<b></p>
+                    <p><b>BILL TO:</b></p>
                     <t t-raw="address.replace('Attention:','')"/>
                 </div>
             </div>
