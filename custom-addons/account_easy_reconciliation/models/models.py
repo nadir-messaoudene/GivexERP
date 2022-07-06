@@ -12,6 +12,7 @@ _logger = logging.getLogger(__name__)
 
 class AccountOutstandingCreditsDebits(models.TransientModel):
     _name = 'account.outstanding.lines'
+    _description = 'Account Outstanding Lines'
 
     name = fields.Char('Title')
     line_id = fields.Many2one('account.move.line', 'Line')
@@ -26,6 +27,7 @@ class AccountInvoiceLine( models.Model ):
 
 class EasyReconciliationLines(models.TransientModel):
     _name = 'easy.reconciliation.lines'
+    _description = 'Easy Reconciliation Lines'
 
 
     easy_reconciliation_id = fields.Many2one('easy.reconciliation', 'Easy Reconciliation', required = True)
@@ -50,6 +52,7 @@ class EasyReconciliationLines(models.TransientModel):
 
 class EasyReconciliation(models.TransientModel):
     _name = 'easy.reconciliation'
+    _description = 'Easy Reconciliation'
 
     partner_id = fields.Many2one('res.partner', 'Partner', required = True)
     line_ids = fields.One2many('easy.reconciliation.lines', 'easy_reconciliation_id')

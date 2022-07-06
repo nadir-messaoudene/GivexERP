@@ -45,6 +45,7 @@ class AccountMoveLine(models.Model):
 
 class AccountMoveXmlrpc(models.Model):
     _name = 'account.move.xmlrpc'
+    _description = 'Account Move Xmlrpc'
 
     def create(self, customer_id, product_list, date_desc):
         partner = self.env['res.partner'].sudo().browse(customer_id)

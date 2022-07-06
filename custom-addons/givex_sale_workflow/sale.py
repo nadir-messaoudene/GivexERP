@@ -25,15 +25,11 @@ class SaleOrder(models.Model):
     def _get_default_require_payment(self):
         return super(SaleOrder, self)._get_default_require_payment()
     
-    state = fields.Selection(selection=[('new', 'New'),
-                                        ('pending_approval', 'Pending Approval'),
-                                        ('pending_ff_approval', 'Pending Fulfillment Approval'),
-                                        ('draft', 'Quotation'),
-                                        ('sent', 'Quotation Sent'),
-                                        ('sale', 'Sales Order'),
-                                        ('done', 'Locked'),
-                                        ('cancel', 'Cancelled'),],
-                             string='Status', readonly=True, copy=False, index=True, tracking=3, default='draft')
+    state = fields.Selection(selection_add=[
+        ('new', 'New'),
+        ('pending_approval', 'Pending Approval'),
+        ('pending_ff_approval', 'Pending Fulfillment Approval'),
+        ], string='Status', readonly=True, copy=False, index=True, tracking=3, default='draft')
 
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True,
                        states={'draft': [('readonly', False)],
@@ -363,16 +359,12 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
     
-    state = fields.Selection([('new', 'New'),
-                              ('pending_approval', 'Pending approval'),
-                              ('pending_ff_approval', 'Pending Fulfillment Approval'),
-                              ('ff_approved', 'Fulfillment Approved'),
-                              ('draft', 'Quotation'),
-                              ('sent', 'Quotation Sent'),
-                              ('sale', 'Sales Order'),
-                              ('done', 'Done'),
-                              ('cancel', 'Cancelled'),],
-                              string='Order Status', related='order_id.state', copy=False, store=True, default='draft', readonly=True)
+    state = fields.Selection([
+            ('new', 'New'),
+            ('pending_approval', 'Pending approval'),
+            ('pending_ff_approval', 'Pending Fulfillment Approval'),
+            ('ff_approved', 'Fulfillment Approved'),
+        ], string='Order Status', related='order_id.state', copy=False, store=True, default='draft', readonly=True)#overrides existing selection; use selection_add instead
 
     requires_ff_approval = fields.Boolean('Requires Fulfillment approval', default=False, store=True,
                                           compute="_check_requires_ff_approval", help='Determines if the product requires approval by fulfillment')

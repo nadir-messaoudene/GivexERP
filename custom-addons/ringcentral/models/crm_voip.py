@@ -14,6 +14,7 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, \
 
 class CrmPhonecallAbout(models.Model):
     _name = "crm.phonecall.about"
+    _description = "Crm Phonecall About"
 
     name = fields.Char('Reason of the call', required=True)
 
@@ -21,6 +22,7 @@ class CrmPhonecallAbout(models.Model):
 class CrmPhonecall(models.Model):
 
     _name = "crm.phonecall"
+    _description = "Crm Phonecall"
     _order = "id DESC"
 
     name = fields.Char('Call Summary', required=True)
@@ -504,6 +506,7 @@ class CrmPhonecall(models.Model):
 
 class CrmCallActivity(models.Model):
     _name = 'crm.call.activity'
+    _description = 'Crm Call Activity'
 
     name = fields.Char('Reason')
     type = fields.Selection(
@@ -522,6 +525,7 @@ class CrmCallActivity(models.Model):
 
 class InOutTaggedDocumented(models.Model):
     _name = "in.out.tagged.documented"
+    _description = "In Out Tagged Documented"
 
     name = fields.Char('Name')
 
@@ -681,6 +685,7 @@ class ResPartner(models.Model):
 
 class CrmPhonecallLogWizard(models.TransientModel):
     _name = 'crm.phonecall.log.wizard'
+    _description = 'Crm Phonecall Log Wizard'
 
     description = fields.Text('Description')
     name = fields.Char(readonly=True)
@@ -714,7 +719,7 @@ class CrmPhonecallLogWizard(models.TransientModel):
     reschedule_date = fields.Datetime(
         'Specific Date',
         default=lambda *a: datetime.now() + timedelta(hours=2))
-    next_activity_id = fields.Many2one("crm.activity", "Next Activity")
+    next_activity_id = fields.Many2one("crm.activity", "Next Activity")#Field crm.phonecall.log.wizard.next_activity_id with unknown comodel_name 'crm.activity'
     new_title_action = fields.Char('Next Action')
     new_date_action = fields.Date()
     show_duration = fields.Boolean()
@@ -793,6 +798,7 @@ class CrmPhonecallLogWizard(models.TransientModel):
 
 class CrmCustomPhonecallWizard(models.TransientModel):
     _name = 'crm.custom.phonecall.wizard'
+    _description = 'Crm Custom Phonecall Wizard'
 
     name = fields.Char('Call summary', required=True)
     user_id = fields.Many2one('res.users', "Assign To")
@@ -814,6 +820,7 @@ class CrmCustomPhonecallWizard(models.TransientModel):
 
 class CrmPhonecallTransferWizard(models.TransientModel):
     _name = 'crm.phonecall.transfer.wizard'
+    _description = 'Crm Phonecall Transfer Wizard'
 
     transfer_number = fields.Char('transfer To')
     transfer_choice = fields.Selection(
@@ -897,6 +904,7 @@ class CrmPhonecallReport(models.Model):
 
 class CrmPhonecall2phonecall(models.TransientModel):
     _name = "crm.phonecall2phonecall"
+    _description = "Crm Phonecall 2 phonecall"
 
     date = fields.Datetime('Date', required=True)
     name = fields.Char('Call summary', required=True, index=True)
