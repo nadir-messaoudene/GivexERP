@@ -24,9 +24,9 @@ class ResConfigSettings(models.TransientModel):
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         ICPSudo = self.env['ir.config_parameter'].sudo()
-        res.update(
-            ll_mail_template_id=ICPSudo.get_param('givex_invoice_report.ll_mail_template_id'),
-        )
+        ll_mail_template_id = ICPSudo.get_param('givex_invoice_report.ll_mail_template_id')
+        if ll_mail_template_id:
+            res.update(ll_mail_template_id=int(ll_mail_template_id))
         return res
 
     @api.model
@@ -34,4 +34,3 @@ class ResConfigSettings(models.TransientModel):
         super(ResConfigSettings, self).set_values()
         ICPSudo = self.env['ir.config_parameter'].sudo()
         ICPSudo.set_param('givex_invoice_report.ll_mail_template_id', self.ll_mail_template_id.id)
-
