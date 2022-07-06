@@ -14,9 +14,6 @@ class AccountMove(models.Model):
 
 
     def action_invoice_sent(self):
-        """ Open a window to compose an email, with the edi invoice template
-            message loaded by default
-        """
         action = super(AccountMove, self).action_invoice_sent()
         if self.company_id.id == 17:
             ICPSudo = self.env['ir.config_parameter'].sudo()
