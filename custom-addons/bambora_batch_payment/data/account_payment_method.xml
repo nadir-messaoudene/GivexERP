@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record
+      id="bamboraeft_outbound_electronic"
+      model="account.payment.method"
+    >
+            <field name="name">Outbound Electronic</field>
+            <field name="code">electronic</field>
+            <field name="display_name">Outbound Electronic</field>
+            <field name="payment_type">outbound</field>
+        </record>
+    </data>
+</odoo>
