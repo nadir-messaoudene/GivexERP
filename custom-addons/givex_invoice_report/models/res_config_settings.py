@@ -7,8 +7,6 @@
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.exceptions import UserError, AccessError
 
-
-
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
