@@ -12,6 +12,7 @@
         'views/custom_external_layout.xml',
         'views/report_invoice_templates.xml',
         'views/account_report.xml',
+        'views/res_config_settings_views.xml',
     ],
     "license": "LGPL-3",
 }
