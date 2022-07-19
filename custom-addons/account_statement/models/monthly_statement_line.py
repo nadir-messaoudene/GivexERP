@@ -5,10 +5,10 @@
 from odoo import api, fields, models, _
 
 
-class monthly_statement_line(models.Model):
-	
+class MonthlyStatementLine(models.Model):
 	_name = 'monthly.statement.line'
 	_description = "Monthly Statement Line"
+	_order = 'invoice_date'
 	
 	
 	company_id = fields.Many2one('res.company', string='Company')
@@ -32,7 +32,7 @@ class monthly_statement_line(models.Model):
 	amount_residual = fields.Monetary(related='invoice_id.amount_residual')
 	amount_residual_signed = fields.Monetary(related='invoice_id.amount_residual_signed', currency_field='currency_id',)
 	
-	_order = 'invoice_date'
+
 
 
 	
