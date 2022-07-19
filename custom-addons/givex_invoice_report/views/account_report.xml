@@ -14,5 +14,18 @@
             print_report_name="(object._get_report_base_filename())"
             groups="account.group_account_invoice"
         />
+
+        <report
+            id="givex_account_invoices_msc"
+            model="account.move"
+            string="Invoices[MSC]"
+            report_type="qweb-pdf"
+            name="givex_invoice_report.givex_report_invoice_msc"
+            file="givex_invoice_report.givex_report_invoice_msc"
+            attachment="(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')"
+            attachment_use="False"
+            print_report_name="(object._get_report_base_filename())"
+            groups="account.group_account_invoice"
+        />
     </data>
 </odoo>
