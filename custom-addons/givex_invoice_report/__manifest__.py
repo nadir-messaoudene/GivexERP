@@ -6,12 +6,13 @@
     'author': "Syncoria Inc.",
     'website': "https://www.syncoria.com",
     'category': 'Report',
-    'version': '0.1.3',
+    'version': '0.5.0',
     'depends': ['base', 'account'],
     'data': [
         'views/custom_external_layout.xml',
         'views/report_invoice_templates.xml',
         'views/account_report.xml',
+        'views/res_config_settings_views.xml',
     ],
     "license": "LGPL-3",
 }
