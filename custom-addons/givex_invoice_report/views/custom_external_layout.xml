@@ -181,10 +181,9 @@
 
       <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
           <div class="text-center" style="border-top: 1px solid black;">
-          <p>A Division of Loyalty Lane, Inc.</p>
-          <p>billing@mediasolutionsco.com  | mediasolutionsco.com | 480-639-1200</p>
+            <p>A Division of Loyalty Lane, Inc.<br>
+            billing@mediasolutionsco.com  | mediasolutionsco.com | 480-639-1200</br></p>
               <!-- <ul class="list-inline mb4">
-              
                   <li t-if="company.phone" class="list-inline-item d-inline">Phone: <span class="o_force_ltr" t-field="company.phone"/></li>
                   <li t-if="company.email" class="list-inline-item d-inline">Email: <span t-field="company.email"/></li>
                   <li t-if="company.website" class="list-inline-item d-inline">Web: <span t-field="company.website"/></li>
