@@ -5,7 +5,7 @@
 
 from . import models
 from . import controllers
-from . import tests
+# from . import tests
 from odoo import _
 from odoo.service import common
 from odoo.exceptions import Warning
