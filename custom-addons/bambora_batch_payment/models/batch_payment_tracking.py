@@ -547,6 +547,8 @@ class BatchPaymentTracking(models.Model):
     def check_bamboraach_status(self):
         '''Checks the Bambora Batch Status using batchID'''
         if self.batch_id:
+            _logger.info('''Checks the Bambora Batch Status using batchID''')
+            
             domain = [("provider", "=", "bamboraeft")]
             domain += [("state", "!=", "disabled")]
             domain += [("company_id", "=", self.env.user.company_id.id)]

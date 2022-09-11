@@ -1,6 +1,6 @@
 {
     "name": "Bambora Batch Payment",
-    "version": "13.1.0.0.0",
+    "version": "13.1.1.0.0",
     "category": "Accounts",
     "summary": "Bambora Bank-to-Bank EFT/ACH/Batch Payment",
     "author": "Syncoria Inc.",
