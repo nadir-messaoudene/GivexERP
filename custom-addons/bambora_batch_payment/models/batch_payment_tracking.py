@@ -180,9 +180,9 @@ class BatchPaymentTracking(models.Model):
                     )
 
                     ################################################
-                    #Vendor Bill Testing
-                    if data["batchId"] in [	10000035, 10000034]:
-                        data["stateName"] = "Complete"
+                    # #Vendor Bill Testing
+                    # if data["batchId"] in [	10000035, 10000034]:
+                    #     data["stateName"] = "Complete"
                     ################################################
 
                     if rec and not rec.state == "complete":
@@ -210,8 +210,10 @@ class BatchPaymentTracking(models.Model):
                                 "remain_settle_day": difference,
                             }
                         )
+                        rec._cr.commit()
 
-                    self.update_bamboraeft_tx(data)
+
+                    # self.update_bamboraeft_tx(data)
             else:
                 _logger.warning(_("No data found on bambora batch payment."))
 
@@ -378,7 +380,15 @@ class BatchPaymentTracking(models.Model):
                             """Handle multile Invoice Payment Transactions"""
 
             elif data.get("stateName") == "Rejected/Declined" or data.get("statusId") == 2:
-                track_id = self.env["batch.payment.tracking"].sudo().search([("batch_id", "=", data.get("batchId"))])
+                # track_id = self.env["batch.payment.tracking"].sudo().search([("batch_id", "=", data.get("batchId"))])
+                track_id = self.env["batch.payment.tracking"].search(
+                        [
+                            ("invoice_no", "=", data["reference"]),
+                            ("batch_id", "=", data["batchId"]),
+                        ],
+                        limit=1,
+                    )
+                _logger.info("track_id ===>>>{}".format(track_id))
                 if track_id:
                     if track_id and track_id.transaction_id != data.get("transId"):
                         sett_date = datetime.datetime.strptime(data["settlementDate"], "%Y-%m-%d")
@@ -534,6 +544,54 @@ class BatchPaymentTracking(models.Model):
         else:
             UserError(_("Module not install or disable."))
 
+    def check_bamboraach_status(self):
+        '''Checks the Bambora Batch Status using batchID'''
+        if self.batch_id:
+            domain = [("provider", "=", "bamboraeft")]
+            domain += [("state", "!=", "disabled")]
+            domain += [("company_id", "=", self.env.user.company_id.id)]
+            acquirer_id = self.env["payment.acquirer"].sudo().search(domain, limit=1)
+
+            if acquirer_id:
+                pass_code = acquirer_id.bamboraeft_report_api
+                header = {"content-type": "application/xml"}
+                service_name = "BatchPaymentsEFT" if acquirer_id.bamboraeft_transaction_type == "E" else "BatchPaymentsACH"
+                rpt_version = acquirer_id.bamboraeft_report_api_version
+                merchant_id = acquirer_id.bamboraeft_merchant_id
+
+                data = '''<?xml version="1.0" encoding="utf-8"?>'''
+                '''<request>'''
+                '''<rptVersion>'''+ '{}' + '''</rptVersion>'''
+                '''<serviceName>'''+ '{}' + '''</serviceName>'''
+                '''<merchantId>'''+ '{}' + '''</merchantId>'''
+                '''<passCode>'''+ '{}' + '''</passCode>'''
+                '''<sessionSource>external</sessionSource>'''
+                '''<rptFormat>JSON</rptFormat>'''
+                '''<rptFilterBy1>batch_id</rptFilterBy1>'''
+                '''<rptOperationType1>EQ</rptOperationType1>'''
+                '''<rptFilterValue1>'''+ '{}' + '''</rptFilterValue1>'''
+                '''</request>'''.format(rpt_version, service_name, merchant_id, pass_code, self.batch_id)
+
+
+                _logger.info(data)
+
+                try:
+                    response = requests.post(REPORT_API, headers=header, data=data)
+                    response_dict = json.loads(response.text)
+
+                    if acquirer_id.debug_logging:
+                        _logger.info("headers===>>>>" + str(header))
+                        _logger.info("data ===>>>> " + str(data))
+                        _logger.info("response ===>>>> " + str(response.status_code))
+                        _logger.info("response_dict ===>>>> " + str(response_dict))
+
+                    self._batch_data_update(response_dict, acquirer_id)
+
+
+                except Exception as e:
+                    raise AccessError(_('Internal Problem . Please Try again!!. \n Error: {}'.format(e.args)))
+        else:
+            raise UserError(_("Batch ID is empty"))
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
