@@ -1,7 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 {
     'name': 'RingCentral',
-    'version': '13.0.1.0.1',
+    'version': '13.0.1.0.2',
     'category': 'Customer Relationship Management',
     'description': """
     This is the connector application for RingCentral integration.
