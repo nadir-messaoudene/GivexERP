@@ -359,12 +359,13 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
     
-    state = fields.Selection([
+
+    state = fields.Selection(selection_add=[
             ('new', 'New'),
             ('pending_approval', 'Pending approval'),
             ('pending_ff_approval', 'Pending Fulfillment Approval'),
             ('ff_approved', 'Fulfillment Approved'),
-        ], string='Order Status', related='order_id.state', copy=False, store=True, default='draft', readonly=True)#overrides existing selection; use selection_add instead
+        ], string='Order Status', related='order_id.state', copy=False, store=True, default='draft', readonly=True)
 
     requires_ff_approval = fields.Boolean('Requires Fulfillment approval', default=False, store=True,
                                           compute="_check_requires_ff_approval", help='Determines if the product requires approval by fulfillment')
