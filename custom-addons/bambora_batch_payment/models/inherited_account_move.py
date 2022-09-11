@@ -45,8 +45,6 @@ class AccountMove(models.Model):
     #             values['invoice_partner_bank_id'] = invoice_partner_bank_id.id
     #         if not invoice_partner_bank_id and int(values.get('invoice_partner_bank_id')) != invoice_partner_bank_id.id:
     #                del(values['invoice_partner_bank_id'])
-
-
     #     if not values.get('invoice_partner_bank_id'):
     #         invoice_partner_bank_id = res_partner_bank.search([('partner_id', '=', int(values.get('partner_id')))], order='id desc', limit=1)
     #         if invoice_partner_bank_id:
@@ -139,7 +137,6 @@ class AccountMove(models.Model):
                     #     Entry Detail Addenda Record - Leave blank unless your account has SEC code permissions enabled.
                     ################################################################################
                     ################################################################################
-                    # print dict(self._fields['type'].selection).get(self.type)
                     data = [
                             "A",#Transaction type
                             transaction_type,#Transaction type
@@ -149,6 +146,9 @@ class AccountMove(models.Model):
                             round(record.amount_total * 100),#Amount - Transaction amount in pennies
                             record.name,#Reference number - An optional reference number of up to 19 digits. If you don't want a reference number, enter "0" (zero).
                             record.partner_id.name,#Recipient Name - Full name of the bank account holder
+                            "",
+                            "",
+                            ""
                         ]
                 _logger.info("DATA ===>>>{}".format(data))
                 return data
@@ -157,7 +157,6 @@ class AccountMove(models.Model):
 
     # Bambora payment register
     def action_register_bambora_batch_payment(self):
-        # icp_sudo = self.env['ir.config_parameter'].sudo()
         domain = [("provider", "=", "bamboraeft")]
         domain += [("state", "!=", "disabled")]
         domain += [("company_id", "=", self.company_id.id)]
