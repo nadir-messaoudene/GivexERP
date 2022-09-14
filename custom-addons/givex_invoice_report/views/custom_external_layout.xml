@@ -152,18 +152,48 @@
     <template id="custom_address_layout_msc">
         <t t-set="colclass" t-value="('col-md-5' if report_type == 'html' else 'col-5') + ' ml-auto'"/>
         <t t-if="address">
-            <div class="address row">
-                <t t-if="information_block">
-                    <t t-set="colclass" t-value="'col-5 offset-1'"/>
-                    <div name="information_block" class="col-6">
-                        <t t-raw="information_block"/>
-                    </div>
-                </t>
-                <div name="address" t-att-class="colclass">
-                    <p><b>BILL TO:</b></p>
-                    <t t-raw="address.replace('Attention:','')"/>
-                </div>
+            <div>
+                <table style="width:100%">
+                <tr style="text-align: left; padding-left: 50px;">
+                    <th >
+                    BILL TO:
+                    </th>
+                    <th >
+                    DELIVER TO:
+                    </th>
+                </tr>
+                <tr style="text-align: left; padding-left: 50px;">
+                      <td >
+                        <t t-if="o.partner_id">
+                            <br><t t-esc="o.partner_id.name"/></br>
+                            <br><t t-esc="o.partner_id.street"/></br>
+                            <br>
+                              <t t-esc="o.partner_id.city"/>, 
+                              <t t-esc="o.partner_id.state_id.code"/>,
+                              <t t-esc="o.partner_id.zip"/>
+                            </br>
+                            <br><t t-esc="o.partner_id.country_id.name"/></br>
+                        </t>
+                      </td> 
+                      <td>
+                        <t t-if="o.partner_shipping_id">
+                            <br><t t-esc="o.partner_shipping_id.name"/></br>
+                            <br><t t-esc="o.partner_shipping_id.street"/></br>
+                            <br>
+                              <t t-esc="o.partner_shipping_id.city"/>, 
+                              <t t-esc="o.partner_shipping_id.state_id.code"/>,
+                              <t t-esc="o.partner_shipping_id.zip"/>
+                            </br>
+                            <br><t t-esc="o.partner_shipping_id.country_id.name"/></br>
+                        </t>
+                      </td>
+
+
+                  </tr>
+              </table>
+
             </div>
+
         </t>
     </template>
 
