@@ -6,7 +6,7 @@
     'author': "Syncoria Inc.",
     'website': "https://www.syncoria.com",
     'category': 'Report',
-    'version': '13.8.0',
+    'version': '13.8.1',
     'depends': ['base', 'account'],
     'data': [
         'views/custom_external_layout.xml',
