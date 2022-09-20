@@ -13,8 +13,8 @@ class Lead(models.Model):
     _inherit = "crm.lead"
 
     planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True, compute="_compute_planned_revenue", store=True)
-    x_studio_setup_fees = fields.Monetary('Setup Fees', currency_field='company_currency', tracking=True, required=True)
-    x_studio_expected_annual_revenue = fields.Monetary('Expected Annual Revenue', currency_field='company_currency', tracking=True, required=True)
+    x_studio_setup_fees = fields.Monetary('Setup Fees', currency_field='company_currency', tracking=True, )#required=True
+    x_studio_expected_annual_revenue = fields.Monetary('Expected Annual Revenue', currency_field='company_currency', tracking=True)#, required=True
     x_studio_expected_recurring_revenue = fields.Monetary('Expected Monthly Recurring Revenue', currency_field='company_currency', tracking=True)
     company_currency_cad = fields.Many2one('res.currency', string='Active Currency (in CAD)', readonly=True,
                                            store=False, default=lambda self: self.env['res.currency'].search([('name', '=', 'CAD')]))
