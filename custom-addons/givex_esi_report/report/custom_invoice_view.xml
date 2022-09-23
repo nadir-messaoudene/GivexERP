@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="custom_invoices_report"
+            model="account.move"
+            string="Invoices [ESI]"
+            report_type="qweb-pdf"
+            name="givex_esi_report.report_invoice"
+            file="givex_esi_report.report_invoice"
+            attachment="(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')"
+            print_report_name="(object._get_report_base_filename())"
+        />
+    </data>
+</odoo>
