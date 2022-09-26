@@ -91,7 +91,7 @@ class AccountMove(models.Model):
             or not record.invoice_partner_bank_id.aba_routing
         ):
             if record.partner_id and record.partner_id.bank_ids:
-                record.invoice_partner_bank_id = record.partner_id.bank_id[0]
+                record.invoice_partner_bank_id = record.partner_id.bank_ids[0]
                 record._cr.commit()
             else:
                 raise UserError(_("Please Add Full Account Information for  %s") % record.name)
