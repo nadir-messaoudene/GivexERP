@@ -90,7 +90,11 @@ class AccountMove(models.Model):
             or not record.invoice_partner_bank_id.bamboraeft_country_type
             or not record.invoice_partner_bank_id.aba_routing
         ):
-            raise UserError(_("Please Add Full Account Information for  %s") % record.name)
+            if record.partner_id and record.partner_id.bank_ids:
+                record.invoice_partner_bank_id = record.partner_id.bank_id[0]
+                record._cr.commit()
+            else:
+                raise UserError(_("Please Add Full Account Information for  %s") % record.name)
         elif record.state == "draft":
             raise UserError(_("Please only sent posted entries!! %s") % record.name)
         elif record.invoice_payment_state == "paid":
