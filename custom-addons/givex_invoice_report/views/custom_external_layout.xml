@@ -14,7 +14,6 @@
           </address>
         </div>
         <div class="col-4 text-right" t-attf-style="color: #7b8dc5;">
-          <!-- <img class="logo img-responsive" t-attf-src="/givex_invoice_report/static/img/loyaltylane.png" t-attf-style="max-width: 250px;" /> -->
           <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-width: 300px; max-height: 150px;" alt="Logo"/>
         </div>
         <div class="col-4 text-right" t-attf-style="color: #7b8dc5;">
@@ -268,7 +267,6 @@
       <t t-if="not o" t-set="o" t-value="doc"/>
 
       <t t-if="not company">
-        <!-- Multicompany -->
         <t t-if="company_id">
           <t t-set="company" t-value="company_id"/>
         </t>
@@ -332,8 +330,6 @@
     </template>
 
     <template id="custom_external_layout_standard_esi">
-
-      <!-- support for custom header -->
       <div t-attf-class="header o_company_#{company.id}_layout">
         <t t-call="givex_invoice_report.custom_header_template_esi" t-lang="lang"/>
       </div>
@@ -361,6 +357,133 @@
     </template>
 
     <!--ESI [END] -->
+
+    <!--KES [START] -->
+    <template id="custom_header_template_kes">
+      <header class="invoice_header row" t-attf-style="font-family: 'Open Sans', sans-serif; font-size: 17px; font-weight: lighter;">
+        <div class="col-4">
+          <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-width: 200px; max-height: 150px;" alt="Logo"/>
+          <h1 class="website_name mb-0 mt-" t-attf-style="font-size: 20px; font-weight: bold;" ><t t-esc="o.company_id.name"/></h1>
+          <address class="warehouse_address" t-attf-style="font-size: 16px;">
+            <p class="mb-0"><t t-esc="o.company_id.street"/></p>
+            <p class="mb-0"><t t-esc="o.company_id.street2"/></p>
+            <p class="mb-0"><t t-esc="o.company_id.city"/>&#160;<t t-esc="o.company_id.country_id.code"/>&#160;<t t-esc="o.company_id.zip"/></p>
+          </address>
+        </div>
+        <div class="col-4 text-center">
+          <p>***HISTORICAL***</p>
+        </div>
+        <div class="col-4 text-center">
+          <h2>Invoice</h2>
+          <table class="table table-sm table-bordered">
+            <tr style="text-align: left;">
+                <th t-attf-style="background-color: #C0C0C0;">
+                Date:
+                </th>
+                <th >
+                Invoice:
+                </th>
+            </tr>
+            <tr style="text-align: left;">
+              <td t-attf-style="background-color: #C0C0C0;">
+                <t t-esc="o.date"/>
+              </td> 
+              <td >
+                <t t-esc="o.name"/>
+              </td> 
+            </tr>
+          </table>
+        </div>
+      </header>
+    </template>
+
+    <template id="custom_external_layout_kes">
+      <t t-if="not o" t-set="o" t-value="doc"/>
+
+      <t t-if="not company">
+        <t t-if="company_id">
+          <t t-set="company" t-value="company_id"/>
+        </t>
+        <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+          <t t-set="company" t-value="o.company_id.sudo()"/>
+        </t>
+        <t t-else="else">
+          <t t-set="company" t-value="res_company"/>
+        </t>
+      </t>
+      <t t-call="givex_invoice_report.custom_external_layout_standard_kes"><t t-raw="0"/></t>
+
+    </template>
+
+    <template id="custom_address_layout_kes">
+        <t t-set="colclass" t-value="('col-md-5' if report_type == 'html' else 'col-5') + ' ml-auto'"/>
+        <t t-if="address">
+            <div>
+                <table style="width:100%">
+                  <tr style="text-align: left;">
+                      <th >
+                      BILL TO:
+                      </th>
+                      <th >
+                      DELIVER TO:
+                      </th>
+                  </tr>
+                  <tr style="text-align: left;">
+                    <td >
+                      <t t-if="o.partner_id">
+                          <br><t t-esc="o.partner_id.name"/></br>
+                          <br><t t-esc="o.partner_id.street"/></br>
+                          <br>
+                            <t t-esc="o.partner_id.city"/>, 
+                            <t t-esc="o.partner_id.state_id.code"/>,
+                            <t t-esc="o.partner_id.zip"/>
+                          </br>
+                          <br><t t-esc="o.partner_id.country_id.name"/></br>
+                      </t>
+                    </td> 
+                    <td>
+                      <t t-if="o.partner_shipping_id">
+                          <br><t t-esc="o.partner_shipping_id.name"/></br>
+                          <br><t t-esc="o.partner_shipping_id.street"/></br>
+                          <br>
+                            <t t-esc="o.partner_shipping_id.city"/>, 
+                            <t t-esc="o.partner_shipping_id.state_id.code"/>,
+                            <t t-esc="o.partner_shipping_id.zip"/>
+                          </br>
+                          <br><t t-esc="o.partner_shipping_id.country_id.name"/></br>
+                      </t>
+                    </td>
+                  </tr>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <template id="custom_external_layout_standard_kes">
+      <div t-attf-class="header o_company_#{company.id}_layout">
+        <t t-call="givex_invoice_report.custom_header_template_kes" t-lang="lang"/>
+      </div>
+
+      <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+        <t t-call="givex_invoice_report.custom_address_layout_kes"/>
+        <t t-raw="0"/>
+      </div>
+
+      <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+          <div class="text-center" style="border-top: 1px solid black;">
+              <div name="financial_infos">
+                  <span t-field="company.report_footer"/>
+              </div>
+              <div t-if="report_type == 'pdf'" class="text-muted">
+                  Page: <span class="page"/> / <span class="topage"/>
+              </div>
+          </div>
+      </div>
+
+    </template>
+
+    <!--KES [END] -->
+
 
 
 
