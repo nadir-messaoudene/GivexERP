@@ -141,6 +141,7 @@ class AccountMove(models.Model):
                     #     Entry Detail Addenda Record - Leave blank unless your account has SEC code permissions enabled.
                     ################################################################################
                     ################################################################################
+                    recipient_name = record.partner_id.name.split(' #')[0]
                     data = [
                             "A",#Transaction type
                             transaction_type,#Transaction type
@@ -149,10 +150,11 @@ class AccountMove(models.Model):
                             record.invoice_partner_bank_id.bamboraeft_account_type,#Account Code - Designates the type of bank account 
                             round(record.amount_total * 100),#Amount - Transaction amount in pennies
                             record.name,#Reference number - An optional reference number of up to 19 digits. If you don't want a reference number, enter "0" (zero).
-                            record.partner_id.name,#Recipient Name - Full name of the bank account holder
+                            recipient_name,#Recipient Name - Full name of the bank account holder
                             "",
                             "",
-                            ""
+                            record.invoice_partner_bank_id.bamboraeft_sec_code or "",
+                            record.invoice_partner_bank_id.bamboraeft_entry_detail or "",
                         ]
                 _logger.info("DATA ===>>>{}".format(data))
                 return data
