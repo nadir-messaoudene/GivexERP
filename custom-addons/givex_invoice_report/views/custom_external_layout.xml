@@ -14,7 +14,6 @@
           </address>
         </div>
         <div class="col-4 text-right" t-attf-style="color: #7b8dc5;">
-          <!-- <img class="logo img-responsive" t-attf-src="/givex_invoice_report/static/img/loyaltylane.png" t-attf-style="max-width: 250px;" /> -->
           <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-width: 300px; max-height: 150px;" alt="Logo"/>
         </div>
         <div class="col-4 text-right" t-attf-style="color: #7b8dc5;">
@@ -236,7 +235,7 @@
           </address>
         </div>
         <div class="col-3 text-right" t-attf-style="color: #7b8dc5;">
-          <img class="logo img-responsive" t-attf-src="/givex_invoice_report/static/img/esi.png" style="max-width: 200px; max-height: 100px;" alt="Logo"/>
+          <img class="logo img-responsive" t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-width: 200px; max-height: 100px;" alt="Logo"/>
         </div>
         <div class="col-4 text-right" t-attf-style="color: #7b8dc5;">
           <h2>
