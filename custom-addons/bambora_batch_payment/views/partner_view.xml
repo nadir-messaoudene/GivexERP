@@ -26,6 +26,8 @@
                             <field name="bamboraeft_account_type" />
                             <field name="bamboraeft_country_type"/>
                             <!-- <field name="bamboraeft_customer_code"/> -->
+                            <field name="bamboraeft_sec_code"/>
+                            <field name="bamboraeft_entry_detail"/>
                         </tree>
                     </field>
                 </xpath>

@@ -113,6 +113,8 @@ class ResPartnerBank(models.Model):
         comodel_name="payment.token",
         ondelete="restrict",
     )
+    bamboraeft_sec_code = fields.Char('Standard Entry Code')
+    bamboraeft_entry_detail = fields.Char('Entry Detail Addenda Record')
     bamboraeft_status = fields.Boolean(default=False, compute="_compute_bamboraeft_status")
 
     @api.depends("company_id")
