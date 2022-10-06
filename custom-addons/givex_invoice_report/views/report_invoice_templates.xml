@@ -585,17 +585,18 @@
                             <td style="border: 1px solid black;"><span t-field="o.partner_id.name"/></td>
                             <td style="border: 1px solid black;"><span t-field="o.invoice_payment_term_id"/></td>
                             <td style="border: 1px solid black;"><span t-field="o.invoice_user_id.name"/></td>
-                            <t t-set="order_id" t-value="env['sale.order'].search([('name', '=', o.invoice_origin)])" />
+                            
+                            <t t-if="o.invoice_origin" t-set="order_id" t-value="env['sale.order'].search([('name', '=', o.invoice_origin)])" />
                             <td style="border: 1px solid black;">
                                 <span>
-                                    <t t-if="order_id">
+                                    <t t-if="order_id and o.invoice_origin!='New'">
                                         <t t-esc="order_id.effective_date"/>
                                     </t>
                                 </span>
                             </td>
                             <td style="border: 1px solid black;">                           
                                 <span>
-                                    <t t-if="order_id">
+                                    <t t-if="order_id and o.invoice_origin!='New'">
                                         <t t-esc="order_id.carrier_id.name"/>
                                     </t>
                                 </span>
