@@ -32,26 +32,6 @@ def bambora_payment(provider):
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    # @api.model
-    # def create(self, values):
-    #     values = self.update_bank_info(values)
-    #     result = super(AccountMove, self).create(values)
-    #     return result
-    # def update_bank_info(self, values):
-    #     res_partner_bank = self.env['res.partner.bank']
-    #     if values.get('invoice_partner_bank_id'):
-    #         invoice_partner_bank_id = res_partner_bank.search([('partner_id', '=', int(values.get('partner_id')))], order='id desc', limit=1)
-    #         if invoice_partner_bank_id and int(values.get('invoice_partner_bank_id')) != invoice_partner_bank_id.id:
-    #             values['invoice_partner_bank_id'] = invoice_partner_bank_id.id
-    #         if not invoice_partner_bank_id and int(values.get('invoice_partner_bank_id')) != invoice_partner_bank_id.id:
-    #                del(values['invoice_partner_bank_id'])
-    #     if not values.get('invoice_partner_bank_id'):
-    #         invoice_partner_bank_id = res_partner_bank.search([('partner_id', '=', int(values.get('partner_id')))], order='id desc', limit=1)
-    #         if invoice_partner_bank_id:
-    #             values['invoice_partner_bank_id'] = invoice_partner_bank_id.id
-    #     return values
-
-
     @api.model
     def _get_authorization(self, merchant_id, api_key):
         message = merchant_id + ":" + api_key
@@ -139,6 +119,9 @@ class AccountMove(models.Model):
                     #     Dynamic Descriptor - By default the Bambora merchant company name will show on your customer's bank statement. You can override this default by populating the Dynamic Descriptor field.
                     #     Standard Entry Code - Leave blank unless your account has SEC code permissions enabled.
                     #     Entry Detail Addenda Record - Leave blank unless your account has SEC code permissions enabled.
+                    
+                    #Example:
+                    #A,D,107006541,101478,CC,100,0,Ranch Market,,,CCD,,
                     ################################################################################
                     ################################################################################
                     recipient_name = record.partner_id.name.split(' #')[0]
@@ -153,8 +136,8 @@ class AccountMove(models.Model):
                             recipient_name,#Recipient Name - Full name of the bank account holder
                             "",
                             "",
-                            record.invoice_partner_bank_id.bamboraeft_sec_code or "",
-                            record.invoice_partner_bank_id.bamboraeft_entry_detail or "",
+                            record.invoice_partner_bank_id.bamboraeft_sec_code or "CCD",
+                            "",
                         ]
                 _logger.info("DATA ===>>>{}".format(data))
                 return data
