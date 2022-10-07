@@ -21,13 +21,10 @@
                             <field name="acc_number" />
                             <field name="aba_routing" />
                             <field name="acc_holder_name" invisible="1" />
-                            <!-- <field name="bank_bic" />
-                            <field name="bank_transit_no" /> -->
                             <field name="bamboraeft_account_type" />
                             <field name="bamboraeft_country_type"/>
-                            <!-- <field name="bamboraeft_customer_code"/> -->
                             <field name="bamboraeft_sec_code"/>
-                            <field name="bamboraeft_entry_detail"/>
+                            <!-- <field name="bamboraeft_entry_detail" readonly="1"/> -->
                         </tree>
                     </field>
                 </xpath>

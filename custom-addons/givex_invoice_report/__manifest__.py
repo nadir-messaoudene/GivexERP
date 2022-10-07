@@ -6,7 +6,7 @@
     'author': "Syncoria Inc.",
     'website': "https://www.syncoria.com",
     'category': 'Report',
-    'version': '13.8.1',
+    'version': '13.8.2',
     'company': 'syncoria inc.',
     'depends': ['base', 'account'],
     'data': [
