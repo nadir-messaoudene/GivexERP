@@ -226,12 +226,12 @@
 
       <header class="invoice_header row" t-attf-style="font-family: 'Open Sans', sans-serif; font-size: 17px; font-weight: lighter;">
         <div class="col-5">
-          <h1 class="website_name mb-0 mt-" t-attf-style="font-size: 20px; font-weight: bold;" ><t t-esc="o.company_id.name"/></h1>
+          <h1 class="website_name mb-0 mt-" t-attf-style="font-size: 20px; font-weight: bold;" >Electronic Scrip Incorporated</h1>
           <address class="warehouse_address" t-attf-style="font-size: 16px;">
-            <p class="mb-0"><t t-esc="o.company_id.street"/></p>
-            <p class="mb-0"><t t-esc="o.company_id.city"/>, <t t-esc="o.company_id.country_id.code"/> <t t-esc="o.company_id.zip"/></p>
-            <p class="mb-0"><t t-esc="o.company_id.email"/></p>
-            <p class="mb-0"><t t-esc="o.company_id.phone"/></p>
+            <p class="mb-0">P.O. Box 7048</p>
+            <p class="mb-0">Redwood City, CA  94063</p>
+            <p class="mb-0">llopez@escrip.com</p>
+            <p class="mb-0">650-655-3721</p>
           </address>
         </div>
         <div class="col-3 text-right" t-attf-style="color: #7b8dc5;">
