@@ -122,6 +122,10 @@ class AccountMove(models.Model):
                     
                     #Example:
                     #A,D,107006541,101478,CC,100,0,Ranch Market,,,CCD,,
+                    #Working on Bambora Portal with Production Credentials
+                    #Sample CSV Provided
+                    #TEST BY IRIN: October 21 2022
+                    # A,D,091210744,000473,CC,1,TESTLL17068IN,Kocian's Family Market
                     ################################################################################
                     ################################################################################
                     recipient_name = record.partner_id.name.split(' #')[0]
@@ -134,10 +138,10 @@ class AccountMove(models.Model):
                             round(record.amount_total * 100),#Amount - Transaction amount in pennies
                             record.name,#Reference number - An optional reference number of up to 19 digits. If you don't want a reference number, enter "0" (zero).
                             recipient_name,#Recipient Name - Full name of the bank account holder
-                            "",
-                            "",
-                            record.invoice_partner_bank_id.bamboraeft_sec_code or "CCD",
-                            "",
+                            # "",
+                            # "",
+                            # record.invoice_partner_bank_id.bamboraeft_sec_code or "CCD",
+                            # "",
                         ]
                 _logger.info("DATA ===>>>{}".format(data))
                 return data
