@@ -25,11 +25,9 @@ class SaleOrder(models.Model):
     def _get_default_require_payment(self):
         return super(SaleOrder, self)._get_default_require_payment()
     
-    state = fields.Selection(selection_add=[
-        ('new', 'New'),
-        ('pending_approval', 'Pending Approval'),
-        ('pending_ff_approval', 'Pending Fulfillment Approval'),
-        ], string='Status', readonly=True, copy=False, index=True, tracking=3, default='draft')
+    state = fields.Selection(selection_add=[('new', 'New'),
+                                            ('pending_approval', 'Pending Approval'),
+                                            ('pending_ff_approval', 'Pending Fulfillment Approval'),])
 
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True,
                        states={'draft': [('readonly', False)],
@@ -359,13 +357,11 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
     
-
-    state = fields.Selection(selection_add=[
-            ('new', 'New'),
-            ('pending_approval', 'Pending approval'),
-            ('pending_ff_approval', 'Pending Fulfillment Approval'),
-            ('ff_approved', 'Fulfillment Approved'),
-        ], string='Order Status', related='order_id.state', copy=False, store=True, default='draft', readonly=True)
+    state = fields.Selection(selection_add=[('new', 'New'),
+                                            ('pending_approval', 'Pending approval'),
+                                            ('pending_ff_approval', 'Pending Fulfillment Approval'),
+                                            ('ff_approved', 'Fulfillment Approved'),],
+                             string='Order Status', related='order_id.state', copy=False, store=True, default='draft', readonly=True)
 
     requires_ff_approval = fields.Boolean('Requires Fulfillment approval', default=False, store=True,
                                           compute="_check_requires_ff_approval", help='Determines if the product requires approval by fulfillment')
@@ -410,21 +406,22 @@ class SaleOrderLine(models.Model):
             if not each.product_id:
                 return
 
+            product = each.product_id.with_context(lang=get_lang(self.env, each.order_id.partner_id.lang).code,
+                                                   partner=each.order_id.partner_id,
+                                                   quantity=each.product_uom_qty,
+                                                   date=each.order_id.date_order,
+                                                   pricelist=each.order_id.pricelist_id.id,
+                                                   uom=each.product_uom.id
+            )
+
             if each.state != 'pending_approval' and each.order_id.pricelist_id and each.order_id.partner_id:
-                    product = each.product_id.with_context(lang=get_lang(self.env, each.order_id.partner_id.lang).code,
-                                                            partner=each.order_id.partner_id,
-                                                            quantity=each.product_uom_qty,
-                                                            date=each.order_id.date_order,
-                                                            pricelist=each.order_id.pricelist_id.id,
-                                                            uom=each.product_uom.id
-                    )
                     price_unit = self.env['account.tax']._fix_tax_included_price_company(each._get_display_price(product), product.taxes_id, each.tax_id, each.company_id)
-                    # if the price is manually changed
-                    if price_unit != each.price_unit:
+                    # if the price is manually changed and product is not excluded from price change approval
+                    if price_unit != each.price_unit and product.exclude_from_price_approval is False:
                         each.requires_price_approval = True
                         each.is_price_approved = False
 
-            if each.discount:
+            if each.discount and product.exclude_from_price_approval is False:
                 each.requires_price_approval = True
                 each.is_price_approved = False
     

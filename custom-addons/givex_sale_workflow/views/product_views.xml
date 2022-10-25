@@ -9,6 +9,9 @@
             <xpath expr="//page[@name='sales']/group[@name='description']/field[@name='description_sale']" position="after">
                 <field name='requires_ff_approval'/>
             </xpath>
+            <xpath expr="//page[@name='sales']/group[@name='description']/field[@name='description_sale']" position="after">
+                <field name='exclude_from_price_approval'/>
+            </xpath>
         </field>
     </record>
 </odoo>

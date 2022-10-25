@@ -9,3 +9,5 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     requires_ff_approval = fields.Boolean('Requires Fulfillment Approval', help="Does this product when added to a sale order requires approval from Fulfillment?")
+    exclude_from_price_approval = fields.Boolean('Exclude from Quotation Price Approval', default=False, copy=False, help="Exclude this product from requiring sale order (quotation) approval when the price is changed?")
+
