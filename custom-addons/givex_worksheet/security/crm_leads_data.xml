@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="givex_view_expected_revenue_in_cad" model="res.groups">
+        <field name="name">View Expected revenue in CAD</field>
+        <field name="comment">Show Expected revenue in CAD</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+        <!-- Add super user and admin to group, you can delete the below line to hide for them as well --> 
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+</odoo>

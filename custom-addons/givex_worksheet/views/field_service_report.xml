@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Project Task Field Service -->
+    <record id="action_custom_report_field_service" model="ir.actions.report">
+        <field name="name">Worksheet Sing off</field>
+        <field name="model">project.task</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">givex_worksheet.worksheet_report_projecttask</field>
+        <field name="report_file">givex_worksheet.worksheet_report_projecttask</field>
+        <field name="print_report_name">'Worksheet Sing off - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_project_task" />
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

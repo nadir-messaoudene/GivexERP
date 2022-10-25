@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="worksheet_report_projecttask_document">
+        <t t-call="web.basic_layout">
+            <t t-set="doc" t-value="doc.with_context(lang=doc.user_id.lang)"/>
+            <div class="header">
+                <t t-if="not o" t-set="o" t-value="doc"/>
+                <t t-if="not company">
+                    <t t-if="company_id">
+                        <t t-set="company" t-value="company_id"/>
+                    </t>
+                    <t t-elif="o and 'company_id' in o">
+                        <t t-set="company" t-value="o.company_id.sudo()"/>
+                    </t>
+                    <t t-else="else">
+                        <t t-set="company" t-value="res_company"/>
+                    </t>
+                </t>
+                <div class="container" t-if="company.id == 1">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <span t-esc="company.name"/> 
+                            <p>
+                                <div class="text-center"><h5 class="text-center"><strong>Givex POS Install Sign Off Sheet</strong></h5></div>
+                                <div class="text-center"><strong>Please contact Ricardo at 437 228 5928 for additional Install or any issues.</strong></div>
+                                <div class="text-center"><strong>Do not forget to take Pictures after installation and send it to shibothan.t@givex.com and Ricardo.desousa@givex.com</strong></div>
+                                <div class="text-center"><strong>Need Pictures of POS Front and Back, KDS, Network Area with Switch and VHUB installed, ETC   https://www.dropbox.com/sh/cq1pb08spjfoi4z/AADlA9RSS7e0vLuIFBORD9PQa?dl=0</strong></div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page" t-if="company.id == 1">
+                <br/><br/>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Store Name: </strong><t t-if="doc.partner_id"><span t-field="doc.partner_id"/></t>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Store Address: </strong>
+                            <t t-if="doc.partner_id.street"><span t-field="doc.partner_id.street"/>,</t>
+                            <t t-if="doc.partner_id.street2"><span t-field="doc.partner_id.street2"/>,</t>
+                            <t t-if="doc.partner_id.city"><span t-field="doc.partner_id.city"/>,</t>
+                            <t t-if="doc.partner_id.state_id"><span t-field="doc.partner_id.state_id"/>,</t>
+                            <t t-if="doc.partner_id.zip"><span t-field="doc.partner_id.zip"/>,</t>
+                            <t t-if="doc.partner_id.country_id"><span t-field="doc.partner_id.country_id"/>,</t>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Techs Name: </strong><t t-if="doc.user_id"><span t-field="doc.user_id"/></t>
+                        </div>
+                        <div class="col-6">
+                            <strong>Installation Date: </strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Start Time: </strong><t t-if="doc.timesheet_timer_first_start"><span t-field="doc.timesheet_timer_first_start"/></t>
+                        </div>
+                        <div class="col-6">
+                            <strong>End Time: </strong><t t-if="doc.timesheet_timer_last_stop"><span t-field="doc.timesheet_timer_last_stop"/></t>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Travel Time: </strong>
+                        </div>
+                        <div class="col-6">
+                            <strong>Cable Runs: </strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Drive Thru: </strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Number of V10 WS Installed: </strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Number of Printer Installed: </strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Number of Cash Drawer Installed: </strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Number of Stands Installed: </strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Number of V10 KDS Installed: </strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Number of Bumpbars Installed: </strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Number of VHUB Installed: </strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Number of Switches Installed: </strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Number of UPS Installed: </strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Owner/Employee Signature: </strong>
+                        </div>
+                        <div class="col-6">
+                            <strong>Date: </strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Additional Comments: </strong>
+                        </div>
+                    </div>
+                    <br/><br/>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Hardware returned: </strong>
+                        </div>
+                    </div>
+                    <br/><br/>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>NewhardwareInstalled </strong>
+                        </div>
+                    </div>
+                    <br/><br/>
+                </div>
+            </div>
+            <div class="footer o_boxed_footer" t-if="company.id == 1">
+            </div>
+        </t>
+    </template>
+
+    <template id="worksheet_report_projecttask">
+        <t t-call="web.html_container">
+            <t t-set="data_report_margin_top" t-value="27"/>
+            <t t-set="data_report_header_spacing" t-value="27"/>
+            <t t-set="data_report_dpi" t-value="110"/>
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="lang" t-value="doc.user_id.sudo().lang"/>
+                <t t-call="givex_worksheet.worksheet_report_projecttask_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>
