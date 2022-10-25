@@ -2,7 +2,7 @@
 <odoo>
     <!-- Project Task Field Service -->
     <record id="action_custom_report_field_service" model="ir.actions.report">
-        <field name="name">Worksheet Sing off</field>
+        <field name="name">Worksheet Sign Off</field>
         <field name="model">project.task</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">givex_worksheet.worksheet_report_projecttask</field>
