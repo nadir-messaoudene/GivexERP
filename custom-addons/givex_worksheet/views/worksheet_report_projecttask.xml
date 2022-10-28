@@ -39,6 +39,7 @@
                             <strong>Store Name: </strong><t t-if="doc.partner_id"><span t-field="doc.partner_id"/></t>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-12">
                             <strong>Store Address: </strong>
@@ -50,6 +51,7 @@
                             <t t-if="doc.partner_id.country_id"><span t-field="doc.partner_id.country_id"/>,</t>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-6">
                             <strong>Techs Name: </strong><t t-if="doc.user_id"><span t-field="doc.user_id"/></t>
@@ -58,6 +60,7 @@
                             <strong>Installation Date: </strong>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-6">
                             <strong>Start Time: </strong><t t-if="doc.timesheet_timer_first_start"><span t-field="doc.timesheet_timer_first_start"/></t>
@@ -66,6 +69,7 @@
                             <strong>End Time: </strong><t t-if="doc.timesheet_timer_last_stop"><span t-field="doc.timesheet_timer_last_stop"/></t>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-6">
                             <strong>Travel Time: </strong>
@@ -74,56 +78,67 @@
                             <strong>Cable Runs: </strong>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-12">
                             <strong>Drive Thru: </strong>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-12">
                             <strong>Number of V10 WS Installed: </strong>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-12">
                             <strong>Number of Printer Installed: </strong>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-12">
                             <strong>Number of Cash Drawer Installed: </strong>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-12">
                             <strong>Number of Stands Installed: </strong>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-12">
                             <strong>Number of V10 KDS Installed: </strong>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-12">
                             <strong>Number of Bumpbars Installed: </strong>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-12">
                             <strong>Number of VHUB Installed: </strong>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-12">
                             <strong>Number of Switches Installed: </strong>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-12">
                             <strong>Number of UPS Installed: </strong>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-6">
                             <strong>Owner/Employee Signature: </strong>
@@ -132,6 +147,7 @@
                             <strong>Date: </strong>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-12">
                             <strong>Additional Comments: </strong>
