@@ -396,9 +396,12 @@
                                     <span t-field="o.partner_id.parent_id"/><br/>
                                 </t>
                                 <span/><br/>
-                                <span t-field="o.partner_id.street"/><br/>
                                 Attn: <span t-field="o.partner_id.name"/><br/>
-                                <span t-field="o.partner_id.city"/>, <span t-field="o.partner_id.country_id.code"/><t></t> <span t-field="o.partner_id.zip"/>
+                                
+                                <span t-field="o.partner_id.street"/><br/>
+                                <span t-field="o.partner_id.city"/>, 
+                                <span t-field="o.partner_id.country_id.code"/><t></t> 
+                                <span t-field="o.partner_id.zip"/>
                             </td>
                         </tr>
                     </tbody>
