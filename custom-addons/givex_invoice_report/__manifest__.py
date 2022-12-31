@@ -8,7 +8,7 @@
     'category': 'Report',
     'version': '13.9.0',
     'company': 'syncoria inc.',
-    'depends': ['base', 'account'],
+    'depends': ['base', 'account','report_qweb_element_page_visibility','web'],
     'data': [
         'views/custom_external_layout.xml',
         'views/report_invoice_templates.xml',
