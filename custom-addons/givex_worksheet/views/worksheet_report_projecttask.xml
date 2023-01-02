@@ -22,10 +22,10 @@
                         <div class="col-12 text-center">
                             <span t-esc="company.name"/> 
                             <p>
-                                <div class="text-center"><h5 class="text-center"><strong>Givex POS Install Sign Off Sheet</strong></h5></div>
-                                <div class="text-center"><strong>Please contact Ricardo at 437 228 5928 for additional Install or any issues.</strong></div>
-                                <div class="text-center"><strong>Do not forget to take Pictures after installation and send it to shibothan.t@givex.com and Ricardo.desousa@givex.com</strong></div>
-                                <div class="text-center"><strong>Need Pictures of POS Front and Back, KDS, Network Area with Switch and VHUB installed, ETC   https://www.dropbox.com/sh/cq1pb08spjfoi4z/AADlA9RSS7e0vLuIFBORD9PQa?dl=0</strong></div>
+                                <div class="text-center"><h5 class="text-center"><strong>GivexPOS Install Sign-Off Sheet</strong></h5></div>
+                                <div class="text-center"><strong>Please contact Ricardo at 437-228-5928 or Ronaldo at 647-691-7696 for additional Install or any issues.</strong></div>
+                                <div class="text-center"><strong>Do not forget to take pictures of finished installation and send it to <a href="mailto:Ricardo.desousa@givex.com">Ricardo.desousa@givex.com</a> and <a href="mailto:Ronaldo.tomiozzo@givex.com">Ronaldo.tomiozzo@givex.com</a></strong></div>
+                                <div class="text-center"><strong>Pictures needed: POS Front and Back, KDS, Network Area with Switch and vHub, ETC <a href="https://www.dropbox.com/sh/cq1pb08spjfoi4z/AADlA9RSS7e0vLuIFBORD9PQa?dl=0">https://www.dropbox.com/sh/cq1pb08spjfoi4z/AADlA9RSS7e0vLuIFBORD9PQa?dl=0</a></strong></div>
                             </p>
                         </div>
                     </div>
