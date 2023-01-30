@@ -8,8 +8,9 @@
             <field name="inherit_id" ref="base.view_partner_bank_form" />
             <field name="arch" type="xml">
                 <field name="bank_id" position="after">
-                    <field name="bacs_code" />
-                    <field name="free_format" />
+                    <field name="bacs_code"/>
+                    <field name="free_format"/>
+                    <field name="originator_name"/>
                 </field>
                 <field name="partner_id" position="after">
                     <field name="sort_code" />

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <report
-    id="batch_payment_csv"
+    id="batch_payment_barclays_csv"
     model="account.batch.payment"
-    string="Export to CSV"
+    string="Export to Barclays CSV"
     report_type="csv"
     name="report_csv.batch_payment_barclays_csv"
     file="report_csv.batch_payment_barclays_csv"
@@ -13,12 +13,12 @@
   />
 
     <report
-    id="batch_payment_xlsx"
+    id="batch_payment_barclays_xlsx"
     model="account.batch.payment"
-    string="Export to XLSX"
+    string="Export to Barclays XLSX"
     report_type="xlsx"
-    name="report_xlsx.batch_payment_xlsx"
-    file="report_xlsx.batch_payment_xlsx"
+    name="report_xlsx.batch_payment_barclays_xlsx"
+    file="report_xlsx.batch_payment_barclays_xlsx"
     attachment_use="False"
     menu="False"
     print_report_name="(object._get_report_base_filename())"

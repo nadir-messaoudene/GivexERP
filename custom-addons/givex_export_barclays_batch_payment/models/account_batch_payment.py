@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import models, fields
 
 SEPARATOR = "\r\n"
 
@@ -7,6 +7,8 @@ SEPARATOR = "\r\n"
 class AccountBatchPayment(models.Model):
     _inherit = "account.batch.payment"
     _description = "Batch Payment"
+
+    payment_method_code = fields.Char(related="payment_method_id.code", string="Payment method code", store=True)
 
     def export_barclays_batch_to_csv(self):
         report_action = {
@@ -26,7 +28,7 @@ class AccountBatchPayment(models.Model):
     def export_barclays_batch_to_xlsx(self):
         report_action = {
             "type": "ir.actions.report",
-            "report_name": "report_xlsx.batch_payment_xlsx",
+            "report_name": "report_xlsx.batch_payment_barclays_xlsx",
             "report_type": "xlsx",
             "report_file": "report_xlsx.batch_payment_xlsx",
             "print_report_name": "(object._get_report_base_filename())",
@@ -38,6 +40,24 @@ class AccountBatchPayment(models.Model):
             return report_action
         return True
 
+    def export_td_batch_to_csv(self):
+        report_action = {
+            "type": "ir.actions.report",
+            "report_name": "report_csv.batch_payment_td_csv",
+            "report_type": "csv",
+            "report_file": "report_csv.batch_payment_td_csv",
+            "print_report_name": "(object._get_report_base_filename())",
+            "model": "account.batch.payment",
+            "attachment_use": False,
+            "name": "Export to CSV",
+        }
+        if self.payment_method_id.code == "td":
+            return report_action
+        return True
+
     def _get_report_base_filename(self):
         self.ensure_one()
-        return "%s - (%s)" % (self.sudo().name, self.sudo().batch_type)
+        if self.payment_method_id.code == "bacs":
+            return "%s - (%s) - Barclays" % (self.sudo().name, self.sudo().batch_type)
+        if self.payment_method_id.code == "td":
+            return "%s - (%s) - TD" % (self.sudo().name, self.sudo().batch_type)

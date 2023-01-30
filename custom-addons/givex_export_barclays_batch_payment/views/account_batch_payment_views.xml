@@ -10,21 +10,21 @@
       ref="account_batch_payment.view_batch_payment_form"
     />
             <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="payment_method_code" readonly="1" invisible="1"/>
+                </xpath>
+
                 <xpath expr="//button[@name='print_batch_payment']" position="after">
                     <button
           name="export_barclays_batch_to_csv"
           string="Export to Barclays CSV Format"
           type="object"
-          attrs="{'invisible': [('state', '!=', 'sent')]}"
-        />
-                    <button
-          name="export_barclays_batch_to_xlsx"
-          string="Export to Barclays XLSX Format"
-          type="object"
-          invisible="1"
-          attrs="{'invisible': [('state', '!=', 'sent')]}"
+          attrs="{'invisible': ['|', ('state', '!=', 'sent'), ('payment_method_code', '!=', 'bacs')]}"
         />
                 </xpath>
             </field>
+
+
         </record>
 </odoo>
