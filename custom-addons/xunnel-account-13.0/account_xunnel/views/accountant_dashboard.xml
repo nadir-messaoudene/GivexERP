@@ -22,7 +22,7 @@
     <record id="account_journal_dashboard_inherit_online_sync_id" model="ir.ui.view">
         <field name="name">Xunnel accountant dashboard</field>
         <field name="model">account.journal</field>
-        <field name="inherit_id" ref="account_online_sync.account_journal_dashboard_inherit_online_sync" />
+        <field name="inherit_id" ref="account_online_synchronization.account_journal_dashboard_inherit_online_sync" />
         <field name="arch" type="xml">
             <xpath expr="//t[starts-with(@t-if, 'record.synchronization_status.value !=')]" position="inside">
                 <div class="mb8">
@@ -47,7 +47,7 @@
         <field name="name">account.journal.form</field>
         <field name="model">account.journal</field>
         <field name="priority">99</field>
-        <field name="inherit_id" ref="account_online_sync.account_journal_form_inherit_online_sync"/>
+        <field name="inherit_id" ref="account_online_synchronization.account_journal_form_inherit_online_sync"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='bank_statement_creation']" position="replace">
                 <field name="bank_statement_creation" attrs="{'invisible': [('bank_statements_source', '!=', 'online_sync')]}" string="Synchronization Frequency"/>

@@ -14,7 +14,7 @@
     'depends': [
         'account_accountant',
         'account_asset',
-        'account_online_sync',
+        'account_online_synchronization',
     ],
     'demo': [
         'demo/res_company.xml',
