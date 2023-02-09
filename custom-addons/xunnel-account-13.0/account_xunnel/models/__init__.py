@@ -8,3 +8,4 @@ from . import account_online_account
 from . import account_online_link
 from . import res_company
 from . import res_users
+from . import xunnel_online_account

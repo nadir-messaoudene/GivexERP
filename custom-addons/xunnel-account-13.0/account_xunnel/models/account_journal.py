@@ -18,6 +18,7 @@ class AccountJournal(models.Model):
             is_online_bank = rec.bank_statements_source == 'online_sync'
             rec.has_synchronized_xunnel = (is_online_bank and has_online_sync)
 
+    account_online_journal_id = fields.Many2one('account.online.journal')
     has_synchronized_xunnel = fields.Boolean(
         help='Recognize if has synchronized with Xunnel',
         compute='_compute_has_synchronized_xunnel')
