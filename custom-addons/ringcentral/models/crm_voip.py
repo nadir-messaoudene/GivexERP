@@ -995,3 +995,24 @@ class IrAttachment(models.Model):
                         doc_id.id, doc_id.name),
                 'target': 'new',
             }
+
+class CrmPhonecallLogWizard(models.TransientModel):
+    _name = 'crm.phonecall.log.wizard'
+    _description = 'Crm Phonecall Log Wizard'
+
+class CrmCustomPhonecallWizard(models.TransientModel):
+    _name = 'crm.custom.phonecall.wizard'
+    _description = 'Crm Custom Phonecall Wizard'
+
+class CrmPhonecallTransferWizard(models.TransientModel):
+    _name = 'crm.phonecall.transfer.wizard'
+    _description = 'Crm Phonecall Transfer Wizard'
+
+class CrmPhonecallReport(models.Model):
+    _name = "crm.phonecall.report"
+    _description = "Phone Calls by user and team"
+    _auto = False
+class CrmPhonecall2phonecall(models.TransientModel):
+    _name = "crm.phonecall2phonecall"
+    _description = "Crm Phonecall 2 phonecall"
+
