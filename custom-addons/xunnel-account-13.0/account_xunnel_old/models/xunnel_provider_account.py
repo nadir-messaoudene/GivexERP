@@ -6,7 +6,8 @@ from odoo.exceptions import UserError
 
 
 class XunnelProviderAccount(models.Model):
-    _inherit = 'account.online.provider'
+    # _inherit = 'account.online.provider'
+    _inherit = 'account.online.link'
 
     provider_type = fields.Selection(selection_add=[('xunnel', 'Xunnel')])
 
