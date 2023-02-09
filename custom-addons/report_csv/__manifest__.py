@@ -9,7 +9,14 @@
     "version": "14.0.1.0.0",
     "license": "AGPL-3",
     "depends": ["base", "web"],
-    "data": ["views/webclient_templates.xml"],
+    "data": [
+            # "views/webclient_templates.xml"
+        ],
     "demo": ["demo/report.xml"],
     "installable": True,
+    "assets": {
+        "web.assets_backend": [
+            "/report_csv/static/src/js/report/qwebactionmanager.js",
+        ],
+    },
 }
