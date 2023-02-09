@@ -31,7 +31,7 @@
     "installable": True,
     'application': False,
     'auto_install': False,
-    "pre_init_hook": "pre_init_check",
-    "post_init_hook": "create_missing_journal_for_acquirers",
+    # "pre_init_hook": "pre_init_check",
+    # "post_init_hook": "create_missing_journal_for_acquirers",
     "uninstall_hook": "uninstall_hook",
 }

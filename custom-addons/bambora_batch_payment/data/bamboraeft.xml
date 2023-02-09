@@ -4,7 +4,7 @@
 
     <record id="payment_acquirer_bamboraeft" model="payment.acquirer">
       <field name="name">Bambora EFT</field>
-      <field name="image_128" type="base64" file="bambora_batch_payment/static/description/icon.png" />
+      <!-- <field name="image_128" type="base64" file="bambora_batch_payment/static/description/icon.png" /> -->
       <field name="display_as">Bambora EFT</field>
       <field name="provider">bamboraeft</field>
       <field name="description" type="html">
@@ -23,18 +23,19 @@
       </field>
       <field name="module_id" ref="base.module_bambora_batch_payment" />
       <field name="company_id" ref="base.main_company" />
-      <field name="journal_id" ref="bambora_batch_payment.bamboraeft_customer_journal" />
+      <!-- <field name="journal_id" ref="bambora_batch_payment.bamboraeft_customer_journal" /> -->
       <field name="bamboraeft_vendor_journal_id" ref="bambora_batch_payment.bamboraeft_vendor_journal" />
-      <field name="registration_view_template_id" ref="bamboraeft_s2s_form" />
+      <!-- <field name="registration_view_template_id" ref="bambora_batch_payment.bamboraeft_s2s_form" /> -->
       <field name="pending_msg">
         <![CDATA[
               <h3>Your Bambora (EFT/ACH) Fund Transfer is in `Scheduled` State.</h3>
               <p>Your transaction will be complete when your Bambora (EFT/ACH) Fund Transfer is in `complete` state.<p>
             ]]>
       </field>
-      <field name="save_token">ask</field>
-      <field name="payment_flow">s2s</field>
-      <field name="token_implemented">True</field>
+      <!-- <field name="save_token">ask</field> -->
+      <!-- <field name="payment_flow">s2s</field> -->
+      <!-- <field name="token_implemented">True</field> -->
+      <field name="allow_tokenization">True</field>
       <field name="bamboraeft_merchant_id">383610231</field>
       <field name="bamboraeft_batch_api">59346692ed194CD1805A66f541287B74</field>
       <field name="bamboraeft_report_api">AF492A390B00481CbD4a2907FA33e3ed</field>

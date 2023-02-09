@@ -70,7 +70,9 @@ def get_comment(self):
 class AcquirerBamboraEft(models.Model):
     _inherit = "payment.acquirer"
 
-    provider = fields.Selection(selection_add=[("bamboraeft", _("Bambora EFT"))])
+    provider = fields.Selection(
+        selection_add=[('bamboraeft', 'Bambora EFT')], ondelete={'bamboraeft': 'set default'}
+    )
     bamboraeft_merchant_id = fields.Char(string="Merchant ID", required_if_provider="bamboraeft")
     bamboraeft_batch_api = fields.Char(string="Batch API", required_if_provider="bamboraeft")
     bamboraeft_report_api = fields.Char(string="Report API", required_if_provider="bamboraeft")
@@ -208,7 +210,7 @@ class AcquirerBamboraEft(models.Model):
             _logger.info("Payment by Card")
         else:
             _logger.info("Payment by Bank Number")
-            values["invoice_partner_bank_id"] = bank_id.id
+            values["partner_bank_id"] = bank_id.id
 
         comments = "Create Token for Customer-%s, %s" % (
             data.get("partner_id"),
@@ -272,9 +274,9 @@ class AcquirerBamboraEft(models.Model):
 
             self.process_response(pro_res, values, partner, bank_id, data, res_partner_bank)
         else:
-            invoice_partner_bank_id = self.create_bank_account(partner, bank_id, data, res_partner_bank)
-            if invoice_partner_bank_id:
-                values['invoice_partner_bank_id'] = invoice_partner_bank_id.id
+            partner_bank_id = self.create_bank_account(partner, bank_id, data, res_partner_bank)
+            if partner_bank_id:
+                values['partner_bank_id'] = partner_bank_id.id
 
         payment_method = self.env["payment.token"].sudo().create(values)
         _logger.info(values)
@@ -282,10 +284,10 @@ class AcquirerBamboraEft(models.Model):
         return payment_method
 
     def create_bank_account(self, partner, bank_id, data, res_partner_bank):
-        invoice_partner_bank_id = self.env['res.partner.bank']
+        partner_bank_id = self.env['res.partner.bank']
         try:
             if partner and bank_id:
-                invoice_partner_bank_id = partner.bank_ids.filtered(lambda c: c.acc_number == data["acc_number"])
+                partner_bank_id = partner.bank_ids.filtered(lambda c: c.acc_number == data["acc_number"])
                 bank_account_vals = {}
                 bank_account_vals["acc_holder_name"] = data["acc_holder_name"]
                 bank_account_vals["acc_number"] = data["acc_number"]
@@ -295,17 +297,17 @@ class AcquirerBamboraEft(models.Model):
                 bank_account_vals["aba_routing"] = data["branch_number"]
                 bank_account_vals["partner_id"] = partner.id
                 bank_account_vals["bank_id"] = bank_id.id
-                invoice_partner_bank_id = (
+                partner_bank_id = (
                     res_partner_bank.create(bank_account_vals)
-                    if not invoice_partner_bank_id
-                    else invoice_partner_bank_id.write(bank_account_vals)
+                    if not partner_bank_id
+                    else partner_bank_id.write(bank_account_vals)
                 )
             else:
                 _logger.warning("Bank Name not provided")
         except Exception as e:
             msg ='Exceptions {}'.format(e.args)
             _logger.warning(msg)
-        return invoice_partner_bank_id
+        return partner_bank_id
 
 
     def process_response(self, pro_res, values, partner, bank_id, data, res_partner_bank):
@@ -317,7 +319,7 @@ class AcquirerBamboraEft(models.Model):
                 try:
                     # Create a Bank Account for the Customer
                     if partner and bank_id:
-                        invoice_partner_bank_id = partner.bank_ids.filtered(lambda c: c.acc_number == data["acc_number"])
+                        partner_bank_id = partner.bank_ids.filtered(lambda c: c.acc_number == data["acc_number"])
                         bank_account_vals = {}
                         bank_account_vals["acc_holder_name"] = data["acc_holder_name"]
                         bank_account_vals["acc_number"] = data["acc_number"]
@@ -326,8 +328,8 @@ class AcquirerBamboraEft(models.Model):
                         bank_account_vals["bank_id"] = bank_id.id
                         bank_account_vals["bamboraeft_customer_code"] = pro_res.json().get("customer_code")
                         bank_account_vals["aba_routing"] = data.get('aba_routing')
-                        if not invoice_partner_bank_id:
-                            invoice_partner_bank_id = res_partner_bank.create(bank_account_vals)
+                        if not partner_bank_id:
+                            partner_bank_id = res_partner_bank.create(bank_account_vals)
                     else:
                         _logger.warning("Bank Name not provided")
                 except Exception as e:
@@ -898,8 +900,8 @@ class Txbambora(models.Model):
                     for record in records
                 ]
             else:
-                if self.payment_token_id.invoice_partner_bank_id:
-                    ipb_id = self.payment_token_id.invoice_partner_bank_id
+                if self.payment_token_id.partner_bank_id:
+                    ipb_id = self.payment_token_id.partner_bank_id
                     if not data.get('institution_number'):
                         data["institution_number"] = ipb_id.aba_routing
                     if not data.get('branch_number'):
@@ -1085,7 +1087,7 @@ class Txbambora(models.Model):
                         "invoice_no": invoice_rec.id,
                         "invoice_ref": rec.reference,
                         "invoice_partner_id": rec.partner_id.id,
-                        "invoice_partner_bank_id": rec.payment_token_id.invoice_partner_bank_id.id,
+                        "partner_bank_id": rec.payment_token_id.partner_bank_id.id,
                         "invoice_date": rec.date,
                         "batch_id": response_dict.get("batch_id"),
                         "state": "scheduled",
@@ -1166,9 +1168,9 @@ class PaymentTokenEft(models.Model):
         selection=[("temporary", "Temporary"), ("permanent", "Permanent")],
     )
     provider = fields.Selection(string="Provider", related="acquirer_id.provider", readonly=False)
-    save_token = fields.Selection(string="Save Cards", related="acquirer_id.save_token", readonly=False)
+    # save_token = fields.Selection(string="Save Cards", related="acquirer_id.save_token", readonly=False)
     bamboraeft_tran_type = fields.Selection(string="Transaction Type", selection=[("bank", "Bank"), ("card", "Card")])
-    invoice_partner_bank_id = fields.Many2one(
+    partner_bank_id = fields.Many2one(
         string="Partner Bank",
         comodel_name="res.partner.bank",
         ondelete="restrict",

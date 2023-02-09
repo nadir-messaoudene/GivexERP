@@ -45,13 +45,13 @@ class AccountMove(models.Model):
     bambora_batch_state = fields.Selection(string="Bambora State", related="bambora_batch_payment_id.state")
     bambora_batch_status = fields.Char(string="Bambora Status", related="bambora_batch_payment_id.status")
     bambora_bank_identifier_number = fields.Char(
-        "Bank Identifier No.", related="invoice_partner_bank_id.bank_bic", readonly=True
+        "Bank Identifier No.", related="partner_bank_id.bank_bic", readonly=True
     )
     bambora_bank_transit_number = fields.Char(
-        "Bank Transit No.", related="invoice_partner_bank_id.bank_transit_no", readonly=True
+        "Bank Transit No.", related="partner_bank_id.bank_transit_no", readonly=True
     )
     bambora_aba_routing = fields.Char(
-        "ABA/Routing", related="invoice_partner_bank_id.aba_routing", readonly=True
+        "ABA/Routing", related="partner_bank_id.aba_routing", readonly=True
     )
 
     def check_conditions(self, record, acquirers):
@@ -65,13 +65,13 @@ class AccountMove(models.Model):
         if tx:
             raise UserError(_("%s Record already in transaction process") % record.name)
         if (
-            not record.invoice_partner_bank_id.acc_number
-            or not record.invoice_partner_bank_id.bamboraeft_account_type
-            or not record.invoice_partner_bank_id.bamboraeft_country_type
-            or not record.invoice_partner_bank_id.aba_routing
+            not record.partner_bank_id.acc_number
+            or not record.partner_bank_id.bamboraeft_account_type
+            or not record.partner_bank_id.bamboraeft_country_type
+            or not record.partner_bank_id.aba_routing
         ):
             if record.partner_id and record.partner_id.bank_ids:
-                record.invoice_partner_bank_id = record.partner_id.bank_ids[0]
+                record.partner_bank_id = record.partner_id.bank_ids[0]
                 record._cr.commit()
             else:
                 raise UserError(_("Please Add Full Account Information for  %s") % record.name)
@@ -89,7 +89,7 @@ class AccountMove(models.Model):
                         transaction_type,
                         record.bambora_bank_identifier_number,
                         record.bambora_bank_transit_number,
-                        record.invoice_partner_bank_id.acc_number,
+                        record.partner_bank_id.acc_number,
                         round(record.amount_total * 100),
                         record.name,
                         record.partner_id.name,
@@ -132,15 +132,15 @@ class AccountMove(models.Model):
                     data = [
                             "A",#Transaction type
                             transaction_type,#Transaction type
-                            record.invoice_partner_bank_id.aba_routing,#Transit Routing Number - The 9-digit transit number
-                            record.invoice_partner_bank_id.acc_number,#Account Number - The 5-15 digit account number
-                            record.invoice_partner_bank_id.bamboraeft_account_type,#Account Code - Designates the type of bank account 
+                            record.partner_bank_id.aba_routing,#Transit Routing Number - The 9-digit transit number
+                            record.partner_bank_id.acc_number,#Account Number - The 5-15 digit account number
+                            record.partner_bank_id.bamboraeft_account_type,#Account Code - Designates the type of bank account 
                             round(record.amount_total * 100),#Amount - Transaction amount in pennies
                             record.name,#Reference number - An optional reference number of up to 19 digits. If you don't want a reference number, enter "0" (zero).
                             recipient_name,#Recipient Name - Full name of the bank account holder
                             # "",
                             # "",
-                            # record.invoice_partner_bank_id.bamboraeft_sec_code or "CCD",
+                            # record.partner_bank_id.bamboraeft_sec_code or "CCD",
                             # "",
                         ]
                 _logger.info("DATA ===>>>{}".format(data))
@@ -206,7 +206,7 @@ class AccountMove(models.Model):
                     "invoice_no": rec.id,
                     "invoice_ref": rec.ref,
                     "invoice_partner_id": rec.partner_id.id,
-                    "invoice_partner_bank_id": rec.invoice_partner_bank_id.id,
+                    "partner_bank_id": rec.partner_bank_id.id,
                     "invoice_date": rec.invoice_date,
                     "batch_id": response_dict["batch_id"],
                     "state": "scheduled",
