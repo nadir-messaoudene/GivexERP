@@ -21,9 +21,9 @@
     'depends': ['base', 'web'],
     'data': [
         'security/res_groups.xml',
-        'views/external_load_view.xml',
+        # 'views/external_load_view.xml',
     ],
-    'qweb': ['static/src/xml/template_view.xml'],
+    # 'qweb': ['static/src/xml/template_view.xml'],
     'demo': [],
     'installable': True,
     'auto_install': False,
