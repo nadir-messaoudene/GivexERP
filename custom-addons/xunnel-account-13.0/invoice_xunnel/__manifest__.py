@@ -24,7 +24,7 @@
         'views/documents_views.xml',
         'wizards/attach_xmls_wizard_view.xml',
         'wizards/documents.xml',
-        'views/account_config_settings.xml',
+        # 'views/account_config_settings.xml',
     ],
     'demo': [
         'demo/res_company.xml',
