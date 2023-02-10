@@ -35,13 +35,13 @@
         # VIEWS
         'views/account_online_sync.xml',
         'views/accountant_dashboard.xml',
-        'views/assets.xml',
+        # 'views/assets.xml',
         'views/xunnel_menuitems.xml',
 
         # WIZARDS
     ],
-    'qweb': [
-        'static/src/xml/add_account_manager.xml',
-    ],
+    # 'qweb': [
+    #     'static/src/xml/add_account_manager.xml',
+    # ],
     'installable': True,
 }
