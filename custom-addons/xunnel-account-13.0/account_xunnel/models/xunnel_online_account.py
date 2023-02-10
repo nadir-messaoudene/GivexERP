@@ -14,7 +14,7 @@ class ProviderAccount(models.Model):
     _description = 'Interface for Online Account Journal'
 
     name = fields.Char(string="Journal Name", required=True)
-    account_online_provider_id = fields.Many2one('account.online.provider', ondelete='cascade', readonly=True)
+    account_online_provider_id = fields.Many2one('account.online.link', ondelete='cascade', readonly=True)
     journal_ids = fields.One2many('account.journal', 'account_online_journal_id', string='Journal', domain=[('type', '=', 'bank')])
     account_number = fields.Char()
     last_sync = fields.Date("Last synchronization")
