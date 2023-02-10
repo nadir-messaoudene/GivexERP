@@ -6,7 +6,7 @@ import requests
 from lxml import objectify
 
 from odoo import models, fields, api, tools
-from odoo.addons.l10n_mx_edi.models.account_invoice import CFDI_SAT_QR_STATE
+# from odoo.addons.l10n_mx_edi.models.account_invoice import CFDI_SAT_QR_STATE
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_repr
 
@@ -156,7 +156,8 @@ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
             })
         except Exception as e:
             raise ValidationError(str(e))
-        return CFDI_SAT_QR_STATE.get(status[0] if status else '', 'none')
+        return status[0] if status else ''
+        # return CFDI_SAT_QR_STATE.get(status[0] if status else '', 'none')
 
     @api.depends('datas')
     def _compute_product_list(self):
