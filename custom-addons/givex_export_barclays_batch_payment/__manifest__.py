@@ -11,6 +11,7 @@
     """,
     "depends": [
         "base",
+        "l10n_us",
         "l10n_mx_edi",
         "l10n_mx_patch_snd",
         "report_csv",
