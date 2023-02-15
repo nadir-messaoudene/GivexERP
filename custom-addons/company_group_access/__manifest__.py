@@ -25,14 +25,14 @@
         'views/external_load_view.xml',
     ],
     # 'qweb': ['static/src/xml/template_view.xml'],
-    "assets": {
-        "web.assets_backend": [
-            "/company_group_access/static/src/js/company_access.js",
-        ],
-        'web.assets_qweb': [
-            'company_group_access/static/src/xml/*',
-        ],
-    },
+    # "assets": {
+    #     "web.assets_backend": [
+    #         "/company_group_access/static/src/js/company_access.js",
+    #     ],
+    #     'web.assets_qweb': [
+    #         'company_group_access/static/src/xml/**/*',
+    #     ],
+    # },
     'demo': [],
     'installable': True,
     'auto_install': False,
