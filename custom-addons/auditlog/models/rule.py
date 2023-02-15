@@ -503,6 +503,21 @@ class AuditlogRule(models.Model):
                 log_vals = self._prepare_log_line_vals_on_read(log, field, read_values)
                 log_line_model.create(log_vals)
 
+    # def _create_log_line_on_read(
+    #     self, log, fields_list, read_values, fields_to_exclude
+    # ):
+    #     """Log field filled on a 'read' operation."""
+    #     log_line_model = self.env["auditlog.log.line"]
+    #     fields_to_exclude = fields_to_exclude + FIELDS_BLACKLIST
+    #     for field_name in fields_list:
+    #         if field_name in fields_to_exclude:
+    #             continue
+    #         field = self._get_field(log.model_id, field_name)
+    #         # not all fields have an ir.models.field entry (ie. related fields)
+    #         if field:
+    #             log_vals = self._prepare_log_line_vals_on_read(log, field, read_values)
+    #             log_line_model.create(log_vals)
+
     def _prepare_log_line_vals_on_read(self, log, field, read_values):
         """Prepare the dictionary of values used to create a log line on a
         'read' operation.
@@ -535,6 +550,23 @@ class AuditlogRule(models.Model):
                     log, field, old_values, new_values
                 )
                 log_line_model.create(log_vals)
+
+    # def _create_log_line_on_write(
+    #     self, log, fields_list, old_values, new_values, fields_to_exclude
+    # ):
+    #     """Log field updated on a 'write' operation."""
+    #     log_line_model = self.env["auditlog.log.line"]
+    #     fields_to_exclude = fields_to_exclude + FIELDS_BLACKLIST
+    #     for field_name in fields_list:
+    #         if field_name in fields_to_exclude:
+    #             continue
+    #         field = self._get_field(log.model_id, field_name)
+    #         # not all fields have an ir.models.field entry (ie. related fields)
+    #         if field:
+    #             log_vals = self._prepare_log_line_vals_on_write(
+    #                 log, field, old_values, new_values
+    #             )
+    #             log_line_model.create(log_vals)
 
     def _prepare_log_line_vals_on_write(self, log, field, old_values, new_values):
         """Prepare the dictionary of values used to create a log line on a
@@ -582,6 +614,21 @@ class AuditlogRule(models.Model):
             if field:
                 log_vals = self._prepare_log_line_vals_on_create(log, field, new_values)
                 log_line_model.create(log_vals)
+
+    # def _create_log_line_on_create(
+    #     self, log, fields_list, new_values, fields_to_exclude
+    # ):
+    #     """Log field filled on a 'create' operation."""
+    #     log_line_model = self.env["auditlog.log.line"]
+    #     fields_to_exclude = fields_to_exclude + FIELDS_BLACKLIST
+    #     for field_name in fields_list:
+    #         if field_name in fields_to_exclude:
+    #             continue
+    #         field = self._get_field(log.model_id, field_name)
+    #         # not all fields have an ir.models.field entry (ie. related fields)
+    #         if field:
+    #             log_vals = self._prepare_log_line_vals_on_create(log, field, new_values)
+    #             log_line_model.create(log_vals)
 
     def _prepare_log_line_vals_on_create(self, log, field, new_values):
         """Prepare the dictionary of values used to create a log line on a
