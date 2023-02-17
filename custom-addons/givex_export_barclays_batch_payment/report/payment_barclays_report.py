@@ -45,13 +45,13 @@ class BatchPaymentBarclaysCSV(models.AbstractModel):
                             and payment.partner_bank_account_id.barclays_account_type
                             or "",
                             "Bacs Code": payment.partner_bank_account_id.bacs_code
-                            and int(payment.partner_bank_account_id.bacs_code[:2])
+                            and str(payment.partner_bank_account_id.bacs_code[:2])
                             or "",
                             "Debit Sort Code": payment.journal_id.bank_account_id.aba_routing
-                            and int(payment.journal_id.bank_account_id.aba_routing[:6])
+                            and str(payment.journal_id.bank_account_id.aba_routing[:6])
                             or "",
                             "Debit Account Number": payment.journal_id.bank_account_id.acc_number
-                            and int(payment.journal_id.bank_account_id.acc_number[:8])
+                            and str(payment.journal_id.bank_account_id.acc_number[:8])
                             or "",
                             "Free Format": "",
                             "Amount": amount or "0.00",
