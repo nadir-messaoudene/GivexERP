@@ -36,10 +36,10 @@ class BatchPaymentBarclaysCSV(models.AbstractModel):
                     writer.writerow(
                         {
                             "Destination Sort Code": payment.partner_bank_account_id.aba_routing
-                            and int(payment.partner_bank_account_id.aba_routing[:6])
+                            and str(payment.partner_bank_account_id.aba_routing[:6])
                             or "",
                             "Destination Account Number": payment.partner_bank_account_id.acc_number
-                            and int(payment.partner_bank_account_id.acc_number[:8])
+                            and str(payment.partner_bank_account_id.acc_number[:8])
                             or "",
                             "Destination Account Type": payment.partner_bank_account_id.barclays_account_type
                             and payment.partner_bank_account_id.barclays_account_type
