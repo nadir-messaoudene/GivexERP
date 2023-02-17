@@ -11,9 +11,9 @@ class AccountBatchPayment(models.Model):
     def export_barclays_batch_to_csv(self):
         report_action = {
             "type": "ir.actions.report",
-            "report_name": "report_csv.batch_payment_csv",
+            "report_name": "report_csv.batch_payment_barclays_csv",
             "report_type": "csv",
-            "report_file": "report_csv.batch_payment_csv",
+            "report_file": "report_csv.batch_payment_barclays_csv",
             "print_report_name": "(object._get_report_base_filename())",
             "model": "account.batch.payment",
             "attachment_use": False,
