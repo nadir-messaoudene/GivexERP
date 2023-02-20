@@ -82,7 +82,7 @@ class AccountMoveInherit(models.Model):
         payment_state = ['not_paid', 'in_payment']
 
 
-        if self._context.get('partner_id') and self._context.get('type'):
+        if self._context.get('partner_id') and self._context.get('move_type'):
             partner_id = int(self._context.get('partner_id'))
 
             currency_id = self._context.get('currency_id')

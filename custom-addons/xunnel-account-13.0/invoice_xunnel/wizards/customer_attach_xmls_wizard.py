@@ -189,7 +189,7 @@ class AttachXmlsWizard(models.TransientModel):
         inv_amount = inv.amount_total
         inv_folio = inv.invoice_origin
         domain = [('l10n_mx_edi_cfdi_name', '!=', False),
-                  ('type', '=', 'out_invoice'),
+                  ('move_type', '=', 'out_invoice'),
                   ('id', '!=', inv_id)]
         if exist_supplier:
             domain += [('partner_id', 'child_of', exist_supplier.id)]
@@ -277,7 +277,7 @@ class AttachXmlsWizard(models.TransientModel):
         invoice._set_cfdi_origin('01', [xml_related_uuid])
         related_invoices = invoice.search([
             ('partner_id', '=', invoice.partner_id.id),
-            ('type', '=', 'in_invoice')])
+            ('move_type', '=', 'in_invoice')])
         related_invoices = related_invoices.filtered(
             lambda inv: inv.l10n_mx_edi_cfdi_uuid == xml_related_uuid)
         if related_invoices:
@@ -449,7 +449,7 @@ class AttachXmlsWizard(models.TransientModel):
                 type=type_invoice)._get_default_journal()
         account_id = account_id or line_obj.with_context({
             'journal_id': journal.id,
-            'type': type_invoice})._default_account()
+            'move_type': type_invoice})._default_account()
         invoice_line_ids = self._prepare_invoice_lines_data(
             xml, account_id, taxes)
         if isinstance(invoice_line_ids, dict):
@@ -461,7 +461,7 @@ class AttachXmlsWizard(models.TransientModel):
             'currency_id': (
                 currency_id.id or self.env.company.currency_id.id),
             'invoice_line_ids': invoice_line_ids,
-            'type': type_invoice,
+            'move_type': type_invoice,
             'journal_id': journal.id,
         })
         invoice_id = inv_obj.create(invoice_data)

@@ -102,7 +102,7 @@ class AccountMoveXmlrpc(models.Model):
         if invoice_address:
             fiscal_position_id = self.env['account.fiscal.position'].with_context(force_company=company_id).get_fiscal_position(partner_id, invoice_address)
         
-        move = {'type': 'out_invoice',
+        move = {'move_type': 'out_invoice',
                 'state': 'draft',
                 'invoice_origin': 'import',
                 'extract_state': 'no_extract_requested',

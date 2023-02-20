@@ -84,6 +84,6 @@ class AccountMoveLine(models.Model):
         if self._context.get('journal_id'):
             journal = self.env['account.journal'].browse(
                 self._context.get('journal_id'))
-            if self._context.get('type') in ('out_invoice', 'in_refund'):
+            if self._context.get('move_type') in ('out_invoice', 'in_refund'):
                 return journal.default_credit_account_id.id
             return journal.default_debit_account_id.id
