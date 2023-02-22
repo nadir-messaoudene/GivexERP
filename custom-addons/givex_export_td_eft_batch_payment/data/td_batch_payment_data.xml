@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Payment methods -->
+
+        <record id="account_payment_method_td" model="account.payment.method">
+            <field name="name">TD Bank</field>
+            <field name="code">td</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+        <record id="ir_cron_filename_reset_sequence" model="ir.cron">
+            <field name="name">Reset filename sequence if it reaches 9999</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="model_id" ref="model_filename_sequence_reset"/>
+            <field name="code">model._reset_sequence()</field>
+            <field name="priority" eval="10"/>
+        </record>
+
+        <function model="account.journal" name="_enable_td_on_bank_journals"/>
+    </data>
+
+    <data noupdate="0">
+        <function model="account.journal" name="_create_td_batch_payment_outbound_sequence"/>
+    </data>
+</odoo>

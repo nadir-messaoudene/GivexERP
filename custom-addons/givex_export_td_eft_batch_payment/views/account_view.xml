@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Account Journal -->
+    <record id="view_account_journal_tree_td_eft" model="ir.ui.view">
+        <field name="name">account.journal.tree.td.eft</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="field[@name='company_id']" position="before">
+                <field name="td_originator_code"/>
+                <field name="td_cpa_code"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_journal_form_td_eft" model="ir.ui.view">
+        <field name="name">account.journal.form.td.eft</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/notebook/page[@name='advanced_settings']/group" position="inside">
+                <group cols="3" attrs="{'invisible': [('payment_method_code', '!=', 'td')]}">
+                    <field name="payment_method_code"/>
+                    <field name="td_originator_code" />
+                    <field name="td_cpa_code"/>
+                </group>
+                <group cols="3" attrs="{'invisible': [('payment_method_code', '!=', 'td')]}">
+                    <field name="td_originator_short_name"/>
+                    <field name="td_institution_id_return"/>
+                    <field name="td_account_no_return"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
