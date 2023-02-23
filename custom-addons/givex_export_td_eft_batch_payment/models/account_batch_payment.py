@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 import base64
 import textwrap
 
 
 from odoo import api, fields, models
+
+_logger = logging.getLogger(__name__)
 
 SEPARATOR = "\r\n"
 
@@ -182,7 +185,9 @@ class AccountBatchPayment(models.Model):
                             data_line = batch_payment._eft_td_transation_line(
                                 payment=payment
                             )
-                            data += data_line + "\n"
+                            _logger.info("data_line : {}".format(data_line))
+                            if data_line:
+                                data += str(data_line) + "\n"
                     data += footer_line
 
                     data = self._wraptext_lines(data)
