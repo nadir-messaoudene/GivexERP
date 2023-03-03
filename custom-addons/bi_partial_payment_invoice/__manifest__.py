@@ -3,7 +3,7 @@
 
 {
     'name' : 'Invoice Partial Payment Reconciliation',
-    'version' : '13.0.0.2',
+    'version' : '15.0.0.3',
     'category' : 'Sales',
     'depends' : ['base', 
         'account', 'sale', 'sale_management', 
@@ -31,9 +31,15 @@
         'wizard/multiple_paymemt_view.xml',
         'views/account_move_view.xml',
     ],
-    'qweb' : [],
+    'assets': {
+        'web.assets_backend': [
+            'bi_partial_payment_invoice/static/src/js/account_payment.js',
+        ],
+    },
+    'qweb': [],
+    'license': 'OPL-1',
     'auto_install': False,
     'installable': True,
-    "live_test_url":'https://youtu.be/8mCirowgP1o',
-    "images":['static/description/Banner.png'],
+    "live_test_url": 'https://youtu.be/8mCirowgP1o',
+    "images": ['static/description/Banner.png'],
 }

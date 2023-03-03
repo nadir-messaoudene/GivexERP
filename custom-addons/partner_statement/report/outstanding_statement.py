@@ -16,8 +16,12 @@ class OutstandingStatement(models.AbstractModel):
         return str(
             self._cr.mogrify(
                 """
-            SELECT m.name AS move_id, l.partner_id, l.date, l.name,
-                            l.ref, l.blocked, l.currency_id, l.company_id,
+            SELECT l.id, m.name AS move_id, l.partner_id, l.date, l.name,
+                            l.blocked, l.currency_id, l.company_id,
+            CASE WHEN l.ref IS NOT NULL
+                THEN l.ref
+                ELSE m.ref
+            END as ref,
             CASE WHEN (l.currency_id is not null AND l.amount_currency > 0.0)
                 THEN avg(l.amount_currency)
                 ELSE avg(l.debit)
@@ -31,14 +35,16 @@ class OutstandingStatement(models.AbstractModel):
                 ELSE l.balance + sum(coalesce(pc.amount, 0.0))
             END AS open_amount,
             CASE WHEN l.balance > 0.0
-                THEN l.amount_currency - sum(coalesce(pd.amount_currency, 0.0))
-                ELSE l.amount_currency + sum(coalesce(pc.amount_currency, 0.0))
+                THEN l.amount_currency - sum(coalesce(pd.debit_amount_currency, 0.0))
+                ELSE l.amount_currency + sum(coalesce(pc.credit_amount_currency, 0.0))
             END AS open_amount_currency,
             CASE WHEN l.date_maturity is null
                 THEN l.date
                 ELSE l.date_maturity
             END as date_maturity
             FROM account_move_line l
+            JOIN account_account aa ON (aa.id = l.account_id)
+            JOIN account_account_type at ON (at.id = aa.user_type_id)
             JOIN account_move m ON (l.move_id = m.id)
             LEFT JOIN (SELECT pr.*
                 FROM account_partial_reconcile pr
@@ -52,8 +58,7 @@ class OutstandingStatement(models.AbstractModel):
                 ON pr.debit_move_id = l2.id
                 WHERE l2.date <= %(date_end)s
             ) as pc ON pc.credit_move_id = l.id
-            WHERE l.partner_id IN %(partners)s
-                                AND l.account_internal_type = %(account_type)s
+            WHERE l.partner_id IN %(partners)s AND at.type = %(account_type)s
                                 AND (
                                   (pd.id IS NOT NULL AND
                                       pd.max_date <= %(date_end)s) OR
@@ -61,9 +66,12 @@ class OutstandingStatement(models.AbstractModel):
                                       pc.max_date <= %(date_end)s) OR
                                   (pd.id IS NULL AND pc.id IS NULL)
                                 ) AND l.date <= %(date_end)s AND m.state IN ('posted')
-            GROUP BY l.partner_id, m.name, l.date, l.date_maturity, l.name,
-                                l.ref, l.blocked, l.currency_id,
-                                l.balance, l.amount_currency, l.company_id
+            GROUP BY l.id, l.partner_id, m.name, l.date, l.date_maturity, l.name,
+                CASE WHEN l.ref IS NOT NULL
+                    THEN l.ref
+                    ELSE m.ref
+                END,
+                l.blocked, l.currency_id, l.balance, l.amount_currency, l.company_id
             """,
                 locals(),
             ),

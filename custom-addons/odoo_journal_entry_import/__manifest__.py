@@ -39,6 +39,7 @@ journal items excel import
                 'account',
                 ],
     'data':[
+        'security/ir.model.access.csv',
         'wizard/import_excel_wizard.xml',
         'views/journal_view.xml',
     ],

@@ -10,7 +10,7 @@
     "license": "AGPL-3",
     "depends": ["base", "web"],
     "data": [
-            # "views/webclient_templates.xml"
+            # "views/webclient_templates.xml"  # ADD JS file
         ],
     "demo": ["demo/report.xml"],
     "installable": True,

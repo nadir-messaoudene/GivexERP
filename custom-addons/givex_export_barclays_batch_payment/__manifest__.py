@@ -1,6 +1,6 @@
 {
     "name": "Barclays Export CSV/Excel File for BACS",
-    "version": "13.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Extra Tool",
     "sequence": 1,
     "author": "Syncoria Inc.",
@@ -11,7 +11,7 @@
     """,
     "depends": [
         "base",
-        "l10n_us",
+        # "l10n_us",
         "l10n_mx_edi",
         "l10n_mx_patch_snd",
         "report_csv",
@@ -19,6 +19,7 @@
         "account_batch_payment",
     ],
     "data": [
+        # "data/account_batch_payment_barclays_data.xml",
         "report/payment_barclays_report.xml",
         "views/account_batch_payment_views.xml",
         "views/res_bank_views.xml",

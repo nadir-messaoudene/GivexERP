@@ -25,12 +25,20 @@ class AccontMultiPaymentWizard(models.Model):
 
         return result
 
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        for payment in self:
+            payment.update({
+                'move_line_id' : False,
+            })
+
     @api.onchange('move_line_id', 'partner_id')
     def _onchange_payment_id(self):
         for payment in self:
             payment.update({
                 'move_lines_ids' : self.env['multi.move.line']
             })
+
 
     @api.depends('move_line_id', 'partner_id', 'move_lines_ids')
     def onchange_payment_(self):
@@ -72,8 +80,7 @@ class AccontMultiPaymentWizard(models.Model):
                             remain_amount_currency += line.curr_amount_to_pay
                     else:
                         remain_amount += line.amount_to_pay
-            
-            
+
             if remain_amount > amount_residual:
                 raise UserError(_('You can not pay more than Residual Amount'))
             if transfer_currency_id:
@@ -92,12 +99,12 @@ class AccontMultiPaymentWizard(models.Model):
 
     name = fields.Char('Payment Name')
     partner_id = fields.Many2one('res.partner', string='Partner')
-    payment_id = fields.Many2one('account.payment', 'Customer/Venodr Payment')
-    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')], tracking=True)
+    payment_id = fields.Many2one('account.payment', 'Customer/Vendor Payment')
+    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')])
     payment_type = fields.Selection([('payin', 'Customer Payment'), ('payout', 'Vendor Payment')], 
         string='Payment Type', required=True, default='payin')
     last_amount = fields.Float('Last Amount', compute='onchange_payment_')
-    move_line_id = fields.Many2one('account.move.line', 'Customer/Venodr Payment Line')
+    move_line_id = fields.Many2one('account.move.line', 'Customer/Vendor Payment Line')
     company_id = fields.Many2one('res.company', related='move_line_id.company_id', store=True, string='Company', readonly=False)
     company_currency_id = fields.Many2one('res.currency', string="Company Currency", related='company_id.currency_id', store=True,
         help='Utility field to express amount currency')
@@ -130,8 +137,6 @@ class AccontMultiPaymentWizard(models.Model):
             payment_line_id = payment.move_line_id
             payment_move_id = payment.move_line_id.move_id
 
-
-
             current_balance = payment_line_id.debit - payment_line_id.credit
 
             if payment.currency_id:
@@ -148,9 +153,9 @@ class AccontMultiPaymentWizard(models.Model):
             payment_id = payment.move_line_id.payment_id
 
             if payment_id:
-                payment_date = payment_id.payment_date or fields.Date.context_today(self)
+                date = payment_id.date or fields.Date.context_today(self)
             else:
-                payment_date = fields.Date.context_today(self)
+                date = fields.Date.context_today(self)
 
             account_id = payment_line_id.account_id and payment_line_id.account_id.id
 
@@ -175,7 +180,8 @@ class AccontMultiPaymentWizard(models.Model):
 
             if line_ids:
                 line_ids = list(set(line_ids))
-                payment_move_id.with_context(check_move_validity=False).write({'line_ids' : [(2, line) for line in line_ids]})
+                payment_move_id.with_context(check_move_validity=False,force_delete=True,skip_account_move_synchronization=True).write({'line_ids' : [(2, line) for line in line_ids]})
+
 
             last_line_number = self.env.user.company_id.last_line_number
 
@@ -189,7 +195,7 @@ class AccontMultiPaymentWizard(models.Model):
                     else:
                         amount_to_pay = line_currency_id._convert(\
                         line.amount_to_pay, currency, company, \
-                        payment_date)
+                        date)
                 else:
                     amount_to_pay = line.amount_to_pay
 
@@ -201,15 +207,16 @@ class AccontMultiPaymentWizard(models.Model):
                 else:
                     amount_remain = line.curr_amount_to_pay
 
-                do_payment_move_vals = payment_id.with_context(
-                    amount_remain=amount_remain,
-                    last_line_number=last_line_number,
-                    currency_id = line.currency_id,
-                    partner_id=partner_id)._prepare_payment_moves()
+                if payment_id:
+                    do_payment_move_vals = payment_id.with_context(
+                        amount_remain=amount_remain,
+                        last_line_number=last_line_number,
+                        currency_id = line.currency_id,
+                        partner_id=partner_id)._prepare_move_line_default_vals()
 
                 if not payment_id:
                     if currency and currency != company_currency:
-                        amount_to_pay = currency._convert(amount_to_pay, company_currency, company, payment_date)
+                        amount_to_pay = currency._convert(amount_to_pay, company_currency, company, date)
                         amount_currency = amount_to_pay
                         currency_id = currency.id
                     else:
@@ -224,22 +231,23 @@ class AccontMultiPaymentWizard(models.Model):
                         last_line_number=last_line_number,
                         partner_id=partner_id,
                         current_balance=current_balance,
-                        account_id=account_id)._prepare_payment_moves()
+                        account_id=account_id)._prepare_move_line_default_vals()
 
 
                 if len(do_payment_move_vals) >= 1:
-                    payment_move_id.with_context(check_move_validity=False).write({
-                        'line_ids' : do_payment_move_vals[0].get('line_ids') or self.env['account.move.line']
-                    })
+                    for vals in do_payment_move_vals:
+                        vals.update({'move_id':payment_move_id.id})
+
+                        payment_move_id.with_context(check_move_validity=False,force_delete=True,skip_account_move_synchronization=True).line_ids.create(vals)
 
                     if line.move_id.is_inbound():
-                        lines = payment_move_id.with_context(check_move_validity=False).line_ids.filtered(lambda x : (x.credit > 0 and x.debit == 0) and (x.partner_id == partner_id) and not x.reconciled)
+                        lines = payment_move_id.with_context(check_move_validity=False,force_delete=True,skip_account_move_synchronization=True).line_ids.filtered(lambda x : (x.credit > 0 and x.debit == 0) and (x.partner_id == partner_id) and not x.reconciled)
                     else:
-                        lines = payment_move_id.with_context(check_move_validity=False).line_ids.filtered(lambda x : (x.credit == 0 and x.debit > 0) and (x.partner_id == partner_id) and not x.reconciled)
+                        lines = payment_move_id.with_context(check_move_validity=False,force_delete=True,skip_account_move_synchronization=True).line_ids.filtered(lambda x : (x.credit == 0 and x.debit > 0) and (x.partner_id == partner_id) and not x.reconciled)
+
 
                     lines += line.move_id.line_ids.filtered(lambda line: line.account_id == lines[0].account_id and not line.reconciled)
-
-                    lines.reconcile()
+                    lines.reconcile_()
             
 
             if remaining_payment:   
@@ -247,16 +255,16 @@ class AccontMultiPaymentWizard(models.Model):
                 self.env.user.company_id.write({
                     'last_line_number' : last_line_number
                 })
-
-                remain_payment_move_vals = payment_id.with_context(
-                    amount_remain=remaining_payment,
-                    last_line_number=last_line_number,
-                    currency_id = currency or company_currency,
-                    partner_id=partner_id)._prepare_payment_moves()
+                if payment_id:
+                    remain_payment_move_vals = payment_id.with_context(
+                        amount_remain=remaining_payment,
+                        last_line_number=last_line_number,
+                        currency_id = currency or company_currency,
+                        partner_id=partner_id)._prepare_move_line_default_vals()
 
                 if not payment_id:
                     if currency and currency != company_currency:
-                        amount_remain = currency._convert(remaining_payment, company_currency, company, payment_date)
+                        amount_remain = currency._convert(remaining_payment, company_currency, company, date)
                         amount_currency = remaining_payment
                         currency_id = currency.id
                     else:
@@ -271,12 +279,12 @@ class AccontMultiPaymentWizard(models.Model):
                         last_line_number=last_line_number,
                         partner_id=partner_id,
                         current_balance=current_balance,
-                        account_id=account_id)._prepare_payment_moves()
+                        account_id=account_id)._prepare_move_line_default_vals()
 
                 if len(remain_payment_move_vals) >= 1:
-                    payment_move_id.with_context(check_move_validity=False).write({
-                        'line_ids' : remain_payment_move_vals[0].get('line_ids') or self.env['account.move.line']
-                    })
+                    for vals in remain_payment_move_vals:
+                        vals.update({'move_id':payment_move_id.id})    
+                    payment_move_id.with_context(check_move_validity=False,force_delete=True,skip_account_move_synchronization=True).line_ids.create(vals)
             else:
                 self.env.user.company_id.write({
                     'last_line_number' : last_line_number
@@ -284,7 +292,7 @@ class AccontMultiPaymentWizard(models.Model):
 
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
-    def _prepare_payment_moves(self):
+    def _prepare_move_line_default_vals(self):
         for payment in self:
             if self._context.get('amount_to_pay'):
                 amount = self._context.get('amount_to_pay')
@@ -319,30 +327,26 @@ class AccontMultiPaymentWizard(models.Model):
 
             all_move_vals = []
 
-            move_vals = {
-                'line_ids': [
-                    # Receivable / Payable / Transfer line.
-                    (0, 0, {
-                        'name': rec_pay_line_name,
-                        'amount_currency': amount_currency,
-                        'currency_id': currency_id,
-                        'debit': debit,
-                        'credit': credit,
-                        'date_maturity': fields.Date.context_today(self),
-                        'partner_id': partner_id or False,
-                        'account_id': account_id or False,
-                        'payment_id': False,
-                        'in_payment': in_payment,
-                        'exclude_from_invoice_tab' : True,
-                        'last_line_number' : int(self._context.get('last_line_number', 0)),
-                    }),
-                ]
-            }
 
-            all_move_vals.append(move_vals)
+            line_vals_list = [
 
-            return all_move_vals
+                # Receivable / Payable.
+                {
+                    'name': rec_pay_line_name,
+                    'date_maturity': fields.Date.context_today(self),
+                    'amount_currency': amount_currency,
+                    'currency_id': currency_id,
+                    'debit':debit,
+                    'credit': credit,
+                    'partner_id': partner_id or False,
+                    'account_id': account_id,
+                    'in_payment': in_payment,
+                    'payment_id': False,
+                    'last_line_number' : int(self._context.get('last_line_number', 0)),
 
+                },
+            ]
+            return line_vals_list    
     
 
 class MultiMoveLine(models.Model):
@@ -351,7 +355,7 @@ class MultiMoveLine(models.Model):
 
 
     multi_payment_id = fields.Many2one('account.multi.payment.wizard', string='Payment Wizard') 
-    move_line_id = fields.Many2one('account.move.line', string='Move Line')
+    move_line_id = fields.Many2one('account.move.line', string='Move Line',)
     move_id = fields.Many2one('account.move', string='Account Move')
     partner_id = fields.Many2one('res.partner', string='Partner', related="multi_payment_id.partner_id")
     company_id = fields.Many2one('res.company', related='move_id.company_id', store=True, string='Company', readonly=False)
@@ -360,8 +364,7 @@ class MultiMoveLine(models.Model):
     currency_id = fields.Many2one('res.currency', string="Currency", related='move_id.currency_id', readonly=True,
         help='Utility field to express amount currency')
     payment_type = fields.Selection(related='multi_payment_id.payment_type', string="Payment Type", store=True, readonly=True)
-    amount_total = fields.Monetary(string='Amount Total', store=True, 
-        related="move_id.amount_total", default=0.00)
+    amount_total = fields.Monetary(string='Amount Total', store=True, related="move_id.amount_total")
     amount_residual = fields.Monetary(string='Residual Amount', readonly=True,
         default=0.00, currency_field='company_currency_id')
     amount_residual_currency = fields.Monetary(string='Currency Residual Amount', readonly=True,
@@ -407,6 +410,7 @@ class MultiMoveLine(models.Model):
                         payment_curr_id,
                         company_id, 
                         fields.Date.context_today(self))
+
 
     @api.onchange('curr_amount_to_pay')
     def onchange_curr_amount_to_pay(self):

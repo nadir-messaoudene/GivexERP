@@ -7,7 +7,7 @@
 {
     'name': "Inventory Adjustment Backdated",
     'category': 'Inventory',
-    'version': '13.0.1.0',
+    'version': '15.0.1.0',
     'author': 'Equick ERP',
     'description': """
         This Module allows user to do adjustments in back dated-force dated.
@@ -15,9 +15,9 @@
         * Update the date in stock moves and product moves.
         * Update the date in journal entries if product have automated valuation method.
     """,
-    'summary': """inventory adjustment date | inventory adjustment force date | force date inventory adjustment | back dated inventory adjustment | date inventory adjustment | back dated inventory | force date inventory.""",
+    'summary': """inventory adjustment date inventory adjustment force date force date inventory adjustment back dated inventory adjustment date inventory adjustment back dated inventory force date inventory Backdate Inventory Adjustment Backdated Inventory Adjustment""",
     'depends': ['stock_account'],
-    'price': 12,
+    'price': 14,
     'currency': 'EUR',
     'license': 'OPL-1',
     'website': "",

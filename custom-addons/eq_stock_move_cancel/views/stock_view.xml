@@ -26,7 +26,7 @@
 	</record>
 
 	<!-- Cancel Inventory Adjustment -->
-	<record id="inherit_stock_view_inventory_form" model="ir.ui.view">
+<!-- 	<record id="inherit_stock_view_inventory_form" model="ir.ui.view">
 		<field name="name">stock.inventory.form</field>
 		<field name="model">stock.inventory</field>
 		<field name="inherit_id" ref="stock.view_inventory_form" />
@@ -42,7 +42,7 @@
 				</attribute>
 			</xpath>
 		</field>
-	</record>
+	</record> -->
 
 	<!-- Cancel Scrap Stock -->
 	<record id="inherit_stock_stock_scrap_form_view" model="ir.ui.view">

@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 class Lead(models.Model):
     _inherit = "crm.lead"
 
-    planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True, compute="_compute_planned_revenue", store=True)
+    planned_revenue = fields.Monetary('Expected Revenue -', currency_field='company_currency', tracking=True, compute="_compute_planned_revenue", store=True)
     x_studio_setup_fees = fields.Monetary('Setup Fees', currency_field='company_currency', tracking=True, )#required=True
     x_studio_expected_annual_revenue = fields.Monetary('Expected Annual Revenue', currency_field='company_currency', tracking=True)#, required=True
     x_studio_expected_recurring_revenue = fields.Monetary('Expected Monthly Recurring Revenue', currency_field='company_currency', tracking=True)
@@ -35,7 +35,7 @@ class Lead(models.Model):
         cad_company = self.env['res.company'].search([('currency_id', '=', cad_currency.id), ('name', 'ilike', 'Canada')])
         date = fields.Date.today()
         _logger.warning("Initializing Givex CRM module...")
-        for each in res:
+        for each in res.filtered(lambda r: r.company_id.currency_id):
             lead_curr = self.env['res.currency'].browse(each.company_id.currency_id.id)
             # Set the expected revenue to the sum of setup fees and annual revenue if both are non-zero
             if each.x_studio_setup_fees > 0 and each.x_studio_expected_annual_revenue > 0:
@@ -44,7 +44,6 @@ class Lead(models.Model):
                 planned_revenue = each.planned_revenue
             else:
                 continue
-                
             if each.company_id.id != cad_company.id:
                 planned_revenue_cad = lead_curr._convert(planned_revenue, cad_currency, cad_company, date)
             else:
@@ -67,10 +66,14 @@ class Lead(models.Model):
         Calculate the sum of the planned revenues
         in the current state
         """
-        
         active_currency = self.env['res.currency'].search([('name', '=', 'CAD')])
         date = self._context.get('date') or fields.Date.today()
-        company = self.env['res.company'].search([('currency_id', '=', active_currency.id)])[0]
+        if active_currency:
+            company_rec = self.env['res.company'].search([('currency_id', '=', active_currency.id)])
+            company = company_rec and company_rec[0] or False
+        else:
+            company_rec = self.env['res.company'].search([])[0]
+            company = company_rec and company_rec[0] or False
         for lead in self:
             if lead.planned_revenue:
                 lead_curr = lead.company_id.currency_id

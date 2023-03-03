@@ -44,23 +44,23 @@
                     </group>
                     <notebook colspan="5">
                         <page string="Journal Items">
-                            <label for='account_label' string='Deposits, Credits, and Interest'/>
+                            <label for='debit_move_line_ids' string='Deposits, Credits, and Interest'/>
                             <field colspan="4" mode="tree" name="debit_move_line_ids" nolabel="1" widget="one2many_list" height="300" attrs="{'readonly': [('state','=','done')]}">
                                 <form string="Deposits, Credits, and Interest">
                                     <group>
-		                                <group>
+                                        <group>
                                             <field name="name"/>
                                             <field name="ref"/>
                                             <field name="amount"/>
                                             <field name="currency_id"/>
-		                                </group>
-		                                <group>
+                                        </group>
+                                        <group>
                                             <field name="partner_id"/>
-		                                    <field name="date"/>
+                                            <field name="date"/>
                                             <field name="cleared_bank_account"/>
-		                                    <field name="research_required" invisible="1"/>
+                                            <field name="research_required" invisible="1"/>
                                             <field name="type" invisible="1"/>
-		                                </group>
+                                        </group>
                                     </group>
                                 </form>
                                 <tree string="Deposits, Credits, and Interest" editable="top">
@@ -76,7 +76,7 @@
                                     <field name="type" invisible="1"/>
                                 </tree>
                             </field>
-                            <label for='account_label2' string='Checks, Withdrawals, Debits, and Service Charges'/>
+                            <label for='credit_move_line_ids' string='Checks, Withdrawals, Debits, and Service Charges'/>
                             <field colspan="4" name="credit_move_line_ids" nolabel="1" height="300" context="{'default_type': 'cr'}" attrs="{'readonly': [('state','=','done')]}">
                                 <form string="Checks, Withdrawals, Debits, and Service Charges">
                                     <group>
@@ -146,10 +146,10 @@
                         </page>
                     </notebook>
                  </sheet>
-	            <div class="oe_chatter">
-	                <field name="message_follower_ids" widget="mail_followers"/>
-	                <field name="message_ids" widget="mail_thread"/>
-	            </div>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -197,25 +197,34 @@
     parent="menu_finance_menu_finance_entries"
     sequence="5"/>
 
-    <act_window
-    id="act_account_move_line_to_add"
-    name="Journal Items"
-    res_model="account.move.line"
-    binding_model="bank.acc.rec.statement"/>
+    <record id="act_account_move_line_to_add" model="ir.actions.act_window">
+        <field name="name">Journal Items</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_bank_acc_rec_statement"/>
+        <field name="binding_view_types">form</field>
+    </record>
 
-    <act_window
-    id="act_supplier_payment_to_add1"
-    name="Supplier Payment"
-    domain="[('journal_id.type', 'in', ['bank', 'cash']), ('payment_type','=', 'outbound')]"
-    res_model="account.payment"
-    binding_model="bank.acc.rec.statement"/>
+    <record id="act_supplier_payment_to_add1" model="ir.actions.act_window">
+        <field name="name">Supplier Payment</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('payment_type','=', 'outbound')]</field>
+        <field name="binding_model_id" ref="model_bank_acc_rec_statement"/>
+        <field name="binding_view_types">form</field>
+    </record>
 
-    <act_window
-    id="act_customer_payment_to_add"
-    name="Customer Payment"
-    domain="[('journal_id.type', 'in', ['bank', 'cash']), ('payment_type','=','inbound')]"
-    context="{'type':'receipt'}"
-    res_model="account.payment"
-    binding_model="bank.acc.rec.statement"/>
+    <record id="act_customer_payment_to_add" model="ir.actions.act_window">
+        <field name="name">Customer Payment</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('payment_type','=','inbound')]</field>
+        <field name="context" eval="{'type':'receipt'}"/>
+        <field name="binding_model_id" ref="model_bank_acc_rec_statement"/>
+        <field name="binding_view_types">form</field>
+    </record>
 
 </odoo>

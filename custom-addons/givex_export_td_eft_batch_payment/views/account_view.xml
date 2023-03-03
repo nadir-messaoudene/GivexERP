@@ -19,12 +19,11 @@
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form/sheet/notebook/page[@name='advanced_settings']/group" position="inside">
-                <group cols="3" attrs="{'invisible': [('payment_method_code', '!=', 'td')]}">
-                    <field name="payment_method_code"/>
+                <group cols="3" attrs="{'invisible': [('has_td_EFT_payment_method', '!=', True)]}">
+                    <field name="has_td_EFT_payment_method" invisible="1"/>
+                    <field name="payment_method_code" invisible="1"/>
                     <field name="td_originator_code" />
                     <field name="td_cpa_code"/>
-                </group>
-                <group cols="3" attrs="{'invisible': [('payment_method_code', '!=', 'td')]}">
                     <field name="td_originator_short_name"/>
                     <field name="td_institution_id_return"/>
                     <field name="td_account_no_return"/>

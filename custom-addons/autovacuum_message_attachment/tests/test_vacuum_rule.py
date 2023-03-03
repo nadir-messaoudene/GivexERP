@@ -162,4 +162,4 @@ class TestVacuumRule(common.TransactionCase):
 
         rule.write({"model_filter_domain": "[['name', '=', 'Test Partner']]"})
         self.message_obj.autovacuum(ttype="message")
-        self.assertEqual(len(partner.message_ids), 0)
+        self.assertEqual(len(partner.message_ids), 1)

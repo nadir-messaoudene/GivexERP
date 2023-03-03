@@ -8,16 +8,25 @@
             <field name="inherit_id" ref="base.view_partner_bank_form" />
             <field name="arch" type="xml">
                 <field name="bank_id" position="after">
-                    <field name="bacs_code"/>
-                    <field name="free_format"/>
-                    <field name="originator_name"/>
+                    <field name="bacs_code" />
+                    <field name="free_format" />
+                    <!-- <field name="originator_name"/> -->
                 </field>
                 <field name="partner_id" position="after">
-                    <field name="sort_code" invisible="1"/>
+                    <field name="sort_code" />
                     <field name="barclays_account_type" />
                 </field>
             </field>
         </record>
-
+<!--         <record id="view_partner_bank_form_inherit_l10n_us_label" model="ir.ui.view">
+            <field name="name">res.partner.bank.form.inherit.label</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="l10n_us.view_partner_bank_form_inherit_l10n_us"/>
+            <field name="arch" type="xml">
+                <field name="aba_routing" position="attributes">
+                    <attribute name="string">ABA/Routing/SortCode</attribute>
+                </field>
+            </field>
+        </record> -->
     </data>
 </odoo>

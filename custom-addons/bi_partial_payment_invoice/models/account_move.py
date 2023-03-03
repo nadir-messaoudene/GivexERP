@@ -19,7 +19,7 @@ class ResCompany(models.Model):
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    account_id = fields.Many2one('account.account', 'Bank Account')    
+    account_id = fields.Many2one('account.account', 'Bank Account')
 
 
 class AccountBankStatementLine(models.Model):
@@ -32,10 +32,11 @@ class AccountMoveInherit(models.Model):
     _inherit = 'account.move'
 
     ref_text = fields.Text(string='Voucher Reference')
-    report_user_id = fields.Many2one('res.users', string='Responsible', 
+    report_user_id = fields.Many2one('res.users', string='Responsible',
         required=False, compute="compute_user_date")
-    report_date = fields.Date(required=False, string="Date",
+    report_date = fields.Date(required=False, string="Date:",
         index=True, copy=False, compute="compute_user_date")
+
 
     def compute_user_date(self):
         for record in self:
@@ -79,7 +80,7 @@ class AccountMoveInherit(models.Model):
         args = args or []
 
         state = ['posted']
-        payment_state = ['not_paid', 'in_payment']
+        payment_state = ['not_paid', 'in_payment', 'partial']
 
 
         if self._context.get('partner_id') and self._context.get('move_type'):
@@ -89,14 +90,14 @@ class AccountMoveInherit(models.Model):
 
             if not currency_id:
                 currency_id = self.env.company.currency_id.id
-            
+
             if self._context.get('type') == 'payin':
                 move_type = 'out_invoice'
             else:
                 move_type = 'in_invoice'
-            
-            args += [('partner_id','=',partner_id),('type','=',move_type),
-            ('state','in',state),('invoice_payment_state','in',payment_state)]
+
+            args += [('partner_id','=',partner_id),('move_type','=',move_type),
+            ('state','in',state),('payment_state','in',payment_state)]
 
         return super(AccountMoveInherit, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
@@ -120,127 +121,20 @@ class AccountMoveLineInherit(models.Model):
     in_payment = fields.Boolean('In Payment')
     last_line_number = fields.Integer('Last Line Number', default=0)
     last_amount = fields.Float('Last Amount', default=0.00)
-    
-    def unlink(self):
-        
-        moves = self.mapped('move_id')
-        for move in moves:
-            move.update({'state':'draft'})
-        return super(AccountMoveLineInherit,self).unlink()
 
-    def check_full_reconcile(self):
-        """
-        This method check if a move is totally reconciled and if we need to create exchange rate entries for the move.
-        In case exchange rate entries needs to be created, one will be created per currency present.
-        In case of full reconciliation, all moves belonging to the reconciliation will belong to the same account_full_reconcile object.
-        """
-        # Get first all aml involved
-        todo = self.env['account.partial.reconcile'].search_read(['|', ('debit_move_id', 'in', self.ids), ('credit_move_id', 'in', self.ids)], ['debit_move_id', 'credit_move_id'])
-        amls = set(self.ids)
-        seen = set()
-        while todo:
-            aml_ids = [rec['debit_move_id'][0] for rec in todo if rec['debit_move_id']] + [rec['credit_move_id'][0] for rec in todo if rec['credit_move_id']]
-            amls |= set(aml_ids)
-            seen |= set([rec['id'] for rec in todo])
-            todo = self.env['account.partial.reconcile'].search_read(['&', '|', ('credit_move_id', 'in', aml_ids), ('debit_move_id', 'in', aml_ids), '!', ('id', 'in', list(seen))], ['debit_move_id', 'credit_move_id'])
-
-        partial_rec_ids = list(seen)
-        if not amls:
-            return
-        else:
-            amls = self.browse(list(amls))
-
-        # If we have multiple currency, we can only base ourselves on debit-credit to see if it is fully reconciled
-        currency = set([a.currency_id for a in amls if a.currency_id.id != False])
-        multiple_currency = False
-        if len(currency) != 1:
-            currency = False
-            multiple_currency = True
-        else:
-            currency = list(currency)[0]
-        # Get the sum(debit, credit, amount_currency) of all amls involved
-        total_debit = 0
-        total_credit = 0
-        total_amount_currency = 0
-        maxdate = date.min
-        to_balance = {}
-        cash_basis_partial = self.env['account.partial.reconcile']
-        for aml in amls:
-            cash_basis_partial |= aml.move_id.tax_cash_basis_rec_id
-            total_debit += aml.debit
-            total_credit += aml.credit
-            maxdate = max(aml.date, maxdate)
-            total_amount_currency += aml.amount_currency
-            # Convert in currency if we only have one currency and no amount_currency
-            if not aml.amount_currency and currency:
-                multiple_currency = True
-                total_amount_currency += aml.company_id.currency_id._convert(aml.balance, currency, aml.company_id, aml.date)
-            # If we still have residual value, it means that this move might need to be balanced using an exchange rate entry
-            if aml.amount_residual != 0 or aml.amount_residual_currency != 0:
-                if not to_balance.get(aml.currency_id):
-                    to_balance[aml.currency_id] = [self.env['account.move.line'], 0]
-                to_balance[aml.currency_id][0] += aml
-                to_balance[aml.currency_id][1] += aml.amount_residual != 0 and aml.amount_residual or aml.amount_residual_currency
-
-        # Check if reconciliation is total
-        # To check if reconciliation is total we have 3 different use case:
-        # 1) There are multiple currency different than company currency, in that case we check using debit-credit
-        # 2) We only have one currency which is different than company currency, in that case we check using amount_currency
-        # 3) We have only one currency and some entries that don't have a secundary currency, in that case we check debit-credit
-        #   or amount_currency.
-        # 4) Cash basis full reconciliation
-        #     - either none of the moves are cash basis reconciled, and we proceed
-        #     - or some moves are cash basis reconciled and we make sure they are all fully reconciled
-
-        digits_rounding_precision = amls[0].company_id.currency_id.rounding
-        if (
-                (
-                    not cash_basis_partial or (cash_basis_partial and all([p >= 1.0 for p in amls._get_matched_percentage().values()]))
-                ) and
-                (
-                    currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding) or
-                    multiple_currency and float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0
-                )
-        ):
-
-            exchange_move_id = False
-            missing_exchange_difference = False
-            # Eventually create a journal entry to book the difference due to foreign currency's exchange rate that fluctuates
-            if to_balance and any([not float_is_zero(residual, precision_rounding=digits_rounding_precision) for aml, residual in to_balance.values()]):
-                if not self.env.context.get('no_exchange_difference'):
-                    exchange_move_vals = self.env['account.full.reconcile']._prepare_exchange_diff_move(
-                        move_date=maxdate, company=amls[0].company_id)
-                    if len(amls.mapped('partner_id')) == 1 and amls[0].partner_id:
-                        exchange_move_vals['partner_id'] = amls[0].partner_id.id
-                    
-                    exchange_move = self.env['account.move'].with_context(default_type='entry').create(exchange_move_vals)
-                    part_reconcile = self.env['account.partial.reconcile']
-                    for aml_to_balance, total in to_balance.values():
-                        if total:
-                            rate_diff_amls, rate_diff_partial_rec = part_reconcile.create_exchange_rate_entry(aml_to_balance, exchange_move)
-                            amls += rate_diff_amls
-                            partial_rec_ids += rate_diff_partial_rec.ids
-                        else:
-                            aml_to_balance.reconcile()
-                    exchange_move.post()
-                    exchange_move_id = exchange_move.id
-                else:
-                    missing_exchange_difference = True
-            if not missing_exchange_difference:
-                #mark the reference of the full reconciliation on the exchange rate entries and on the entries
-                self.env['account.full.reconcile'].with_context(check_move_validity=False).create({
-                    'partial_reconcile_ids': [(6, 0, partial_rec_ids)],
-                    'reconciled_line_ids': [(6, 0, amls.ids)],
-                    'exchange_move_id': exchange_move_id,
-                })            
 
     def _check_reconciliation(self):
-        moves = self.mapped('move_id')
-        for m in moves:
-            m.update({'state':'posted'})
         for line in self:
             if line.matched_debit_ids or line.matched_credit_ids:
-                line.remove_move_reconcile()     
+                line.remove_move_reconcile()
+
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_posted(self):
+        # Prevent deleting lines on posted entries
+        if not self._context.get('force_delete') and any(m.state == 'posted' for m in self.move_id):
+            raise UserError(_('You cannot delete an item linked to a posted entry.'))
+
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
@@ -252,13 +146,12 @@ class AccountMoveLineInherit(models.Model):
             if not currency_id:
                 currency_id = False
 
-            args += [('full_reconcile_id', '=', False), 
+            args += [('full_reconcile_id', '=', False),
                 ('balance', '!=', 0),
                 ('account_id.reconcile', '=', True),
                 ('reconciled', '=', False),
                 ('in_payment', '=', False),
-                ('move_id.type','!=','entry'),
-                # ('account_id.internal_type', '=', 'payable'),
+                ('move_id.move_type','!=','entry'),
                 ('move_id.state', '=', 'posted'),
             ]
 
@@ -268,22 +161,21 @@ class AccountMoveLineInherit(models.Model):
             if not currency_id:
                 currency_id = False
 
-            args += [('full_reconcile_id', '=', False), 
+            args += [('full_reconcile_id', '=', False),
                 ('balance', '!=', 0),
                 ('account_id.reconcile', '=', True),
                 ('reconciled', '=', False),
                 ('in_payment', '=', False),
-                ('move_id.type','!=','entry'),
+                ('move_id.move_type','!=','entry'),
                 ('move_id.state', '=', 'posted'),
             ]
 
         if self._context.get('partner_id') and self._context.get('partner_type'):
             partner_id = int(self._context.get('partner_id'))
-            args = ['|', ('move_id.state', '=', 'posted'), '&', 
-                ('move_id.state', '=', 'draft'), 
-                ('journal_id.post_at', '=', 'bank_rec'),
+
+            args = [('move_id.state', '=', 'posted'),
                 ('partner_id', '=', partner_id),
-                ('reconciled', '=', False), '|', 
+                ('reconciled', '=', False), '|',
                 ('amount_residual', '!=', 0.0),
                 ('amount_residual_currency', '!=', 0.0)
             ]
@@ -293,18 +185,132 @@ class AccountMoveLineInherit(models.Model):
                 ('company_id', '=', self.env.user.company_id.id),
                 ('user_type_id.type', '=', 'receivable')])
 
-                args.extend([('credit', '>', 0), ('debit', '=', 0),
+                args.extend([('credit', '>', 0), ('debit', '=', 0),('partner_id', '=', partner_id),
                     ('account_id','in',account_ids.ids or [])])
+                return self._search(args, limit=limit, access_rights_uid=name_get_uid)
             else:
                 account_ids = self.env['account.account'].search([
                 ('company_id', '=', self.env.user.company_id.id),
                 ('user_type_id.type', '=', 'payable')])
 
-                args.extend([('credit', '=', 0), ('debit', '>', 0),
+                args.extend([('credit', '=', 0), ('debit', '>', 0),('partner_id', '=', partner_id),
                     ('account_id','in',account_ids.ids or [])])
+                return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+        return super()._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
-        return super(AccountMoveLineInherit, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
+    def reconcile_(self):
+            ''' Reconcile the current move lines all together.
+            :return: A dictionary representing a summary of what has been done during the reconciliation:
+                    * partials:             A recorset of all account.partial.reconcile created during the reconciliation.
+                    * full_reconcile:       An account.full.reconcile record created when there is nothing left to reconcile
+                                            in the involved lines.
+                    * tax_cash_basis_moves: An account.move recordset representing the tax cash basis journal entries.
+            '''
+            results = {}
+
+            if not self:
+                return results
+
+            # List unpaid invoices
+            not_paid_invoices = self.move_id.filtered(
+                lambda move: move.is_invoice(include_receipts=True) and move.payment_state not in ('paid', 'in_payment')
+            )
+
+            # ==== Check the lines can be reconciled together ====
+            company = None
+            account = None
+            for line in self:
+                if line.reconciled:
+                    raise UserError(_("You are trying to reconcile some entries that are already reconciled."))
+                if not line.account_id.reconcile and line.account_id.internal_type != 'liquidity':
+                    raise UserError(_("Account %s does not allow reconciliation. First change the configuration of this account to allow it.")
+                                    % line.account_id.display_name)
+                # if line.move_id.state != 'posted':
+                #     raise UserError(_('You can only reconcile posted entries.'))
+                if company is None:
+                    company = line.company_id
+                elif line.company_id != company:
+                    raise UserError(_("Entries doesn't belong to the same company: %s != %s")
+                                    % (company.display_name, line.company_id.display_name))
+                if account is None:
+                    account = line.account_id
+                elif line.account_id != account:
+                    raise UserError(_("Entries are not from the same account: %s != %s")
+                                    % (account.display_name, line.account_id.display_name))
+
+            sorted_lines = self.sorted(key=lambda line: (line.date_maturity or line.date, line.currency_id))
+
+            # ==== Collect all involved lines through the existing reconciliation ====
+
+            involved_lines = sorted_lines
+            involved_partials = self.env['account.partial.reconcile']
+            current_lines = involved_lines
+            current_partials = involved_partials
+            while current_lines:
+                current_partials = (current_lines.matched_debit_ids + current_lines.matched_credit_ids) - current_partials
+                involved_partials += current_partials
+                current_lines = (current_partials.debit_move_id + current_partials.credit_move_id) - current_lines
+                involved_lines += current_lines
+
+            # ==== Create partials ====
+
+            partials = self.env['account.partial.reconcile'].create(sorted_lines._prepare_reconciliation_partials())
+
+            # Track newly created partials.
+            results['partials'] = partials
+            involved_partials += partials
+
+            # ==== Create entries for cash basis taxes ====
+
+            is_cash_basis_needed = account.user_type_id.type in ('receivable', 'payable')
+            if is_cash_basis_needed and not self._context.get('move_reverse_cancel'):
+                tax_cash_basis_moves = partials._create_tax_cash_basis_moves()
+                results['tax_cash_basis_moves'] = tax_cash_basis_moves
+
+            # ==== Check if a full reconcile is needed ====
+
+            if involved_lines[0].currency_id and all(line.currency_id == involved_lines[0].currency_id for line in involved_lines):
+                is_full_needed = all(line.currency_id.is_zero(line.amount_residual_currency) for line in involved_lines)
+            else:
+                is_full_needed = all(line.company_currency_id.is_zero(line.amount_residual) for line in involved_lines)
+
+            if is_full_needed:
+
+                # ==== Create the exchange difference move ====
+
+                if self._context.get('no_exchange_difference'):
+                    exchange_move = None
+                else:
+                    exchange_move = involved_lines._create_exchange_difference_move()
+                    if exchange_move:
+                        exchange_move_lines = exchange_move.line_ids.filtered(lambda line: line.account_id == account)
+
+                        # Track newly created lines.
+                        involved_lines += exchange_move_lines
+
+                        # Track newly created partials.
+                        exchange_diff_partials = exchange_move_lines.matched_debit_ids \
+                                                 + exchange_move_lines.matched_credit_ids
+                        involved_partials += exchange_diff_partials
+                        results['partials'] += exchange_diff_partials
+
+                        exchange_move._post(soft=False)
+
+                # ==== Create the full reconcile ====
+
+                results['full_reconcile'] = self.env['account.full.reconcile'].create({
+                    'exchange_move_id': exchange_move and exchange_move.id,
+                    'partial_reconcile_ids': [(6, 0, involved_partials.ids)],
+                    'reconciled_line_ids': [(6, 0, involved_lines.ids)],
+                })
+
+            # Trigger action for paid invoices
+            not_paid_invoices\
+                .filtered(lambda move: move.payment_state in ('paid', 'in_payment'))\
+                .action_invoice_paid()
+
+            return results
 
 class AccountPartialReconcileInherit(models.Model):
     _inherit = "account.partial.reconcile"
@@ -320,7 +326,7 @@ class AccountPartialReconcileInherit(models.Model):
 
                             move_curreny = move_id.currency_id
                             payment_currency = current_move_id.currency_id
-  
+
                             payment_id = reconcile.credit_move_id.payment_id
 
                             credit = reconcile.credit_move_id.credit
@@ -347,13 +353,13 @@ class AccountPartialReconcileInherit(models.Model):
                                         credit += line.credit
                                         remove_lines.append(line.id)
 
-
-                            current_move_id.with_context(check_move_validity=False).write({
+                            current_move_id.with_context(check_move_validity=False,force_delete=True,skip_account_move_synchronization=True).write({
                                 'line_ids' : [(2, line) for line in remove_lines]
                             })
 
                             last_line_number = self.env.user.company_id.last_line_number
                             last_line_number += 1
+
                             self.env.user.company_id.write({
                                 'last_line_number' : last_line_number
                             })
@@ -369,7 +375,8 @@ class AccountPartialReconcileInherit(models.Model):
                                 do_payment_move_vals = payment_id.with_context(
                                     amount_remain=credit,
                                     last_line_number=last_line_number,
-                                    partner_id=partner_id)._prepare_payment_moves()
+                                    partner_id=partner_id)._prepare_move_line_default_vals()
+
                             else:
                                 if (move_curreny == payment_currency) and (payment_currency != move_id.company_currency_id):
                                     credit = credit
@@ -392,13 +399,14 @@ class AccountPartialReconcileInherit(models.Model):
                                     account_id=account_id,
                                     move_name=move_name,
                                     last_line_number=last_line_number,
-                                    partner_id=partner_id)._prepare_payment_moves()
+                                    partner_id=partner_id)._prepare_move_line_default_vals()
 
 
                             if len(do_payment_move_vals) >= 1:
-                                current_move_id.with_context(check_move_validity=False).write({
-                                    'line_ids' : do_payment_move_vals[0].get('line_ids') or self.env['account.move.line']
-                                })
+
+                                for vals in do_payment_move_vals:
+                                    vals.update({'move_id':current_move_id.id})
+                                    current_move_id.line_ids.with_context(check_move_validity=False,force_delete=True,skip_account_move_synchronization=True).create(vals)
 
 
                             return result
@@ -439,7 +447,7 @@ class AccountPartialReconcileInherit(models.Model):
                                         remove_lines.append(line.id)
 
 
-                            current_move_id.with_context(check_move_validity=False).write({
+                            current_move_id.with_context(check_move_validity=False,force_delete=True,skip_account_move_synchronization=True).write({
                                 'line_ids' : [(2, line) for line in remove_lines]
                             })
 
@@ -460,9 +468,9 @@ class AccountPartialReconcileInherit(models.Model):
                                 do_payment_move_vals = payment_id.with_context(
                                     amount_remain=debit,
                                     last_line_number=last_line_number,
-                                    partner_id=partner_id)._prepare_payment_moves()
+                                    partner_id=partner_id)._prepare_move_line_default_vals()
                             else:
-                               
+
                                 if (move_curreny == payment_currency) and (payment_currency != move_id.company_currency_id):
                                     debit = debit
                                     amount_currency = move_id.company_currency_id._convert(debit, move_curreny, move_id.company_id, fields.Date.context_today(self))
@@ -484,75 +492,19 @@ class AccountPartialReconcileInherit(models.Model):
                                     account_id=account_id,
                                     move_name=move_name,
                                     last_line_number=last_line_number,
-                                    partner_id=partner_id)._prepare_payment_moves()
-                            
+                                    partner_id=partner_id)._prepare_move_line_default_vals()
+
 
 
                             if len(do_payment_move_vals) >= 1:
-                                current_move_id.write({
-                                    'line_ids' : do_payment_move_vals[0].get('line_ids') or self.env['account.move.line']
-                                })
+                                for vals in do_payment_move_vals:
+                                    vals.update({'move_id':current_move_id.id})
+                                    current_move_id.line_ids.create(vals)
 
-                            current_move_id.post()
+                            current_move_id.action_post()
 
                             return result
         return super(AccountPartialReconcileInherit, self).unlink()
 
 
-    def _prepare_payment_moves(self):
-        for payment in self:
-            if self._context.get('amount_to_pay'):
-                amount = self._context.get('amount_to_pay')
-                in_payment = True
-            else:
-                amount = self._context.get('amount_remain')
-                in_payment = False
-
-            destination_account_id = False
-            debit = credit = 0.00
-
-            current_balance = self._context.get('current_balance')
-
-            account_id = self._context.get('account_id')
-            partner_id = self._context.get('partner_id').commercial_partner_id.id
-
-            amount_currency = self._context.get('amount_currency')
-            currency_id = self._context.get('currency_id')
-            move_name = self._context.get('move_name')
-
-            if current_balance > 0.0:
-                credit = amount
-                debit = 0.00
-                amount_currency = -amount_currency
-
-            if current_balance < 0.0:
-                credit = 0.00
-                debit = amount
-                
-
-            all_move_vals = []
-
-            move_vals = {
-                'line_ids': [
-                    # Receivable / Payable / Transfer line.
-                    (0, 0, {
-                        'name': move_name,
-                        'amount_currency': amount_currency,
-                        'currency_id': currency_id,
-                        'debit': debit,
-                        'credit': credit,
-                        'date_maturity': fields.Date.context_today(self),
-                        'partner_id': partner_id or False,
-                        'account_id': account_id or False,
-                        'payment_id': False,
-                        'in_payment': in_payment,
-                        'exclude_from_invoice_tab' : True,
-                        'last_line_number' : int(self._context.get('last_line_number', 0)),
-                    }),
-                ]
-            }
-
-            all_move_vals.append(move_vals)
-
-            return all_move_vals
-
+        

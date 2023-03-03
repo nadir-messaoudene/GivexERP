@@ -8,7 +8,7 @@ from odoo.tests.common import TransactionCase
 
 
 class TestActivityStatement(TransactionCase):
-    """ Tests for Activity Statement."""
+    """Tests for Activity Statement."""
 
     def setUp(self):
         super().setUp()
@@ -27,6 +27,7 @@ class TestActivityStatement(TransactionCase):
         self.statement_model = self.env["report.partner_statement.activity_statement"]
         self.wiz = self.env["activity.statement.wizard"]
         self.report_name = "partner_statement.activity_statement"
+        self.report_name_xlsx = "p_s.report_activity_statement_xlsx"
         self.report_title = "Activity Statement"
         self.today = fields.Date.context_today(self.wiz)
 
@@ -55,13 +56,31 @@ class TestActivityStatement(TransactionCase):
 
         statement = wiz_id.button_export_pdf()
 
-        self.assertDictContainsSubset(
-            {
-                "type": "ir.actions.report",
-                "report_name": self.report_name,
-                "report_type": "qweb-pdf",
-            },
+        self.assertDictEqual(
             statement,
+            {
+                **{
+                    "type": "ir.actions.report",
+                    "report_name": self.report_name,
+                    "report_type": "qweb-pdf",
+                },
+                **statement,
+            },
+            "There was an error and the PDF report was not generated.",
+        )
+
+        statement_xlsx = wiz_id.button_export_xlsx()
+
+        self.assertDictEqual(
+            statement_xlsx,
+            {
+                **{
+                    "type": "ir.actions.report",
+                    "report_name": self.report_name_xlsx,
+                    "report_type": "xlsx",
+                },
+                **statement_xlsx,
+            },
             "There was an error and the PDF report was not generated.",
         )
 

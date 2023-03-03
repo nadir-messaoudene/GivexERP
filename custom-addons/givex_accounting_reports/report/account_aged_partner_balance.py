@@ -461,5 +461,3 @@ class report_account_aged_partner(models.AbstractModel):
             }
             lines.append(total_line)
         return lines
-    
-    

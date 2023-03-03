@@ -13,15 +13,15 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
 class JournalItem(models.TransientModel):
     _name = 'journal.item.wizard'
-    
+    _description = 'Journal Item Wizard'
+
     files = fields.Binary(string="Import Excel File")
     datas_fname = fields.Char('Import File Name')
-    
-    #@api.multi
+
     def journal_item(self):
         for rec in self:
             rec._item_import()
-    
+
     @api.model
     def _item_import(self):
         active_id = self._context.get('active_id')

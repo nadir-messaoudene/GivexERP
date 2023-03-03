@@ -31,8 +31,8 @@ odoo.define('bi_partial_payment_invoice.account_payment', function (require) {
                 var id = $(event.target).data('id') || false;
                 var value = JSON.parse(this.value);
                 this._rpc({
-                    model: 'ir.model.data',
-                    method: 'xmlid_to_res_model_res_id',
+                    model: 'ir.ui.view',
+                    method: 'get_view_id',
                     args: ["bi_partial_payment_invoice.account_payment_wizard_form"],
                 }).then(function (data) {
                     self.do_action({

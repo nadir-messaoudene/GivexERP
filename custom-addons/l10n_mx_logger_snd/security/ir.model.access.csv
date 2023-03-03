@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_l10n_mx_logger_snd_l10n_mx_logger_snd,l10n_mx_logger_snd.l10n_mx_logger_snd,model_l10n_mx_logger_snd_l10n_mx_logger_snd,base.group_user,1,1,1,1

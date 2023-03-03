@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Payment methods -->
+    <record id="account_payment_method_barclays" model="account.payment.method">
+        <field name="name">Barclays</field>
+        <field name="code">bacs</field>
+        <field name="payment_type">outbound</field>
+    </record>
+</odoo>
