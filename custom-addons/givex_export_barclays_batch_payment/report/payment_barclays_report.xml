@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <report
+    <!--     <report
     id="batch_payment_csv"
     model="account.batch.payment"
     string="Export to CSV"
@@ -10,9 +10,19 @@
     attachment_use="False"
     menu="False"
     print_report_name="(object._get_report_base_filename())"
-  />
-
-    <report
+  /> -->
+    <record id="batch_payment_csv" model="ir.actions.report">
+        <field name="name">Export to CSV</field>
+        <field name="model">account.batch.payment</field>
+        <field name="report_type">csv</field>
+        <field name="report_name">report_csv.batch_payment_csv</field>
+        <field name="report_file">report_csv.batch_payment_csv</field>
+        <field name="print_report_name">(object._get_report_base_filename())</field>
+        <field name="attachment_use">False</field>
+        <field name="binding_model_id" ref="model_account_batch_payment" />
+        <field name="binding_type">report</field>
+    </record>
+    <!--     <report
     id="batch_payment_xlsx"
     model="account.batch.payment"
     string="Export to XLSX"
@@ -22,5 +32,16 @@
     attachment_use="False"
     menu="False"
     print_report_name="(object._get_report_base_filename())"
-  />
+  /> -->
+    <record id="batch_payment_xlsx" model="ir.actions.report">
+        <field name="name">Export to XLSX</field>
+        <field name="model">account.batch.payment</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">report_xlsx.batch_payment_xlsx</field>
+        <field name="report_file">report_xlsx.batch_payment_xlsx</field>
+        <field name="print_report_name">(object._get_report_base_filename())</field>
+        <field name="attachment_use">False</field>
+        <field name="binding_model_id" ref="model_account_batch_payment" />
+        <field name="binding_type">report</field>
+    </record>
 </odoo>
