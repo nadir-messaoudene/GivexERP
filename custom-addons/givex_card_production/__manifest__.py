@@ -6,6 +6,7 @@
     'version': '0.1',
     'category': 'Sales/Sales',
     'summary': 'Givex Card Production Order changes',
+    "license": "AGPL-3",
     'description': """This module contains custom field and rule changesfor Sales orders with card production products.""",
     'depends': ['sale', 'product'],
     'data': [

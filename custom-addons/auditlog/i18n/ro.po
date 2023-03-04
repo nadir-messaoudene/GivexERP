@@ -60,10 +60,30 @@ msgid "Auditlog - Rule"
 msgstr "Auditreg - Regula"
 
 #. module: auditlog
+#: model:res.groups,name:auditlog.group_auditlog_manager
+msgid "Auditlog Manager"
+msgstr ""
+
+#. module: auditlog
+#: model:ir.module.category,name:auditlog.security_auditlog_groups
+msgid "Auditlog Rights"
+msgstr ""
+
+#. module: auditlog
+#: model:res.groups,name:auditlog.group_auditlog_user
+msgid "Auditlog User"
+msgstr ""
+
+#. module: auditlog
 #: model:ir.actions.server,name:auditlog.ir_cron_auditlog_autovacuum_ir_actions_server
 #: model:ir.cron,cron_name:auditlog.ir_cron_auditlog_autovacuum
 #: model:ir.cron,name:auditlog.ir_cron_auditlog_autovacuum
 msgid "Auto-vacuum audit logs"
+msgstr ""
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__capture_record
+msgid "Capture Record"
 msgstr ""
 
 #. module: auditlog
@@ -94,6 +114,7 @@ msgid "Created on"
 msgstr "Creat la"
 
 #. module: auditlog
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "Date"
 msgstr "Data"
@@ -125,8 +146,20 @@ msgstr "Registru rapid"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__field_id
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 msgid "Field"
 msgstr "Columna"
+
+#. module: auditlog
+#: code:addons/auditlog/models/rule.py:0
+#, python-format
+msgid "Field 'model_id' cannot be empty."
+msgstr ""
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__fields_to_exclude_ids
+msgid "Fields to Exclude"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__line_ids
@@ -157,6 +190,7 @@ msgstr ""
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_rule_search
 msgid "Group By..."
@@ -169,7 +203,9 @@ msgstr "HTTP Context"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__http_request_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__http_request_id
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_form
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "HTTP Request"
 msgstr "HTTP Cerere"
@@ -245,6 +281,13 @@ msgid "Log Deletes"
 msgstr "Stergere registre"
 
 #. module: auditlog
+#: model:ir.actions.act_window,name:auditlog.action_auditlog_line
+#: model:ir.ui.menu,name:auditlog.menu_auditlog_line
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
+msgid "Log Lines"
+msgstr ""
+
+#. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_read
 msgid "Log Reads"
 msgstr "Lectura registre"
@@ -265,15 +308,25 @@ msgstr "Registre"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__method
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__method
 msgid "Method"
 msgstr "Metoda"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__model_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__model_id
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__model_id
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "Model"
 msgstr "Model"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__model_name
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__model_name
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__model_name
+msgid "Model Name"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__display_name
@@ -293,6 +346,24 @@ msgid "New value Text"
 msgstr "Valoare noua Text"
 
 #. module: auditlog
+#: code:addons/auditlog/models/log.py:0
+#, python-format
+msgid "No field defined to create line."
+msgstr ""
+
+#. module: auditlog
+#: code:addons/auditlog/models/rule.py:0
+#, python-format
+msgid "No model defined to create line."
+msgstr ""
+
+#. module: auditlog
+#: code:addons/auditlog/models/log.py:0
+#, python-format
+msgid "No model defined to create log."
+msgstr ""
+
+#. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__old_value
 msgid "Old Value"
 msgstr "Valoare anterioare"
@@ -310,12 +381,15 @@ msgstr "Ruta"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__res_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__res_id
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "Resource ID"
 msgstr "Resursa ID"
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__name
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__name
 msgid "Resource Name"
 msgstr "Resursa Nume"
 
@@ -341,6 +415,11 @@ msgstr "Reguli"
 #: model:ir.model.fields,help:auditlog.field_auditlog_rule__model_id
 msgid "Select model for which you want to generate log."
 msgstr "Selecteaza modelul pentru care doresti sa generezi un registru."
+
+#. module: auditlog
+#: model:ir.model.fields,help:auditlog.field_auditlog_rule__capture_record
+msgid "Select this if you want to keep track of Unlink Record"
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,help:auditlog.field_auditlog_rule__log_create
@@ -381,6 +460,7 @@ msgstr ""
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__http_session_id
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__http_session_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__http_session_id
 msgid "Session"
 msgstr "Sesiune"
 
@@ -407,9 +487,28 @@ msgid "Subscribed"
 msgstr "Inregistrat"
 
 #. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log__model_model
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__model_model
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__model_model
+msgid "Technical Model Name"
+msgstr ""
+
+#. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__field_name
 msgid "Technical name"
 msgstr "Nume tehnic"
+
+#. module: auditlog
+#: code:addons/auditlog/models/log.py:0
+#, python-format
+msgid "The field 'field_id' cannot be empty."
+msgstr ""
+
+#. module: auditlog
+#: code:addons/auditlog/models/log.py:0
+#, python-format
+msgid "The field 'model_id' cannot be empty."
+msgstr ""
 
 #. module: auditlog
 #: model:ir.model.constraint,message:auditlog.constraint_auditlog_rule_model_uniq
@@ -422,6 +521,7 @@ msgstr ""
 
 #. module: auditlog
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__log_type
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__log_type
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__log_type
 msgid "Type"
 msgstr "Tip"
@@ -435,8 +535,10 @@ msgstr "Elimina inregistrare"
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_http_request__user_id
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_http_session__user_id
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_log__user_id
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_log_line__user_id
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_search
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "User"
 msgstr "Utilizator"
@@ -444,6 +546,7 @@ msgstr "Utilizator"
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_request_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_http_session_form
+#: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_line_search
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_search
 msgid "User session"
 msgstr "Sesiune Utilizator"
@@ -459,6 +562,11 @@ msgstr "Sesiuni Utilizator"
 #: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__user_ids
 msgid "Users"
 msgstr "Utilizatori"
+
+#. module: auditlog
+#: model:ir.model.fields,field_description:auditlog.field_auditlog_rule__users_to_exclude_ids
+msgid "Users to Exclude"
+msgstr ""
 
 #. module: auditlog
 #: model_terms:ir.ui.view,arch_db:auditlog.view_auditlog_log_form

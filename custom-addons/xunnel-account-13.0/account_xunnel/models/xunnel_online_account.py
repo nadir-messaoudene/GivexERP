@@ -4,17 +4,76 @@
 import json
 from datetime import datetime
 from time import mktime
-from odoo import models, _
+from odoo import models, _, api, fields
 from odoo.exceptions import UserError
 
 
 class ProviderAccount(models.Model):
-    _inherit = 'account.online.journal'
+    # _inherit = 'account.online.journal'
+    _name = 'account.online.journal'
+    _description = 'Interface for Online Account Journal'
+
+    name = fields.Char(string="Journal Name", required=True)
+    account_online_provider_id = fields.Many2one('account.online.link', ondelete='cascade', readonly=True)
+    journal_ids = fields.One2many('account.journal', 'account_online_journal_id', string='Journal', domain=[('type', '=', 'bank')])
+    account_number = fields.Char()
+    last_sync = fields.Date("Last synchronization")
+    online_identifier = fields.Char(help='id use to identify account in provider system', readonly=True)
+    provider_name = fields.Char(related='account_online_provider_id.name', string="Provider", readonly=True)
+    balance = fields.Float(readonly=True, help='balance of the account sent by the third party provider')
+
+    @api.depends('name', 'account_online_provider_id.name')
+    def name_get(self):
+        res = []
+        for account_online in self:
+            name = "%s: %s" % (account_online.provider_name, account_online.name)
+            if account_online.account_number:
+                name += " (%s)" % (account_online.account_number)
+            res += [(account_online.id, name)]
+        return res
+
+    @api.model
+    def _find_partner_from_location(self, location):
+        """
+        Return a recordset of partner if the address of the transaction exactly match the address of a partner
+        location : a dictionary of type:
+                   {'state': x, 'address': y, 'city': z, 'zip': w}
+                   state and zip are optional
+
+        """
+        partners = self.env['res.partner']
+        domain = []
+        if 'address' in location and 'city' in location:
+            domain.append(('street', '=', location['address']))
+            domain.append(('city', '=', location['city']))
+            if 'state' in location:
+                domain.append(('state_id.name', '=', location['state']))
+            if 'zip' in location:
+                domain.append(('zip', '=', location['zip']))
+            return self._find_partner(domain)
+        return False
+
+    @api.model
+    def _find_partner(self, domain):
+        """
+        Return a recordset of partner iff we have only one partner associated to the value passed as parameter
+        value : a String send by Yodlee to identify the account or merchant from which the transaction was made
+        field: name of the field where to search for the information
+        """
+        partners = self.env['res.partner'].search(domain)
+        if len(partners) == 1:
+            return partners.id
+        else:
+            # It is possible that all partners share the same commercial partner, in that case, use the commercial partner
+            commercial_partner = list(set([p.commercial_partner_id for p in partners]))
+            if len(commercial_partner) == 1:
+                return commercial_partner[0].id
+        return False
 
     def retrieve_transactions(self, forced_params=None):
         self.ensure_one()
         if self.account_online_provider_id.provider_type != 'xunnel':
-            return super(ProviderAccount, self).retrieve_transactions()
+            UserError(_("Unimplemented"))
         resp_json = self._get_transactions(forced_params)
         transactions = self._prepare_transactions(resp_json)
         if not transactions:

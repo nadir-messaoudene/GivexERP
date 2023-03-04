@@ -83,28 +83,30 @@ class AccontPaymentWizard(models.Model):
                 raise UserError(_('You can not pay more then Remaining Amount. !!!'))
 
             if payment.payment_id:
-                payment_date = payment.payment_id.payment_date or fields.Date.context_today(self)
+                date = payment.payment_id.date or fields.Date.context_today(self)
             else:
-                payment_date = payment_move_id.invoice_date or fields.Date.context_today(self)
+                date = payment_move_id.invoice_date or fields.Date.context_today(self)
 
             last_line_number = self.env.user.company_id.last_line_number
 
             last_line_number += 1
 
             if payment.payment_id.currency_id != payment.currency_id:
-                amount_to_pay = payment.currency_id._convert(payment.amount_to_pay, payment.payment_id.currency_id, payment.company_id, payment_date)
+                amount_to_pay = payment.currency_id._convert(payment.amount_to_pay, payment.payment_id.currency_id, payment.company_id, date)
             else:   
                 amount_to_pay = payment.amount_to_pay
 
-            do_payment_move_vals = payment.payment_id.with_context(
-                amount_to_pay=payment.amount_to_pay,
-                last_line_number=last_line_number,
-                currency_id = payment.currency_id,
-                partner_id=partner_id)._prepare_payment_moves()
+            if payment.payment_id:
+
+                do_payment_move_vals = payment.payment_id.with_context(
+                    amount_to_pay=payment.amount_to_pay,
+                    last_line_number=last_line_number,
+                    currency_id = payment.currency_id,
+                    partner_id=partner_id)._prepare_move_line_default_vals()
 
             if not payment.payment_id:
                 if payment.currency_id != payment.company_currency_id:
-                    amount_to_pay = payment.currency_id._convert(payment.amount_to_pay, payment.company_currency_id, payment.company_id, payment_date)
+                    amount_to_pay = payment.currency_id._convert(payment.amount_to_pay, payment.company_currency_id, payment.company_id, date)
                     amount_currency = payment.amount_to_pay
                     currency_id = payment.currency_id.id
                 else:
@@ -117,7 +119,7 @@ class AccontPaymentWizard(models.Model):
                     amount_currency=amount_currency,
                     currency_id=currency_id,
                     last_line_number=last_line_number,
-                    partner_id=partner_id)._prepare_payment_moves()
+                    partner_id=partner_id)._prepare_move_line_default_vals()
 
                 
 
@@ -129,23 +131,24 @@ class AccontPaymentWizard(models.Model):
                 self.env.user.company_id.write({
                     'last_line_number' : last_line_number
                 })
+                if payment.payment_id:
+                    if payment.currency_id:
+                        amount_remain = payment.currency_id._convert(payment.amount_remain, payment.company_currency_id, payment.company_id, date)
+                    else:
+                        amount_remain = payment.amount_remain
 
-                if payment.currency_id:
-                    amount_remain = payment.currency_id._convert(payment.amount_remain, payment.company_currency_id, payment.company_id, payment_date)
-                else:
-                    amount_remain = payment.amount_remain
+                    remain_payment_move_vals = payment.payment_id.with_context(
+                        amount_remain=payment.amount_remain,
+                        last_line_number=last_line_number,
+                        currency_id = payment.currency_id,
+                        partner_id=partner_id)._prepare_move_line_default_vals()
 
-                remain_payment_move_vals = payment.payment_id.with_context(
-                    amount_remain=payment.amount_remain,
-                    last_line_number=last_line_number,
-                    currency_id = payment.currency_id,
-                    partner_id=partner_id)._prepare_payment_moves()
 
               
 
                 if not payment.payment_id:
                     if payment.currency_id != payment.company_currency_id:
-                        amount_remain = payment.currency_id._convert(payment.amount_remain, payment.company_currency_id, payment.company_id, payment_date)
+                        amount_remain = payment.currency_id._convert(payment.amount_remain, payment.company_currency_id, payment.company_id, date)
                         amount_currency = payment.amount_remain
                         currency_id = payment.currency_id.id
                     else:
@@ -158,7 +161,8 @@ class AccontPaymentWizard(models.Model):
                         amount_currency=amount_currency,
                         currency_id=currency_id,
                         last_line_number=last_line_number,
-                        partner_id=partner_id)._prepare_payment_moves()
+                        partner_id=partner_id)._prepare_move_line_default_vals()
+
 
             else:
                 self.env.user.company_id.write({
@@ -169,7 +173,6 @@ class AccontPaymentWizard(models.Model):
 
 
             payment_line_ids = payment_move_id.line_ids.filtered(lambda x: not x.in_payment and (x.partner_id == partner_id))
-
             if payment.move_id.is_inbound():
                 payment_line_ids = payment_line_ids.filtered(lambda x : (x.credit > 0 and x.debit == 0) and not x.reconciled)
             else:
@@ -178,34 +181,35 @@ class AccontPaymentWizard(models.Model):
             for line in payment_line_ids:
                 if line == payment.move_line_id:
                     line_ids.append(line.id)
-
             if line_ids:
-                payment_move_id.with_context(check_move_validity=False).write({'line_ids' : [(2, line) for line in line_ids]})
-
+                payment_move_id.with_context(check_move_validity=False,skip_account_move_synchronization=True,force_delete=True).write({'line_ids' : [(2, line) for line in line_ids]})
             if len(do_payment_move_vals) >= 1:
-                payment_move_id.with_context(check_move_validity=False).write({
-                    'line_ids' : do_payment_move_vals[0].get('line_ids') or []
-                })
+                for vals in do_payment_move_vals:
+                    vals.update({'move_id':payment_move_id.id})
+                    payment_move_id.with_context(check_move_validity=False,skip_account_move_synchronization=True).line_ids.create(vals)
+
                 if payment.move_id.is_inbound():
-                    lines = payment_move_id.with_context(check_move_validity=False).line_ids.filtered(lambda x : (x.credit > 0 and x.debit == 0)  and (x.partner_id == partner_id) and not x.reconciled and x.last_line_number == do_last_number)
+                    lines = payment_move_id.with_context(check_move_validity=False,skip_account_move_synchronization=True).line_ids.filtered(lambda x : (x.credit > 0 and x.debit == 0)  and (x.partner_id == partner_id) and not x.reconciled and x.last_line_number == do_last_number)
                 
                 else:
-                    lines = payment_move_id.with_context(check_move_validity=False).line_ids.filtered(lambda x : (x.credit == 0 and x.debit > 0)  and (x.partner_id == partner_id) and not x.reconciled and x.last_line_number == do_last_number)
+                    lines = payment_move_id.with_context(check_move_validity=False,skip_account_move_synchronization=True).line_ids.filtered(lambda x : (x.credit == 0 and x.debit > 0)  and (x.partner_id == partner_id) and not x.reconciled and x.last_line_number == do_last_number)
 
                 if lines:
                     lines += payment.move_id.line_ids.filtered(lambda line: line.account_id == lines[0].account_id and not line.reconciled)
-                    
                     if payment.amount_remain:
                         if len(remain_payment_move_vals) >= 1:
-                            payment_move_id.with_context(check_move_validity=False).write({
-                                'line_ids' : remain_payment_move_vals[0].get('line_ids') or []
-                            })
-                    lines.with_context(orignal_amount=payment.amount_to_pay).reconcile()
+                            for vals in remain_payment_move_vals:
+                                vals.update({'move_id':payment_move_id.id})
+                                payment_move_id.with_context(check_move_validity=False,skip_account_move_synchronization=True).line_ids.create(vals)
+
+                    lines.with_context(orignal_amount=payment.amount_to_pay).reconcile_()
                 else:
                     raise UserError(_('Something Went Wrong. Reset Payment and Try again.'))
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
-    def _prepare_payment_moves(self):
+ 
+
+    def _prepare_move_line_default_vals(self):
         for payment in self:
             if self._context.get('amount_to_pay'):
                 amount = self._context.get('amount_to_pay')
@@ -239,26 +243,24 @@ class AccontPaymentWizard(models.Model):
 
             all_move_vals = []
 
-            move_vals = {
-                'line_ids': [
-                    # Receivable / Payable / Transfer line.
-                    (0, 0, {
-                        'name': rec_pay_line_name,
-                        'amount_currency': amount_currency,
-                        'currency_id': currency_id,
-                        'debit': debit,
-                        'credit': credit,
-                        'date_maturity': fields.Date.context_today(self),
-                        'partner_id': partner_id or False,
-                        'account_id': account_id or False,
-                        'payment_id': False,
-                        'in_payment': in_payment,
-                        'exclude_from_invoice_tab' : True,
-                        'last_line_number' : int(self._context.get('last_line_number', 0)),
-                    }),
-                ]
-            }
 
-            all_move_vals.append(move_vals)
+            line_vals_list = [
 
-            return all_move_vals
+                # Receivable / Payable.
+                {
+                    'name': rec_pay_line_name,
+                    'date_maturity': fields.Date.context_today(self),
+                    'amount_currency': amount_currency,
+                    'currency_id': currency_id,
+                    'debit':debit,
+                    'credit': credit,
+                    'partner_id': partner_id or False,
+                    'account_id': account_id,
+                    'in_payment': in_payment,
+                    'payment_id': False,
+                    'last_line_number' : int(self._context.get('last_line_number', 0)),
+
+                },
+            ]
+            return line_vals_list    
+

@@ -14,6 +14,37 @@ from odoo.exceptions import UserError
 BOM_UTF8U = BOM_UTF8.decode('UTF-8')
 
 
+class ProductSatCode(models.Model):
+    """Product and UOM Codes from SAT Data.
+    This code must be defined in CFDI 3.3, in each concept, and this is set
+    by each product.
+    Is defined a new catalog to only allow select the codes defined by the SAT
+    that are load by data in the system.
+    This catalog is found `here <https://goo.gl/iAUGEh>`_ in the page
+    c_ClaveProdServ.
+
+    This model also is used to define the uom code defined by the SAT
+    """
+    _name = 'l10n_mx_edi.product.sat.code'
+    _description = "Product and UOM Codes from SAT Data"
+
+    code = fields.Char(
+        help='This value is required in CFDI version 3.3 to express the '
+        'code of product or service covered by the present concept. Must be '
+        'used a key from SAT catalog.', required=True)
+    name = fields.Char(
+        help='Name defined by SAT catalog to this product',
+        required=True)
+    applies_to = fields.Selection([
+        ('product', 'Product'),
+        ('uom', 'UoM'),
+    ], required=True,
+        help='Indicate if this code could be used in products or in UoM',)
+    active = fields.Boolean(
+        help='If this record is not active, this cannot be selected.',
+        default=True)
+
+
 class ResCompany(models.Model):
     _inherit = 'res.company'
 

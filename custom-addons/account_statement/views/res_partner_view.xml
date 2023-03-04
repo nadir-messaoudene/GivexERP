@@ -35,6 +35,9 @@
 			<field name="model">res.partner</field>
 			<field name="inherit_id" ref="base.view_partner_form" />
 			<field name="arch" type="xml">
+				<field name='category_id' position='after'>
+					<field name='opt_statement'/>
+				</field>
 				<page name="accounting" position='after'>
 					<page string="Customer Statements" groups="account.group_account_invoice"
 						name="followup_tab">
@@ -138,13 +141,13 @@
 							</div>
 							<div class="o_setting_right_pane">
 								<label for="send_statement"/>
-								<label for="period"/>
-								<label for="statement_days"/>
+								<label for="period" invisible = "1"/>
+								<label for="statement_days" invisible = "1"/>
 								<group>
 									<field name="period" attrs="{'invisible':[('send_statement','!=',True)]}" />
-									<field name="statement_days" attrs="{'invisible':[('send_statement','!=',True)]}" />
+									<field name="statement_days" attrs="{'invisible':['|',('send_statement','!=',True),('period','not in', ['all', 'monthly'])]}"/>
+									<field name="weekly_days" attrs="{'invisible':['|',('send_statement','!=',True),('period','not in', ['weekly'])]}"/>
 								</group>
-								
 							</div>
 						</div> 
 					</div>

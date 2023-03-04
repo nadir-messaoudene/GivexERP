@@ -40,7 +40,6 @@
 									<th class="text-right">Total</th>
 									<th class="text-right">Due</th>
 									<th class="text-right">Paid</th>
-									<!-- <th class="text-center">Litigation</th> -->
 								</tr>
 							</thead>
 							<t t-set="due_total" t-value="0"/>
@@ -48,7 +47,7 @@
 							<t t-set="total" t-value="0"/>
 							<tr t-foreach="doc.balance_invoice_ids" t-as="line">
 								<t t-if="datetime.date.today() > line.invoice_date_due  ">
-									<t t-if="line.state !='paid' ">
+									<t t-if="line.payment_state !='paid' ">
 										<td>
 											<span t-esc="line.name"/>
 										</td>

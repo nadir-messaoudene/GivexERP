@@ -33,7 +33,7 @@ class BatchPaymentTracking(models.Model):
     invoice_no = fields.Many2one("account.move", "Invoice Number")
     invoice_ref = fields.Char("Reference")
     invoice_partner_id = fields.Many2one("res.partner", "Partner")
-    invoice_partner_bank_id = fields.Many2one("res.partner.bank", "Bank Account Number")
+    partner_bank_id = fields.Many2one("res.partner.bank", "Bank Account Number")
     invoice_date = fields.Date("Invoice Date")
     settlement_date = fields.Date("Settlement Date")
     batch_id = fields.Char("Batch ID")
@@ -96,7 +96,7 @@ class BatchPaymentTracking(models.Model):
             "journal_id": journal_id,
             # 'currency_id': move_id.journal_id.currency_id.id,
             "partner_id": move_id.partner_id.id,
-            "partner_bank_account_id": move_id.invoice_partner_bank_id.id,
+            "partner_bank_account_id": move_id.partner_bank_id.id,
             "payment_method_id": payment_method_id.id,
             # 'destination_account_id': 4,  # ===>>>Need to change from 4
             "payment_token_id": False,

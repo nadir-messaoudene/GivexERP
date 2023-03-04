@@ -376,36 +376,30 @@ class BankAccRecStatement(models.Model):
         digits='Account',
         help="Total Sum of the Deposit Amount "
         "Cleared - Total Sum of Checks, Withdrawals, "
-        "Debits, and Service Charges Amount Cleared",
-        multi="balance")
+        "Debits, and Service Charges Amount Cleared")
     difference = fields.Float(
         compute='_compute_balance',
         string='Difference',
         digits='Account',
-        help="(Ending Balance - Beginning Balance) - Cleared Balance.",
-        multi="balance")
+        help="(Ending Balance - Beginning Balance) - Cleared Balance.")
     sum_of_credits = fields.Float(
         compute='_compute_balance',
         string='Checks, Withdrawals, Debits, and Service Charges Amount',
         digits='Account',
-        help="Total SUM of Amts of lines with Cleared = True",
-        multi="balance")
+        help="Total SUM of Amts of lines with Cleared = True")
     sum_of_debits = fields.Float(
         compute='_compute_balance',
         string='Deposits, Credits, and Interest Amount',
         digits='Account',
-        help="Total SUM of Amts of lines with Cleared = True",
-        multi="balance")
+        help="Total SUM of Amts of lines with Cleared = True")
     sum_of_credits_lines = fields.Float(
         compute='_compute_balance',
         string='Checks, Withdrawals, Debits, and Service Charges # of Items',
-        help="Total of number of lines with Cleared = True",
-        multi="balance")
+        help="Total of number of lines with Cleared = True")
     sum_of_debits_lines = fields.Float(
         compute='_compute_balance',
         string='Deposits, Credits, and Interest # of Items',
-        help="Total of number of lines with Cleared = True",
-        multi="balance")
+        help="Total of number of lines with Cleared = True")
 
     _order = "ending_date desc"
     _sql_constraints = [
@@ -456,7 +450,7 @@ class BankAccRecStatementLine(models.Model):
                        help="Derived from related Journal Item.")
     statement_id = fields.Many2one('bank.acc.rec.statement', 'Statement',
                                    ondelete='cascade')
-    c_statement_id = fields.Many2one('bank.acc.rec.statement', 'Statement',
+    c_statement_id = fields.Many2one('bank.acc.rec.statement', 'Statement:',
                                      ondelete='cascade')
     move_line_id = fields.Many2one('account.move.line', 'Journal Item',
                                    help="Related Journal Item.")

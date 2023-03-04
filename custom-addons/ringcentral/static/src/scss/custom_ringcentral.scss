@@ -1,154 +1,164 @@
-.phone_edit{
+.phone_edit {
     margin-left: -15px;
     padding: 0px;
     border: none;
     color: green;
     background: none;
 }
-.phone_readonly{
+.phone_readonly {
     border: none;
     color: green;
     background: none;
 }
 
 .ringcentral_msg_truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px;
 }
 
 .btn-circle {
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  padding: 6px 0;
-  font-size: 12px;
-  line-height: 1.428571429;
-  border-radius: 15px;
-  border-color: white;
-  &.btn-lg {
-    width: 50px;
-    height: 50px;
-    padding: 6px 12px;
-    font-size: 16px;
-    line-height: 1.33;
-    border-radius: 0px;
-  }
-  &.btn-default:hover {
-    background-color: #e6f7ff;
-    border-color: #e6f7ff;
-  }
-  span {
-    color: grey;
-    font-size: 10px;
-  }
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+    border-color: white;
+    &.btn-lg {
+        width: 50px;
+        height: 50px;
+        padding: 6px 12px;
+        font-size: 16px;
+        line-height: 1.33;
+        border-radius: 0px;
+    }
+    &.btn-default:hover {
+        background-color: #e6f7ff;
+        border-color: #e6f7ff;
+    }
+    span {
+        color: grey;
+        font-size: 10px;
+    }
 }
 
 .slide-menu .menu-items {
-  background-color: #f8f8f8 !important;
-  .menu-item {
-    font-size: 16px !important;
-    border-top: none !important;
-    border-bottom: none !important;
     background-color: #f8f8f8 !important;
-    &.active, .menu-icon:hover {
-      background-color: #5b97d8 !important;
+    .menu-item {
+        font-size: 16px !important;
+        border-top: none !important;
+        border-bottom: none !important;
+        background-color: #f8f8f8 !important;
+        &.active,
+        .menu-icon:hover {
+            background-color: #5b97d8 !important;
+
+        }
     }
-  }
 }
 
 .menu-panel hr {
-  margin-top: 5px;
-  margin-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 @font-face {
-  font-family: 'Glyphicons Halflings';
-  src: url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.eot');
-  src: url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format("embedded-opentype"), url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.woff2') format("woff2"), url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.woff') format("woff"), url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.ttf') format("truetype"), url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format("svg");
+    font-family: "Glyphicons Halflings";
+    src: url("/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.eot");
+    src: url("/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix")
+            format("embedded-opentype"),
+        url("/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.woff2")
+            format("woff2"),
+        url("/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.woff")
+            format("woff"),
+        url("/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.ttf")
+            format("truetype"),
+        url("/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular")
+            format("svg");
 }
 
-
 .slide-menu .nav > li > a {
-  padding: 10px 20px;
-  outline: none;
+    padding: 10px 20px;
+    outline: none;
 }
 
 .custom-combobox {
-  position: relative;
+    position: relative;
 }
 
 .custom-combobox-toggle {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  margin-left: -1px;
-  padding: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin-left: -1px;
+    padding: 0;
 }
 
 .custom-combobox-input {
-  margin: 0;
-  padding: 5px 10px;
+    margin: 0;
+    padding: 5px 10px;
 }
 
 .ui-autocomplete {
-  overflow: auto !important;
-  max-height: 500px !important;
+    overflow: auto !important;
+    max-height: 500px !important;
 }
 
 .sent_text_messages_in_compose {
-  margin-left: 0 !important;
+    margin-left: 0 !important;
 }
-.msg_cotainer{
-  margin-top: auto;
-  margin-bottom: auto;
-  margin-left: 10px;
-  // border-radius: 25px;
-  background-color: aliceblue;
-  border-bottom-left-radius: 10px;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-  padding: 10px;
-  position: relative;
+.msg_cotainer {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 10px;
+    // border-radius: 25px;
+    background-color: aliceblue;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 10px;
+    position: relative;
 }
-.msg_cotainer_send{
-  margin-top: auto;
-  margin-bottom: auto;
-  margin-right: 10px;
-  border-bottom-left-radius: 10px;
-  border-top-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  // border-radius: 25px;
-  background-color: lightcyan;
-  padding: 10px;
-  position: relative;
+.msg_cotainer_send {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    // border-radius: 25px;
+    background-color: lightcyan;
+    padding: 10px;
+    position: relative;
 }
-.msg_img_cotainer_send{
-  margin-top: auto;
-  margin-bottom: auto;
-  margin-right: 10px;
-  padding: 10px;
-  position: relative; 
-  text-align: right;
+.msg_img_cotainer_send {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 10px;
+    padding: 10px;
+    position: relative;
+    text-align: right;
 }
-.msg_img_cotainer{
-  margin-top: auto;
-  margin-bottom: auto;
-  margin-left: 10px;
-  padding: 10px;
-  position: relative;
+.msg_img_cotainer {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 10px;
+    padding: 10px;
+    position: relative;
 }
 #live-chat {
-  bottom: 0;
-  font-size: 12px;
-  right: 24px;
-  position: fixed;
-  width: 300px;
+    bottom: 0;
+    font-size: 12px;
+    right: 24px;
+    position: fixed;
+    width: 300px;
 }
-.img_display{
-  width: 180px;
-  padding: 5px;
-  height: 130px;
+.img_display {
+    width: 180px;
+    padding: 5px;
+    height: 130px;
 }
 
 .btn-floating {
@@ -173,23 +183,35 @@
     cursor: pointer;
 }
 .custom_overlay {
-  display: none;
+    display: none;
 }
 .time-right {
-  float: right;
-  color: #aaa;
+    float: right;
+    color: #aaa;
 }
 
 .time-left {
-  float: left;
-  color: #999;
+    float: left;
+    color: #999;
 }
-.msg_time{
-  font-size: 10px;
+.msg_time {
+    font-size: 10px;
 }
-.msg_img{
-  border-radius: 10px !important;
+.msg_img {
+    border-radius: 10px !important;
 }
-.msg_time_send{
-  font-size: 10px;
+.msg_time_send {
+    font-size: 10px;
+}
+.ui-widget.ui-autocomplete {
+    z-index: 9999999 !important;
+}
+#partners_panel{
+    overflow-y: auto;
+    max-height: 75vh;
+    overflow-x: hidden;
+}
+
+.ringcentral_sidebar .form-control:focus{
+    border-color: #c5c5c5;
 }

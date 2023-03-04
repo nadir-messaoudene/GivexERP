@@ -13,6 +13,7 @@
         'views/worksheet_report_projecttask.xml',
     ],
     'demo': [],
+    'license': 'OPL-1',
     'installable': True,
     'auto_install': False,
 }

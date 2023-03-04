@@ -21,6 +21,10 @@
                         <strong>Date:</strong>
                         <p t-esc="d['today']" class="m-0" />
                     </div>
+                    <div class="col-3 bm-2">
+                        <strong>Partner Name:</strong>
+                        <p t-field="o.name" class="m-0" />
+                    </div>
                     <div t-if="o.ref" class="col-3 bm-2">
                         <strong>Partner Code:</strong>
                         <p t-field="o.ref" class="m-0" />
@@ -80,12 +84,15 @@
                                     </td>
                                     <td>
                                         <t t-if="line['name'] != '/'">
-                                            <t t-if="not line['ref']">
+                                            <t t-if="not line['ref'] and line['name']">
                                                 <span t-esc="line['name']" />
+                                            </t>
+                                            <t t-if="line['ref'] and not line['name']">
+                                                <span t-esc="line['ref']" />
                                             </t>
                                             <t t-if="line['ref'] and line['name']">
                                                 <t
-                                                    t-if="line['name'] not in line['ref']"
+                                                    t-if="line['name'] not in line['ref'] or line['name'] == line['ref']"
                                                 >
                                                     <span t-esc="line['name']" />
                                                 </t>
@@ -94,16 +101,10 @@
                                                 >
                                                     <span t-esc="line['ref']" />
                                                 </t>
-                                                <t t-if="line['name'] == line['ref']">
-                                                    <span t-esc="line['name']" />
-                                                </t>
                                             </t>
                                         </t>
                                         <t t-if="line['name'] == '/'">
-                                            <span
-                                                t-if="line['ref'] == 'Payment'"
-                                            >Payment</span>
-                                            <span t-else="" t-esc="line['ref']" />
+                                            <span t-esc="line['ref']" />
                                         </t>
                                     </td>
                                     <td class="amount">
@@ -160,13 +161,26 @@
             </t>
         </t>
     </template>
-    <report
-        id="action_print_activity_statement"
-        model="res.partner"
-        report_type="qweb-pdf"
-        menu="False"
-        string="Activity Statement"
-        name="partner_statement.activity_statement"
-        file="partner_statement.activity_statement"
-    />
+    <record id="action_print_activity_statement" model="ir.actions.report">
+        <field name="name">Activity Statement</field>
+        <field name="model">res.partner</field>
+        <field name="report_name">partner_statement.activity_statement</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_file">partner_statement.activity_statement</field>
+    </record>
+    <record id="action_print_activity_statement_html" model="ir.actions.report">
+        <field name="name">Activity Statement</field>
+        <field name="model">res.partner</field>
+        <field name="report_name">partner_statement.activity_statement</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_file">partner_statement.activity_statement</field>
+    </record>
+    <record id="action_print_activity_statement_xlsx" model="ir.actions.report">
+        <field name="name">Activity Statement XLSX</field>
+        <field name="model">res.partner</field>
+        <field name="type">ir.actions.report</field>
+        <field name="report_name">p_s.report_activity_statement_xlsx</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_file">report_activity_statement</field>
+    </record>
 </odoo>

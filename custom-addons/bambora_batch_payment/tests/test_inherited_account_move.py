@@ -135,7 +135,7 @@ class TestInheritedAccountMove(TransactionCase):
 
     # ======================= For Vendor Invoice ======================
     def test_action_register_batch_vendor_complete_report(self):
-        self.invoice.invoice_partner_bank_id.bank_bic = "123"
+        self.invoice.partner_bank_id.bank_bic = "123"
         self.invoice.action_register_bambora_batch_payment()
         self.assertIsNotNone(self.invoice.bambora_batch_payment_id, msg="Not Pass")
         self.assertIsNotNone(self.invoice.batch_id, msg="Not Pass")
@@ -165,7 +165,7 @@ class TestInheritedAccountMove(TransactionCase):
 
         # resposnse = invoice.action_register_bambora_batch_payment()
         # with self.assertRaises(Exception) as context:
-        self.invoice.invoice_partner_bank_id.bank_bic = "123"
+        self.invoice.partner_bank_id.bank_bic = "123"
         self.invoice.action_register_bambora_batch_payment()
         self.assertIsNotNone(self.invoice.bambora_batch_payment_id, msg="Not Pass")
         self.assertIsNotNone(self.invoice.batch_id, msg="Pass")
@@ -201,7 +201,7 @@ class TestInheritedAccountMove(TransactionCase):
             products=self.product_a + self.product_b,
             partner=self.partner_values1,
         )
-        self.invoice.invoice_partner_bank_id.bank_bic = "123"
+        self.invoice.partner_bank_id.bank_bic = "123"
         self.invoice.action_register_bambora_batch_payment()
 
         # ================== ALL TEST CASES =================
@@ -257,7 +257,7 @@ class TestInheritedAccountMove(TransactionCase):
             products=self.product_a + self.product_b,
             partner=self.partner_values1,
         )
-        self.invoice.invoice_partner_bank_id.bank_bic = "123"
+        self.invoice.partner_bank_id.bank_bic = "123"
         self.invoice.action_register_bambora_batch_payment()
 
         # ================== ALL TEST CASES =================

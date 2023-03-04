@@ -31,7 +31,7 @@ class EasyReconciliationLines(models.TransientModel):
 
 
     easy_reconciliation_id = fields.Many2one('easy.reconciliation', 'Easy Reconciliation', required = True)
-    invoice_id = fields.Many2one('account.move', 'Invoice', required = True , domain = "[('partner_id', '=', partner_id),('type', '=', 'out_invoice')]")
+    invoice_id = fields.Many2one('account.move', 'Invoice', required = True , domain = "[('partner_id', '=', partner_id), ('move_type', '=', 'out_invoice')]")
     amount_due = fields.Float('Amount Due', readonly = True)
     outstanding_line_id = fields.Many2one('account.outstanding.lines', 'Outstanding Credits/Debits', domain = "[('invoice_id', '=', invoice_id)]", required = True)
     outstanding_line_amount = fields.Float('Amount', readonly = True)
@@ -58,9 +58,6 @@ class EasyReconciliation(models.TransientModel):
     line_ids = fields.One2many('easy.reconciliation.lines', 'easy_reconciliation_id')
     journal_id = fields.Many2one('account.journal', 'Journal', required = True ) 
 
-
-
-    
     def make_reconciliations(self):
         if self.line_ids:
             account_move = self.env['account.move']
@@ -73,7 +70,7 @@ class EasyReconciliation(models.TransientModel):
             payments = {}
 
             for record in self.line_ids:
-                account_id = record.invoice_id.line_ids.filtered(lambda line: line.debit > 0 and line.account_id.user_type_id.type in ('receivable')).account_id.id
+                account_id = record.invoice_id.line_ids.filtered(lambda line: line.debit > 0 and line.account_id.user_type_id.move_type in ('receivable')).account_id.id
 
                 if not record.outstanding_line_id.line_id.id:
                     raise ValidationError('Please select a credit/debit for the invoice %s' % ( record.invoice_id.name ))
@@ -126,7 +123,7 @@ class EasyReconciliation(models.TransientModel):
 
                 
                 if line_move_id and payment_id:  
-                    data = [{'mv_line_ids' : [line_move_id.id, payment_id], 'new_mv_line_dicts' : [], 'type' : 'partner', 'id' : self.partner_id.id }]              
+                    data = [{'mv_line_ids' : [line_move_id.id, payment_id], 'new_mv_line_dicts' : [], 'move_type' : 'partner', 'id' : self.partner_id.id }]              
                     res = widget_reconciliation.process_move_lines(data)
                     lines_for_payments = move_id.line_ids.search([('move_id', '=', move_id.id),('credit', '>', 0),('partner_id', '=', self.partner_id.id),('invoice_id', '!=', False)])
 
@@ -147,7 +144,7 @@ class EasyReconciliation(models.TransientModel):
 
 
             self.line_ids = False
-            invoices_ids = self.env['account.move'].search([('state', 'in', ['posted']),('partner_id', '=', self.partner_id.id),('journal_id', '=', self.journal_id.id),('type', '=', 'out_invoice')])
+            invoices_ids = self.env['account.move'].search([('state', 'in', ['posted']),('partner_id', '=', self.partner_id.id),('journal_id', '=', self.journal_id.id),('move_type', '=', 'out_invoice')])
             if invoices_ids:
                 self.line_ids = [ (0, 0, {'invoice_id' : invoice.id, 'amount_due' : invoice.amount_residual}) for invoice in invoices_ids ]
 

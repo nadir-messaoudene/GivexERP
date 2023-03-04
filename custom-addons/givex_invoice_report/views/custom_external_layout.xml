@@ -44,7 +44,7 @@
           <t t-set="company" t-value="res_company"/>
         </t>
       </t>
-      <t t-call="givex_invoice_report.custom_external_layout_standard"><t t-raw="0"/></t>
+      <t t-call="givex_invoice_report.custom_external_layout_standard"><t t-out="0"/></t>
 
     </template>
 
@@ -75,7 +75,7 @@
 
       <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
         <t t-call="givex_invoice_report.custom_address_layout"/>
-        <t t-raw="0"/>
+        <t t-out="0"/>
       </div>
 
       <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
@@ -141,7 +141,7 @@
           <t t-set="company" t-value="res_company"/>
         </t>
       </t>
-      <t t-call="givex_invoice_report.custom_external_layout_standard_msc"><t t-raw="0"/></t>
+      <t t-call="givex_invoice_report.custom_external_layout_standard_msc"><t t-out="0"/></t>
 
     </template>
 
@@ -200,7 +200,7 @@
 
       <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
         <t t-call="givex_invoice_report.custom_address_layout_msc"/>
-        <t t-raw="0"/>
+        <t t-out="0"/>
       </div>
 
       <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
@@ -264,7 +264,7 @@
           <t t-set="company" t-value="res_company"/>
         </t>
       </t>
-      <t t-call="givex_invoice_report.custom_external_layout_standard_esi"><t t-raw="0"/></t>
+      <t t-call="givex_invoice_report.custom_external_layout_standard_esi"><t t-out="0"/></t>
 
     </template>
 
@@ -321,7 +321,7 @@
 
       <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
         <t t-call="givex_invoice_report.custom_address_layout_esi"/>
-        <t t-raw="0"/>
+        <t t-out="0"/>
       </div>
 
       <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
@@ -355,7 +355,7 @@
           </address>
         </div>
         <div class="col-4 text-center">
-<!--          <p>***HISTORICAL***</p>-->
+          <p>***HISTORICAL***</p>
         </div>
         <div class="col-4 text-center">
           <h2 t-attf-style="font-size: 14px;font-weight: bold;">Invoice</h2>
@@ -395,7 +395,7 @@
           <t t-set="company" t-value="res_company"/>
         </t>
       </t>
-      <t t-call="givex_invoice_report.custom_external_layout_standard_kes"><t t-raw="0"/></t>
+      <t t-call="givex_invoice_report.custom_external_layout_standard_kes"><t t-out="0"/></t>
 
     </template>
 
@@ -448,86 +448,12 @@
         <t t-call="givex_invoice_report.custom_header_template_kes" t-lang="lang"/>
       </div>
 
-      <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')" t-attf-style="height:100%">
+      <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
         <t t-call="givex_invoice_report.custom_address_layout_kes"/>
-        <t t-raw="0"/>
+        <t t-out="0"/>
       </div>
 
       <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
-          <div class="row last-page">
-              <div class="col-6">
-                  <div >
-                                    <p><br>GST/HST #: 88992 7851 RT0001</br>
-                                    <br>BC PST #: 1006-1954</br>
-                                    <br>MB RST #: 084893-7</br>
-                                    <br>QC QST #: 1216979512 TQ0001</br>
-                                    <br>SK PST #: 2424794</br>
-                                    </p>
-                                </div>
-              </div>
-              <div class="col-6">
-                  <table class="table table-sm" style="page-break-inside: avoid; border: 1px solid; font-size: 10pt">
-                                <tr class="border-black o_subtotal">
-                                    <td style="border: 1px solid black;"><strong>Subtotal</strong></td>
-                                    <td class="text-right" style="border: 1px solid black;">
-                                        <span t-field="o.amount_untaxed"/>
-                                    </td>
-
-                                </tr>
-                                      <t t-foreach="o.amount_by_group" t-as="amount_by_group">
-                                        <tr class="border-black">
-                                            <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) in [0, 1] and float_compare(o.amount_untaxed, amount_by_group[2], precision_rounding=o.currency_id.rounding) == 0">
-                                                <td><span class="text-nowrap" t-esc="amount_by_group[0]"/></td>
-                                                <td class="text-right o_price_total" style="border: 1px solid black;">
-                                                    <span class="text-nowrap" t-esc="amount_by_group[3]" />
-                                                </td>
-                                            </t>
-                                            <t t-else="">
-                                                <td style="border: 1px solid black;">
-                                                    <span t-esc="amount_by_group[0]"/>
-                                                    <span class="text-nowrap"> on
-                                                        <t t-esc="amount_by_group[4]"/>
-                                                    </span>
-                                                </td>
-                                                <td class="text-right o_price_total" style="border: 1px solid black;">
-                                                    <span class="text-nowrap" t-esc="amount_by_group[3]"/>
-                                                </td>
-                                            </t>
-                                        </tr>
-                                    </t>
-<!--                                    <tr>-->
-<!--                                        <th>-->
-<!--                                            PST-->
-<!--                                        </th>-->
-<!--                                        <td>-->
-<!--                                            CAD 0.00-->
-<!--                                        </td>-->
-<!--                                    </tr>-->
-<!--                                    <tr>-->
-<!--                                        <th>-->
-<!--                                            QST-->
-<!--                                        </th>-->
-<!--                                        <td>-->
-<!--                                            CAD 0.00-->
-<!--                                        </td>-->
-<!--                                    </tr>-->
-<!--                                    <tr>-->
-<!--                                        <th>-->
-<!--                                            RST-->
-<!--                                        </th>-->
-<!--                                        <td>-->
-<!--                                            CAD 0.00-->
-<!--                                        </td>-->
-<!--                                    </tr>-->
-                                <tr class="border-black o_total">
-                                        <td style="border: 1px solid black;"><strong>Total</strong></td>
-                                        <td class="text-right" style="border: 1px solid black;">
-                                            <span class="text-nowrap" t-field="o.amount_total"/>
-                                        </td>
-                                    </tr>
-                            </table>
-              </div>
-          </div>
           <div class="text-center" style="border-top: 1px solid black;">
               <div name="financial_infos">
                   <span t-field="company.report_footer"/>
@@ -543,421 +469,6 @@
     <!--KES [END] -->
 
 
-      <!--CSH [START] -->
-    <template id="custom_header_template_cs">
-      <header class="invoice_header header" t-attf-style="font-family: sans-serif; font-size: 17px; font-weight: lighter;">
-          <div class="row">
-              <div class="col-6">
-
-                  <h1 class="website_name mb-0 mt-" t-attf-style="font-size: 18px;">
-                      <t t-esc="o.company_id.name.upper()"/>
-                  </h1>
-                  <address class="warehouse_address" t-attf-style="font-size: 17px; ">
-                      <p class="mb-0">
-                          <t t-esc="o.company_id.street"/>
-                      </p>
-                      <p class="mb-0">
-                          <t t-esc="o.company_id.street2"/>
-                      </p>
-                      <p class="mb-0">
-                          <t t-esc="o.company_id.city"/>
-                      </p>
-                      <p class="mb-0">
-                          <t t-esc="o.company_id.zip"/>
-                      </p>
-                      <p class="mb-0">Tel:
-                          <t t-esc="o.company_id.phone"/>
-                      </p>
-                  </address>
-              </div>
-              <div class="col-6 text-right">
-                  <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
-              </div>
-          </div>
-        <div>
-            <span t-attf-style="font-weight: bold;">VAT Reg No:</span>
-            <t t-esc="o.company_id.vat"/>
-            <br/>
-            <span t-attf-style="font-weight: bold;">Company No:</span>
-            <t t-esc="o.company_id.company_registry"/>
-        </div>
-
-        <div class="row">
-                    <div class=" col-6 border border-dark rounded">
-                        <address class="warehouse_address" t-attf-style="font-size: 17px;">
-                            <p class="mb-0">
-                              <t t-esc="o.partner_id.name"/>
-                          </p>
-                            <p class="mb-0">
-                          <t t-esc="o.partner_id.street"/>
-                      </p>
-                      <p class="mb-0">
-                          <t t-esc="o.partner_id.street2"/>
-                      </p>
-                      <p class="mb-0">
-                          <t t-esc="o.partner_id.city"/>
-                      </p>
-                      <p class="mb-0">
-                          <t t-esc="o.partner_id.zip"/>
-                      </p>
-                      <p class="mb-0">Tel:
-                          <t t-esc="o.partner_id.phone"/>
-                      </p>
-                        </address>
-
-                    </div>
-                    <style>table.table-bordered tr th, table.table-bordered tr td {
-                        border-color: black;
-                        }
-                    </style>
-                    <div class="col-2"/>
-                    <div class="col-4">
-
-                        <div class="row font-weight-bold text-center" >
-                            <div class="col-6" >
-                                INVOICE
-                            </div>
-                            <div class="col-6">
-                                Page <span class="page"/>
-                            </div>
-
-                        </div>
-                        <table t-attf-style="border-color: black; color: black; vertical-align: center;font-size: 16px; outline:2px solid black;border-radius:20px"
-                               class="table table-sm text-center ">
-                                <tbody>
-                                <tr>
-                                    <th style="border-right:2px solid black !important;border-bottom:2px solid black !important;">
-                                        Invoice No
-                                    </th>
-                                    <td style="border-bottom:2px solid black !important;">
-                                         <span class="text-nowrap" t-esc="o.name" />
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <th style="border-right:2px solid black !important;border-bottom:2px solid black !important;">
-                                        Invoice Date
-                                    </th>
-                                    <td style="border-bottom:2px solid black !important;">
-                                        <span class="text-nowrap" t-field="o.invoice_date" t-options='{"format": "dd/MM/yyyy"}'/>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <th style="border-right:2px solid black !important;border-bottom:2px solid black !important;">
-                                        Order No
-                                    </th>
-                                    <td style="border-bottom:2px solid black !important;">
-                                    <span class="text-nowrap" t-field="o.ref" />
-
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <th style="border-right:2px solid black !important;">
-                                        Account Ref
-                                    </th>
-                                    <td>
-                                        <span class="text-nowrap" t-field="o.partner_id.ref" />
-                                    </td>
-
-                                </tr>
-                            </tbody>
-
-                        </table>
-                    </div>
-
-                </div>
-      </header>
-    </template>
-
-    <template id="custom_external_layout_cs">
-      <t t-if="not o" t-set="o" t-value="doc"/>
-
-      <t t-if="not company">
-        <t t-if="company_id">
-          <t t-set="company" t-value="company_id"/>
-        </t>
-        <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
-          <t t-set="company" t-value="o.company_id.sudo()"/>
-        </t>
-        <t t-else="else">
-          <t t-set="company" t-value="res_company"/>
-        </t>
-      </t>
-      <t t-call="givex_invoice_report.custom_external_layout_standard_cs"><t t-raw="0"/></t>
-
-    </template>
-
-    <template id="custom_address_layout_cs">
-        <t t-set="colclass" t-value="('col-md-5' if report_type == 'html' else 'col-5') + ' ml-auto'"/>
-        <t t-if="address">
-            <div>
-                <table style="width:100%">
-                  <tr t-attf-style="text-align: left; font-size: 12px; font-weight: bold;">
-                      <th >
-                      BILL TO:
-                      </th>
-                      <th >
-                      DELIVER TO:
-                      </th>
-                  </tr>
-                  <tr t-attf-style="text-align: left; font-size: 12px; font-weight: bold;">
-                    <td >
-                      <t t-if="o.partner_id">
-                          <br><t t-esc="o.partner_id.name"/></br>
-                          <br><t t-esc="o.partner_id.street"/></br>
-                          <br>
-                            <t t-esc="o.partner_id.city"/>,
-                            <t t-esc="o.partner_id.state_id.code"/>,
-                            <t t-esc="o.partner_id.zip"/>
-                          </br>
-                          <br><t t-esc="o.partner_id.country_id.name"/></br>
-                      </t>
-                    </td>
-                    <td t-attf-style="font-size: 12px; font-weight: bold;">
-                      <t t-if="o.partner_shipping_id">
-                          <br><t t-esc="o.partner_shipping_id.name"/></br>
-                          <br><t t-esc="o.partner_shipping_id.street"/></br>
-                          <br>
-                            <t t-esc="o.partner_shipping_id.city"/>,
-                            <t t-esc="o.partner_shipping_id.state_id.code"/>,
-                            <t t-esc="o.partner_shipping_id.zip"/>
-                          </br>
-                          <br><t t-esc="o.partner_shipping_id.country_id.name"/></br>
-                      </t>
-                    </td>
-                  </tr>
-                </table>
-            </div>
-        </t>
-    </template>
-
-    <template id="custom_external_layout_standard_cs">
-      <div t-attf-class="header o_company_#{company.id}_layout">
-        <t t-call="givex_invoice_report.custom_header_template_cs" t-lang="lang"/>
-      </div>
-
-      <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-        <t t-call="givex_invoice_report.custom_address_layout_cs"/>
-        <t t-raw="0"/>
-      </div>
-
-
-      <div class="footer last-page">
-          <div style="border-top: 1px solid black;">
-              <div t-attf-style="margin-top:20px">
-                  <div class="row">
-                      <div class="col-5" style="width: 300px; height: 200px; border: 2px solid black; border-radius: 3px;">
-                          <address class="warehouse_address" t-attf-style="font-size: 17px;">
-                            <p class="mb-0">
-                              <t t-esc="o.partner_shipping_id.name"/>
-                          </p>
-                            <p class="mb-0">
-                          <t t-esc="o.partner_shipping_id.street"/>
-                      </p>
-                      <p class="mb-0">
-                          <t t-esc="o.partner_shipping_id.street2"/>
-                      </p>
-                      <p class="mb-0">
-                          <t t-esc="o.partner_shipping_id.city"/>
-                      </p>
-                      <p class="mb-0">
-                          <t t-esc="o.partner_shipping_id.zip"/>
-                      </p>
-                      <p class="mb-0">Tel:
-                          <t t-esc="o.partner_shipping_id.phone"/>
-                      </p>
-                        </address>
-                      </div>
-                      <div class="col-1"/>
-                      <div class="col-6">
-                        <table t-attf-style="border-color: black; color: black; vertical-align: center;font-size: 16px"
-                               class="mt-4 table table-bordered table-sm text-center table-striped;">
-                            <tbody>
-
-                                <tr>
-                                    <th>
-                                        Total Net Amount
-                                    </th>
-                                    <td class="text-left" style="border-right:none !important">
-                                        <span class="text-nowrap mr-auto" t-field="o.currency_id.symbol"/>
-                                    </td>
-                                    <td class="text-right" style="border-left: none !important">
-                                        <span class="text-nowrap" style="margin-inline:auto;" t-esc="o.amount_untaxed"/>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <th>
-                                        Carriage Net
-                                    </th>
-
-                                    <td class="text-left" style="border-right:none !important">
-                                        <span class="text-nowrap mr-auto" t-field="o.currency_id.symbol"/>
-                                    </td>
-                                    <td class="text-right" style="border-left: none !important">
-
-                                        <span class="text-nowrap" style="margin-inline:auto;">0.0</span>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Total Tax Amount
-                                    </th>
-                                    <td class="text-left" style="border-right:none !important">
-                                        <span class="text-nowrap mr-auto" t-field="o.currency_id.symbol"/>
-                                    </td>
-                                    <td class="text-right" style="border-left: none !important">
-                                        <span class="text-nowrap" style="margin-inline:auto;" t-esc="o.amount_tax"/>
-
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <th>
-                                        INVOICE TOTAL
-                                    </th>
-                                    <td class="text-left" style="border-right:none !important">
-                                        <span class="text-nowrap mr-auto" t-field="o.currency_id.symbol"/>
-                                    </td>
-                                    <td class="text-right" style="border-left: none !important">
-
-                                        <span class="text-nowrap" style="margin-inline:auto;" t-esc="o.amount_total"/>
-                                    </td>
-
-                                </tr>
-                            </tbody>
-
-                        </table>
-                    </div>
-                  </div>
-                  <span style="text-align:left;">Payment Due:&#032;<span t-field="o.invoice_payment_term_id" t-options='{"format": "dd/MM/yyyy"}'/></span>
-                  <span><p>
-                      The goods covered by this invoice have been supplied subject to our terms and conditions, copies of which are available on request.
-Any claims for incorrect or damaged goods must be notified in writing within 5 days of receipt.<br/>
-                      <t t-if="o.currency_id.name == 'USD'">
-                            Please remit to: Barclays Bank PLC Sort Code: 20 25 85 Account No: 9722
-                      </t>
-                      <t t-elif="o.currency_id.name == 'EUR'">
-                            Please remit to: Barclays Bank PLC Sort Code: 20 25 85 Account No: 64825733
-                      </t>
-                      <t t-else="">
-                            Please remit to: Barclays Bank PLC Sort Code: 20 25 85 Account No: 50716146
-                      </t>
-
-                      Remittance advice to: finance@countersolutions.com
-                  </p></span>
-
-              </div>
-
-<!--              <div name="financial_infos">-->
-<!--                  <span t-field="company.report_footer"/>-->
-<!--              </div>-->
-<!--              <div t-if="report_type == 'pdf'" class="text-muted">-->
-<!--                  Page: <span class="page"/> / <span class="topage"/>-->
-<!--              </div>-->
-          </div>
-      </div>
-
-    </template>
-
-    <!--CSH [END] -->
-
-
-
-    <!--Inherited For Purchase Oder Invoice (Standard,Boxed,Background Layout) -->
-<!--      <template id="external_layout_standard_po_custom_" inherit_id="web.external_layout_standard" >-->
-<!--          <xpath expr="//ul[hasclass('list-inline', 'mb4')]/li[2]" position="replace">-->
-<!--              <t t-if="o._name == 'purchase.order'">-->
-<!--                  <t t-if="'Kalex' in company.name">-->
-<!--                      <li class="list-inline-item d-inline">Email: finance@kalex.com</li>-->
-<!--                  </t>-->
-<!--                  <t t-elif="'Counter Solutions' in company.name">-->
-<!--                      <li class="list-inline-item d-inline">Email: finance@countersolutions.com</li>-->
-<!--                  </t>-->
-<!--                  <t t-else="">-->
-<!--                      <li t-if="company.email" class="list-inline-item d-inline">Email:-->
-<!--                          <span t-field="company.email"/>-->
-<!--                      </li>-->
-
-<!--                  </t>-->
-<!--              </t>-->
-<!--              <t t-else="">-->
-<!--                  <li t-if="company.email" class="list-inline-item d-inline">Email:-->
-<!--                      <span t-field="company.email"/>-->
-<!--                  </li>-->
-
-<!--              </t>-->
-<!--        </xpath>-->
-<!--      </template>-->
-
-<!--      <template id="external_layout_boxed_poo" inherit_id="web.external_layout_boxed" >-->
-<!--          <xpath expr="//ul[hasclass('list-inline')]/li[2]" position="replace">-->
-<!--              &lt;!&ndash;                 <xpath expr="//li[contains(@t-if,'company.email')]" position="replace">&ndash;&gt;-->
-<!--              <t t-if="o._name == 'purchase.order'">-->
-<!--                  <t t-if="'Kalex' in company.name">-->
-<!--                      <li class="list-inline-item d-inline">Email: finance@kalex.com</li>-->
-<!--                  </t>-->
-<!--                  <t t-elif="'Counter Solutions' in company.name">-->
-<!--                      <li class="list-inline-item d-inline">Email: finance@countersolutions.com</li>-->
-<!--                  </t>-->
-<!--                  <t t-else="">-->
-<!--                      <li t-if="company.email" class="list-inline-item d-inline">Email:-->
-<!--                          <span t-field="company.email"/>-->
-<!--                      </li>-->
-
-<!--                  </t>-->
-<!--              </t>-->
-<!--              <t t-else="">-->
-<!--                  <li t-if="company.email" class="list-inline-item d-inline">Email:-->
-<!--                      <span t-field="company.email"/>-->
-<!--                  </li>-->
-
-<!--              </t>-->
-<!--          </xpath>-->
-<!--&lt;!&ndash;            <xpath expr="//li[contains(@t-if,'company.email')]" position="replace">&ndash;&gt;-->
-<!--&lt;!&ndash;                <t t-if="o._name == 'purchase.order'">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <t t-if="'Kalex' in company.name">&ndash;&gt;-->
-<!--&lt;!&ndash;                        <li class="list-inline-item d-inline">Email: finance@kalex.com</li>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </t>&ndash;&gt;-->
-<!--&lt;!&ndash;                </t>&ndash;&gt;-->
-<!--&lt;!&ndash;            </xpath>&ndash;&gt;-->
-<!--      </template>-->
-
-<!--      <template id="external_layout_background_po_" inherit_id="web.external_layout_background" >-->
-<!--          <xpath expr="//ul[hasclass('list-inline')]/li[2]" position="replace">-->
-<!--              &lt;!&ndash;                 <xpath expr="//li[contains(@t-if,'company.email')]" position="replace">&ndash;&gt;-->
-<!--              <t t-if="o._name == 'purchase.order'">-->
-<!--                  <t t-if="'Kalex' in company.name">-->
-<!--                      <li class="list-inline-item d-inline">Email: finance@kalex.com</li>-->
-<!--                  </t>-->
-<!--                  <t t-elif="'Counter Solutions' in company.name">-->
-<!--                      <li class="list-inline-item d-inline">Email: finance@countersolutions.com</li>-->
-<!--                  </t>-->
-<!--                  <t t-else="">-->
-<!--                      <li t-if="company.email" class="list-inline-item d-inline">Email:-->
-<!--                          <span t-field="company.email"/>-->
-<!--                      </li>-->
-
-<!--                  </t>-->
-<!--              </t>-->
-<!--              <t t-else="">-->
-<!--                  <li t-if="company.email" class="list-inline-item d-inline">Email:-->
-<!--                      <span t-field="company.email"/>-->
-<!--                  </li>-->
-
-<!--              </t>-->
-<!--          </xpath>-->
-<!--&lt;!&ndash;            <xpath expr="//li[contains(@t-if,'company.email')]" position="replace">&ndash;&gt;-->
-<!--&lt;!&ndash;                <t t-if="o._name == 'purchase.order'">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <t t-if="'Kalex' in company.name">&ndash;&gt;-->
-<!--&lt;!&ndash;                        <li class="list-inline-item d-inline">Email: finance@kalex.com</li>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </t>&ndash;&gt;-->
-<!--&lt;!&ndash;                </t>&ndash;&gt;-->
-<!--&lt;!&ndash;            </xpath>&ndash;&gt;-->
-<!--      </template>-->
 
   </data>
 </odoo>

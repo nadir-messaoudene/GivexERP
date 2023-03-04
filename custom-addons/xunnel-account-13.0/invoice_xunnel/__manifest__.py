@@ -20,17 +20,17 @@
         'data/folder.xml',
         'security/groups.xml',
         'security/ir.model.access.csv',
-        'views/assets.xml',
+        # 'views/assets.xml',
         'views/documents_views.xml',
         'wizards/attach_xmls_wizard_view.xml',
         'wizards/documents.xml',
-        'views/account_config_settings.xml',
+        # 'views/account_config_settings.xml',
     ],
     'demo': [
         'demo/res_company.xml',
     ],
-    'qweb': [
-        'static/src/xml/*.xml'
-    ],
+    # 'qweb': [
+    #     'static/src/xml/*.xml'
+    # ],
     'installable': True,
 }

@@ -4,9 +4,6 @@ from odoo import fields, models
 
 
 class ProjectProject(models.Model):
-    _inherit = 'project.project'
+    _inherit = "project.project"
 
-    phonecall_about_id = fields.Many2one(
-        'crm.phonecall.about',
-        'Phonecall About'
-    )
+    phonecall_about_id = fields.Many2one("crm.phonecall.about", "Phonecall About")

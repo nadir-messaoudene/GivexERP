@@ -1,13 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models, fields
+from odoo import _, api, fields, models
 
 
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
     payment_method_code = fields.Char(
-        string="Payment Code", compute="_compute_time_computed_on"
+        string="Payment Code", compute="_compute_td_payment_code"
+    )
+    has_td_EFT_payment_method = fields.Boolean(
+        compute="_compute_has_td_EFT_payment_method"
     )
     td_originator_code = fields.Char(
         string="TD Bank Originator ID",
@@ -35,27 +38,33 @@ class AccountJournal(models.Model):
         help="Must be a TD Commercial account number where dishonored transactions will be returned. 11 digits followed by 1 space. Format : AN",
     )
 
-    @api.depends("outbound_payment_method_ids")
-    def _compute_time_computed_on(self):
-        for journal in self:
-            journal.payment_method_code = (
-                    any(
-                        payment_method_id.code == "td"
-                        for payment_method_id in journal.outbound_payment_method_ids
-                    )
-                    and "td"
-                    or ""
+    @api.depends("outbound_payment_method_line_ids.payment_method_id.code")
+    def _compute_td_payment_code(self):
+        for rec in self:
+            rec.payment_method_code = (
+                any(
+                    payment_method.payment_method_id.code == "td"
+                    for payment_method in rec.outbound_payment_method_line_ids
+                )
+                and "td"
+                or ""
             )
 
-    @api.model
-    def _enable_td_on_bank_journals(self):
-        """Enables batch deposit payment method on bank journals. Called upon module installation via data file."""
-        td = self.env.ref("givex_export_td_eft_batch_payment.account_payment_method_td")
-        self.search([("type", "=", "bank")]).write(
-            {
-                "outbound_payment_method_ids": [(4, td.id, None)],
-            }
-        )
+    @api.depends("outbound_payment_method_line_ids.payment_method_id.code")
+    def _compute_has_td_EFT_payment_method(self):
+        for rec in self:
+            rec.has_td_EFT_payment_method = any(
+                payment_method.payment_method_id.code == "td"
+                for payment_method in rec.outbound_payment_method_line_ids
+            )
+
+    def _default_outbound_payment_methods(self):
+        res = super()._default_outbound_payment_methods()
+        if self._is_payment_method_available("td"):
+            res |= self.env.ref(
+                "givex_export_td_eft_batch_payment.account_payment_method_td"
+            )
+        return res
 
     @api.model
     def _create_td_batch_payment_outbound_sequence(self):

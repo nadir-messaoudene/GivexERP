@@ -44,8 +44,8 @@ class ReportStatementCommon(models.AbstractModel):
                 ELSE l.balance + sum(coalesce(pc.amount, 0.0))
             END AS open_due,
             CASE WHEN l.balance > 0.0
-                THEN l.amount_currency - sum(coalesce(pd.amount_currency, 0.0))
-                ELSE l.amount_currency + sum(coalesce(pc.amount_currency, 0.0))
+                THEN l.amount_currency - sum(coalesce(pd.debit_amount_currency, 0.0))
+                ELSE l.amount_currency + sum(coalesce(pc.credit_amount_currency, 0.0))
             END AS open_due_currency,
             CASE WHEN l.date_maturity is null
                 THEN l.date
@@ -53,6 +53,8 @@ class ReportStatementCommon(models.AbstractModel):
             END as date_maturity
             FROM account_move_line l
             JOIN account_move m ON (l.move_id = m.id)
+            JOIN account_account aa ON (aa.id = l.account_id)
+            JOIN account_account_type at ON (at.id = aa.user_type_id)
             LEFT JOIN (SELECT pr.*
                 FROM account_partial_reconcile pr
                 INNER JOIN account_move_line l2
@@ -65,8 +67,7 @@ class ReportStatementCommon(models.AbstractModel):
                 ON pr.debit_move_id = l2.id
                 WHERE l2.date <= %(date_end)s
             ) as pc ON pc.credit_move_id = l.id
-            WHERE l.partner_id IN %(partners)s
-                                AND l.account_internal_type = %(account_type)s
+            WHERE l.partner_id IN %(partners)s AND at.type = %(account_type)s
                                 AND (
                                   (pd.id IS NOT NULL AND
                                       pd.max_date <= %(date_end)s) OR
@@ -89,12 +90,12 @@ class ReportStatementCommon(models.AbstractModel):
             self._cr.mogrify(
                 """
             SELECT partner_id, currency_id, date_maturity, open_due,
-                            open_due_currency, move_id, company_id,
+                open_due_currency, move_id, company_id,
             CASE
                 WHEN %(date_end)s <= date_maturity AND currency_id is null
-                                THEN open_due
+                    THEN open_due
                 WHEN %(date_end)s <= date_maturity AND currency_id is not null
-                                THEN open_due_currency
+                    THEN open_due_currency
                 ELSE 0.0
             END as current,
             CASE
@@ -152,7 +153,7 @@ class ReportStatementCommon(models.AbstractModel):
             END as b_over_120
             FROM Q1
             GROUP BY partner_id, currency_id, date_maturity, open_due,
-                                open_due_currency, move_id, company_id
+                open_due_currency, move_id, company_id
         """,
                 locals(),
             ),
@@ -178,11 +179,9 @@ class ReportStatementCommon(models.AbstractModel):
     def _show_buckets_sql_q4(self):
         return """
             SELECT partner_id, currency_id, sum(current) as current,
-                                sum(b_1_30) as b_1_30,
-                                sum(b_30_60) as b_30_60,
-                                sum(b_60_90) as b_60_90,
-                                sum(b_90_120) as b_90_120,
-                                sum(b_over_120) as b_over_120
+                sum(b_1_30) as b_1_30, sum(b_30_60) as b_30_60,
+                sum(b_60_90) as b_60_90, sum(b_90_120) as b_90_120,
+                sum(b_over_120) as b_over_120
             FROM Q3
             GROUP BY partner_id, currency_id
         """
@@ -224,9 +223,9 @@ class ReportStatementCommon(models.AbstractModel):
                 Q3 AS (%s),
                 Q4 AS (%s)
             SELECT partner_id, currency_id, current, b_1_30, b_30_60, b_60_90,
-                            b_90_120, b_over_120,
-                            current+b_1_30+b_30_60+b_60_90+b_90_120+b_over_120
-                            AS balance
+                b_90_120, b_over_120,
+                current+b_1_30+b_30_60+b_60_90+b_90_120+b_over_120
+                AS balance
             FROM Q4
             GROUP BY partner_id, currency_id, current, b_1_30, b_30_60,
                 b_60_90, b_90_120, b_over_120"""
@@ -288,8 +287,9 @@ class ReportStatementCommon(models.AbstractModel):
             currencies,
         )
 
-    @api.model  # noqa: C901
+    @api.model
     def _get_report_values(self, docids, data=None):
+        # flake8: noqa: C901
         """
         @return: returns a dict of parameters to pass to qweb report.
           the most important pair is {'data': res} which contains all

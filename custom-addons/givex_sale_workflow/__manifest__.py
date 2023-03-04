@@ -7,11 +7,12 @@
     'category': 'Sales/Sales',
     'summary': 'Givex Sale Workflow',
     'description': """This module contains custom workflow for Sales orders.""",
+    "license": "AGPL-3",
     'depends': ['sales_team', 'payment', 'portal', 'utm', 'sale', 'product'],
     'data': [
         'views/product_views.xml',
-        'views/sale_view.xml',
         'security/sale_security.xml',
+        'views/sale_view.xml',
      ],
     'installable': True,
     'auto_install': False

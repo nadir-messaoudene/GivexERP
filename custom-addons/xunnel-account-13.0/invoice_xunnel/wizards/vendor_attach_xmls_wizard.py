@@ -286,9 +286,9 @@ class AttachXmlsWizard(models.TransientModel):
         if exist_supplier:
             domain += [('partner_id', 'child_of', exist_supplier.id)]
         if xml_type_of_document == 'I':
-            domain += [('type', '=', 'in_invoice')]
+            domain += [('move_type', '=', 'in_invoice')]
         if xml_type_of_document == 'E':
-            domain += [('type', '=', 'in_refund')]
+            domain += [('move_type', '=', 'in_refund')]
         uuid_dupli = xml_uuid in inv_obj.search(domain).mapped(
             'l10n_mx_edi_cfdi_uuid')
         mxns = [
@@ -303,7 +303,7 @@ class AttachXmlsWizard(models.TransientModel):
             xml_related_uuid = xml.CfdiRelacionados.CfdiRelacionado.get('UUID')
             related_invoice = xml_related_uuid in inv_obj.search([
                 ('l10n_mx_edi_cfdi_name', '!=', False),
-                ('type', '=', 'in_invoice')]).mapped('l10n_mx_edi_cfdi_uuid')
+                ('move_type', '=', 'in_invoice')]).mapped('l10n_mx_edi_cfdi_uuid')
         omit_cfdi_related = self._context.get('omit_cfdi_related')
         force_save = False
         if self.env.user.has_group(
@@ -520,7 +520,7 @@ class AttachXmlsWizard(models.TransientModel):
             journal) if journal else inv_obj.with_context(
                 default_type=type_invoice)._get_default_journal()
         account_id = account_id or line_obj.with_context({
-            'journal_id': journal.id, 'type': 'in_invoice'})._default_account()
+            'journal_id': journal.id, 'move_type': 'in_invoice'})._default_account()
         invoice_line_ids = []
         msg = (_('Some products are not found in the system, and the account '
                  'that is used like default is not configured in the journal, '
@@ -627,7 +627,7 @@ class AttachXmlsWizard(models.TransientModel):
             'currency_id': (
                 currency_id.id or self.env.company.currency_id.id),
             'invoice_line_ids': invoice_line_ids,
-            'type': type_invoice,
+            'move_type': type_invoice,
             'l10n_mx_edi_time_invoice': date_inv[1],
             'journal_id': journal.id,
         })
@@ -682,7 +682,7 @@ class AttachXmlsWizard(models.TransientModel):
             xml_related_uuid = xml.CfdiRelacionados.CfdiRelacionado.get('UUID')
             invoice_id._set_cfdi_origin('01', [xml_related_uuid])
             related_invoices = inv_obj.search([
-                ('partner_id', '=', supplier.id), ('type', '=', 'in_invoice')])
+                ('partner_id', '=', supplier.id), ('move_type', '=', 'in_invoice')])
             related_invoices = related_invoices.filtered(
                 lambda inv: inv.l10n_mx_edi_cfdi_uuid == xml_related_uuid)
             related_invoices.write({

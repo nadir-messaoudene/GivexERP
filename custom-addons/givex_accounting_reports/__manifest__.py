@@ -12,6 +12,12 @@
         'views/external_load_view.xml',
     ],
     'demo': [],
-    'installable' : True,
+    "license": "AGPL-3",
+    "assets": {
+        "web.assets_backend": [
+            "givex_accounting_reports/static/src/js/account_reports.js",
+        ],
+    },
+    'installable': True,
     'auto_install': False,
 }

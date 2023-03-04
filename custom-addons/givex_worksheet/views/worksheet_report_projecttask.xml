@@ -3,7 +3,7 @@
 
     <template id="worksheet_report_projecttask_document">
         <t t-call="web.basic_layout">
-            <t t-set="doc" t-value="doc.with_context(lang=doc.user_id.lang)"/>
+            <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
             <div class="header">
                 <t t-if="not o" t-set="o" t-value="doc"/>
                 <t t-if="not company">
@@ -54,7 +54,7 @@
                     <br/>
                     <div class="row">
                         <div class="col-6">
-                            <strong>Techs Name: </strong><t t-if="doc.user_id"><span t-field="doc.user_id"/></t>
+                            <strong>Techs Name: </strong><t t-if="doc.user_ids"><span t-esc="', '.join(doc.user_ids.mapped('name'))"/></t>
                         </div>
                         <div class="col-6">
                             <strong>Installation Date: </strong>
@@ -63,10 +63,10 @@
                     <br/>
                     <div class="row">
                         <div class="col-6">
-                            <strong>Start Time: </strong><t t-if="doc.timesheet_timer_first_start"><span t-field="doc.timesheet_timer_first_start"/></t>
+                            <strong>Start Time: </strong><t t-if="doc.planned_date_begin"><span t-field="doc.planned_date_begin"/></t>
                         </div>
                         <div class="col-6">
-                            <strong>End Time: </strong><t t-if="doc.timesheet_timer_last_stop"><span t-field="doc.timesheet_timer_last_stop"/></t>
+                            <strong>End Time: </strong><t t-if="doc.planned_date_end"><span t-field="doc.planned_date_end"/></t>
                         </div>
                     </div>
                     <br/>
@@ -179,7 +179,7 @@
             <t t-set="data_report_header_spacing" t-value="27"/>
             <t t-set="data_report_dpi" t-value="110"/>
             <t t-foreach="docs" t-as="doc">
-                <t t-set="lang" t-value="doc.user_id.sudo().lang"/>
+                <t t-set="lang" t-value="doc.partner_id.lang"/>
                 <t t-call="givex_worksheet.worksheet_report_projecttask_document" t-lang="lang"/>
             </t>
         </t>

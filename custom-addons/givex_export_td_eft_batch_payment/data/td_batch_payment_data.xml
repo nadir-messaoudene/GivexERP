@@ -10,6 +10,7 @@
             <field name="payment_type">outbound</field>
         </record>
 
+
         <record id="ir_cron_filename_reset_sequence" model="ir.cron">
             <field name="name">Reset filename sequence if it reaches 9999</field>
             <field name="interval_number">1</field>
@@ -19,8 +20,6 @@
             <field name="code">model._reset_sequence()</field>
             <field name="priority" eval="10"/>
         </record>
-
-        <function model="account.journal" name="_enable_td_on_bank_journals"/>
     </data>
 
     <data noupdate="0">

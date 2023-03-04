@@ -8,11 +8,11 @@
             <xpath expr="//button[@name='action_cancel']" position="replace">
               <button name="action_cancel" states="draft,sent,sale,new" type="object" string="Cancel"/>
             </xpath>
-            <xpath expr="//button[@name='action_confirm']" position="after">
+            <xpath expr="//button[@id='action_confirm']" position="after">
               <button name="action_approve_price_approval" string="Approve" type="object" attrs="{'invisible': [('state', 'not in', ['pending_approval'])]}" groups="givex_sale_workflow.group_so_pending_approval" class="btn-primary" context="{'active_id': id}"/>
               <button name="action_approve_ff_approval" string="Approve" type="object" attrs="{'invisible': [('state', 'not in', ['pending_ff_approval'])]}" groups="givex_sale_workflow.group_so_pending_ff_approval" class="btn-primary" context="{'active_id': id}"/>
             </xpath>
-            <xpath expr="//button[@name='action_confirm']" position="after">
+            <xpath expr="//button[@id='action_confirm']" position="after">
               <button name="request_approval" string="Request for Approval" type="object" attrs="{'invisible': [('state', 'not in', ['new'])]}" class="btn-primary" context="{'active_id': id}"/>
             </xpath>
             <xpath expr="//sheet//notebook//page[@name='order_lines']//field[@name='order_line']//tree//field[@name='company_id']" position="after">

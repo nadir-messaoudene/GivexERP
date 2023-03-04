@@ -3,7 +3,7 @@
 	<data>
 		<template id="report_customer_statement">
 			<t t-call="web.external_layout">
-				<t t-set="doc" t-value="doc.with_context({'lang':doc.lang})" />
+				<t t-set="doc" t-value="o.with_context({'lang':o.lang})" />
 				<t t-set="company" t-value="res_company"/>
 
 				<div class="text-right" style="margin-right: 15em;">
@@ -118,7 +118,7 @@
 								</td>
 								<td class="text-right">
 									<strong>
-										<span t-field="doc.payment_amount_overdue_amt"
+										<span t-esc="doc.payment_amount_overdue_amt"
 											t-options='{"widget": "monetary", "display_currency": res_company.currency_id}' />
 									</strong>
 								</td>
@@ -129,7 +129,7 @@
 								</td>
 								<td class="text-right">
 									<strong>
-										<span t-field="doc.payment_amount_due_amt"
+										<span t-esc="doc.payment_amount_due_amt"
 											t-options='{"widget": "monetary", "display_currency": res_company.currency_id}' />
 									</strong>
 								</td>
@@ -164,8 +164,8 @@
 
 		<template id="report_customer">
 			<t t-call="web.html_container">
-				<t t-foreach="docs" t-as="doc">
-					<t t-call="account_statement.report_customer_statement" t-lang="doc.lang" />
+				<t t-foreach="docs" t-as="o">
+					<t t-call="account_statement.report_customer_statement" t-lang="o.lang" />
 				</t>
 			</t>
 		</template>

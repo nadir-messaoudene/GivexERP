@@ -8,8 +8,8 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
-    _name = 'account.move'
-    _inherit = ['account.move', 'l10n_mx_edi.pac.sw.mixin']
+    _inherit = 'account.move'
+    # _inherit = ['account.move', 'l10n_mx_edi.pac.sw.mixin']
 
     def _l10n_mx_edi_retry(self):
         '''Try to generate the cfdi attachment and then, sign it.
@@ -43,6 +43,6 @@ class AccountMove(models.Model):
                 body=_('CFDI document generated (may be not signed)'),
                 attachment_ids=[attachment_id.id],
                 subtype='account.mt_invoice_validated')
-            if inv.l10n_mx_edi_cfdi == False:
+            if inv.l10n_mx_edi_cfdi is False:
                 inv.l10n_mx_edi_cfdi = attachment_id.datas
             inv._l10n_mx_edi_sign()

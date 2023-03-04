@@ -185,7 +185,7 @@
         <record id="acquirer_form_bamboraeft" model="ir.ui.view">
             <field name="name">payment.acquirer.form.bamboraeft</field>
             <field name="model">payment.acquirer</field>
-            <field name="inherit_id" ref="payment.acquirer_form"/>
+            <field name="inherit_id" ref="payment.payment_acquirer_form"/>
             <field name="arch" type="xml">
                 <xpath expr='//page[@name="acquirer_credentials"]' position='inside'>
                     <group attrs="{'invisible': [('provider', '!=', 'bamboraeft')]}">
@@ -232,25 +232,24 @@
                             <field name="bamboraeft_batch_api"  attrs="{'required':[('provider', '=', 'bamboraeft'), ('state', '!=', 'disabled')]}"/>
                             <field name="bamboraeft_report_api"  attrs="{'required':[('provider', '=', 'bamboraeft'), ('state', '!=', 'disabled')]}"/>
                             <field name="bamboraeft_transaction_type"  attrs="{'required':[('provider', '=', 'bamboraeft'), ('state', '!=', 'disabled')]}"/>
-                            <!-- <field name="bamboraeft_create_profile"  attrs="{'required':[('provider', '=', 'bamboraeft'), ('state', '!=', 'disabled')]}"/> -->
                         </group>
                     </group>
                 </xpath>
                 <xpath expr="//field[@name='journal_id']" position="after">
                     <field name="bamboraeft_vendor_journal_id"  attrs="{'invisible': [('provider', '!=', 'bamboraeft')] }"/>
                 </xpath>
-                <xpath expr="//field[@name='check_validity']" position="after">
+                <!-- <xpath expr="//field[@name='check_validity']" position="after">
                     <field name="bambora_record_interval"  attrs="{'invisible': [('provider', '!=', 'bamboraeft')] }"/>
                     <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
                         attrs="{'invisible': [('provider', '!=', 'bamboraeft')] }"/>
-                </xpath>
+                </xpath> -->
                 
             </field>
         </record>
         <record id="transaction_form_bamboraeft" model="ir.ui.view">
             <field name="name">acquirer.transaction.form.bamboraeft</field>
             <field name="model">payment.transaction</field>
-            <field name="inherit_id" ref="payment.transaction_form"/>
+            <field name="inherit_id" ref="payment.payment_transaction_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//sheet" position="inside">
                     <notebook>

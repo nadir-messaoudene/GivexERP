@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="assets_backend" name="company_access assets"
+<!--     <template id="assets_backend" name="company_access assets"
               inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <script type="text/javascript"
                     src="/company_group_access/static/src/js/company_access.js"/>
         </xpath>
     </template>
-
+ -->
 </odoo>

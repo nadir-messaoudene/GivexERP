@@ -11,16 +11,10 @@ class StatementCommon(models.AbstractModel):
     _name = "statement.common.wizard"
     _description = "Statement Reports Common Wizard"
 
-    def _get_company(self):
-        return (
-            self.env["res.company"].browse(self.env.context.get("force_company"))
-            or self.env.user.company_id
-        )
-
     name = fields.Char()
     company_id = fields.Many2one(
         comodel_name="res.company",
-        default=_get_company,
+        default=lambda self: self.env.company,
         string="Company",
         required=True,
     )
@@ -43,7 +37,6 @@ class StatementCommon(models.AbstractModel):
 
     account_type = fields.Selection(
         [("receivable", "Receivable"), ("payable", "Payable")],
-        string="Account type",
         default="receivable",
     )
 
@@ -55,10 +48,6 @@ class StatementCommon(models.AbstractModel):
             ) - relativedelta(days=1)
         else:
             self.date_end = fields.Date.context_today(self)
-
-    def button_export_pdf(self):
-        self.ensure_one()
-        return self._export()
 
     def _prepare_statement(self):
         self.ensure_one()
@@ -73,5 +62,17 @@ class StatementCommon(models.AbstractModel):
             "filter_negative_balances": self.filter_negative_balances,
         }
 
-    def _export(self):
-        raise NotImplementedError
+    def button_export_html(self):
+        self.ensure_one()
+        report_type = "qweb-html"
+        return self._export(report_type)
+
+    def button_export_pdf(self):
+        self.ensure_one()
+        report_type = "qweb-pdf"
+        return self._export(report_type)
+
+    def button_export_xlsx(self):
+        self.ensure_one()
+        report_type = "xlsx"
+        return self._export(report_type)
