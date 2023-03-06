@@ -14,6 +14,19 @@
             <field name="binding_type">report</field>
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
         </record>
+        <record id="givex_account_invoices_with_payment"
+                model="ir.actions.report">
+            <field name="name">Invoices With Payments[Loyalty Lane]</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">givex_invoice_report.givex_report_invoice_with_payment</field>
+            <field name="report_file">givex_invoice_report.givex_report_invoice_with_payment</field>
+            <field name="print_report_name">(object._get_report_base_filename())</field>
+            <field name="attachment">(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')</field>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+        </record>
 
         <record id="givex_account_invoices_msc" model="ir.actions.report">
             <field name="name">Invoices[MSC]</field>
@@ -70,18 +83,31 @@
             <field name="header_spacing">89</field>
             <field name="dpi">90</field>
         </record>
-        <report
-            id="givex_account_invoices_cs"
-            model="account.move"
-            string="Invoices[CSH]"
-            report_type="qweb-pdf"
-            name="givex_invoice_report.givex_report_invoice_cs"
-            file="givex_invoice_report.givex_report_invoice_cs"
-            attachment="(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')"
-            attachment_use="False"
-            print_report_name="(object._get_report_base_filename())"
-            groups="account.group_account_invoice"
-        />
+<!--        <report-->
+<!--            id="givex_account_invoices_cs"-->
+<!--            model="account.move"-->
+<!--            string="Invoices[CSH]"-->
+<!--            report_type="qweb-pdf"-->
+<!--            name="givex_invoice_report.givex_report_invoice_cs"-->
+<!--            file="givex_invoice_report.givex_report_invoice_cs"-->
+<!--            attachment="(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')"-->
+<!--            attachment_use="False"-->
+<!--            print_report_name="(object._get_report_base_filename())"-->
+<!--            groups="account.group_account_invoice"-->
+<!--        />-->
+         <record id="givex_account_invoices_cs"
+                model="ir.actions.report">
+            <field name="name">Invoices[CSH]</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">givex_invoice_report.givex_report_invoice_cs</field>
+            <field name="report_file">givex_invoice_report.givex_report_invoice_cs</field>
+            <field name="print_report_name">(object._get_report_base_filename())</field>
+            <field name="attachment">(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')</field>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+        </record>
         <record id="givex_account_invoices_cs" model="ir.actions.report">
             <field name="paperformat_id" ref="givex_invoice_report.paperformat_invoice_cs"/>
         </record>
