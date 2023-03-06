@@ -467,64 +467,8 @@
               </div>
               <div class="col-6">
                   <table class="table table-sm" style="page-break-inside: avoid; border: 1px solid; font-size: 10pt">
-                                <tr class="border-black o_subtotal">
-                                    <td style="border: 1px solid black;"><strong>Subtotal</strong></td>
-                                    <td class="text-right" style="border: 1px solid black;">
-                                        <span t-field="o.amount_untaxed"/>
-                                    </td>
-
-                                </tr>
-                                      <t t-foreach="o.amount_by_group" t-as="amount_by_group">
-                                        <tr class="border-black">
-                                            <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) in [0, 1] and float_compare(o.amount_untaxed, amount_by_group[2], precision_rounding=o.currency_id.rounding) == 0">
-                                                <td><span class="text-nowrap" t-esc="amount_by_group[0]"/></td>
-                                                <td class="text-right o_price_total" style="border: 1px solid black;">
-                                                    <span class="text-nowrap" t-esc="amount_by_group[3]" />
-                                                </td>
-                                            </t>
-                                            <t t-else="">
-                                                <td style="border: 1px solid black;">
-                                                    <span t-esc="amount_by_group[0]"/>
-                                                    <span class="text-nowrap"> on
-                                                        <t t-esc="amount_by_group[4]"/>
-                                                    </span>
-                                                </td>
-                                                <td class="text-right o_price_total" style="border: 1px solid black;">
-                                                    <span class="text-nowrap" t-esc="amount_by_group[3]"/>
-                                                </td>
-                                            </t>
-                                        </tr>
-                                    </t>
-<!--                                    <tr>-->
-<!--                                        <th>-->
-<!--                                            PST-->
-<!--                                        </th>-->
-<!--                                        <td>-->
-<!--                                            CAD 0.00-->
-<!--                                        </td>-->
-<!--                                    </tr>-->
-<!--                                    <tr>-->
-<!--                                        <th>-->
-<!--                                            QST-->
-<!--                                        </th>-->
-<!--                                        <td>-->
-<!--                                            CAD 0.00-->
-<!--                                        </td>-->
-<!--                                    </tr>-->
-<!--                                    <tr>-->
-<!--                                        <th>-->
-<!--                                            RST-->
-<!--                                        </th>-->
-<!--                                        <td>-->
-<!--                                            CAD 0.00-->
-<!--                                        </td>-->
-<!--                                    </tr>-->
-                                <tr class="border-black o_total">
-                                        <td style="border: 1px solid black;"><strong>Total</strong></td>
-                                        <td class="text-right" style="border: 1px solid black;">
-                                            <span class="text-nowrap" t-field="o.amount_total"/>
-                                        </td>
-                                    </tr>
+                                <t t-set="tax_totals" t-value="json.loads(o.tax_totals_json)"/>
+                                    <t t-call="account.document_tax_totals"/>
                             </table>
               </div>
           </div>

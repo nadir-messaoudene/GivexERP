@@ -83,18 +83,20 @@
             <field name="header_spacing">89</field>
             <field name="dpi">90</field>
         </record>
-<!--        <report-->
-<!--            id="givex_account_invoices_cs"-->
-<!--            model="account.move"-->
-<!--            string="Invoices[CSH]"-->
-<!--            report_type="qweb-pdf"-->
-<!--            name="givex_invoice_report.givex_report_invoice_cs"-->
-<!--            file="givex_invoice_report.givex_report_invoice_cs"-->
-<!--            attachment="(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')"-->
-<!--            attachment_use="False"-->
-<!--            print_report_name="(object._get_report_base_filename())"-->
-<!--            groups="account.group_account_invoice"-->
-<!--        />-->
+        <record id="paperformat_invoice_kes" model="report.paperformat">
+            <field name="name">Custom A4 KES</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">297</field>
+            <field name="page_width">210</field>
+            <field name="margin_bottom">40</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="dpi">90</field>
+        </record>
+
          <record id="givex_account_invoices_cs"
                 model="ir.actions.report">
             <field name="name">Invoices[CSH]</field>
@@ -111,6 +113,8 @@
         <record id="givex_account_invoices_cs" model="ir.actions.report">
             <field name="paperformat_id" ref="givex_invoice_report.paperformat_invoice_cs"/>
         </record>
-
+        <record id="givex_account_invoices_kes" model="ir.actions.report">
+            <field name="paperformat_id" ref="givex_invoice_report.paperformat_invoice_kes"/>
+        </record>
     </data>
 </odoo>
