@@ -83,7 +83,7 @@
             <field name="header_spacing">89</field>
             <field name="dpi">90</field>
         </record>
-        <record id="paperformat_invoice_kes" model="report.paperformat">
+        <!-- <record id="paperformat_invoice_kes" model="report.paperformat">
             <field name="name">Custom A4 KES</field>
             <field name="default" eval="True"/>
             <field name="format">custom</field>
@@ -95,7 +95,7 @@
             <field name="margin_right">7</field>
             <field name="header_line" eval="False"/>
             <field name="dpi">90</field>
-        </record>
+        </record> -->
 
          <record id="givex_account_invoices_cs"
                 model="ir.actions.report">
@@ -113,8 +113,8 @@
         <record id="givex_account_invoices_cs" model="ir.actions.report">
             <field name="paperformat_id" ref="givex_invoice_report.paperformat_invoice_cs"/>
         </record>
-        <record id="givex_account_invoices_kes" model="ir.actions.report">
+        <!-- <record id="givex_account_invoices_kes" model="ir.actions.report">
             <field name="paperformat_id" ref="givex_invoice_report.paperformat_invoice_kes"/>
-        </record>
+        </record> -->
     </data>
 </odoo>
