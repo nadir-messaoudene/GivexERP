@@ -11,16 +11,13 @@
     """,
     "depends": [
         "base",
-        # "l10n_us",
+        "l10n_us",
         "l10n_mx_edi",
         "l10n_mx_patch_snd",
-        "report_csv",
-        "report_xlsx",
         "account_batch_payment",
     ],
     "data": [
-        # "data/account_batch_payment_barclays_data.xml",
-        "report/payment_barclays_report.xml",
+        "data/account_batch_payment_barclays_data.xml",
         "views/account_batch_payment_views.xml",
         "views/res_bank_views.xml",
     ],
