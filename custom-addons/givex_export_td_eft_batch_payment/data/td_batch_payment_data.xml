@@ -22,7 +22,7 @@
         </record>
     </data>
 
-    <data noupdate="0">
+    <data noupdate="1">
         <function model="account.journal" name="_create_td_batch_payment_outbound_sequence"/>
     </data>
 </odoo>

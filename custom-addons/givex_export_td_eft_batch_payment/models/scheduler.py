@@ -9,6 +9,4 @@ class FilenameSequenceReset(models.Model):
     def _reset_sequence(self):
         sequence = self.env['ir.sequence'].search([('code', '=', 'td.outbound.batch.payment')])
         if sequence and sequence.number_next >= 9999:
-            print('INSIDE')
-
             sequence.sudo().write({'number_next': 1})
