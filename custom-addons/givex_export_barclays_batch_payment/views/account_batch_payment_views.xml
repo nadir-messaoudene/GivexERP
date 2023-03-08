@@ -22,13 +22,13 @@
           name="export_barclays_batch_to_csv"
           string="Export to Barclays CSV Format"
           type="object"
-          attrs="{'invisible': ['|', '|', ('barclay_csv_file', '!=', False), ('state', '!=', 'sent'), ('payment_method_code', '!=', 'bacs')]}"
+          attrs="{'invisible': ['|', '|', ('barclay_csv_file', '!=', False), ('state', 'not in', ['sent', 'reconciled']), ('payment_method_code', '!=', 'bacs')]}"
         />
                     <button
           name="re_generate_barclays_batch_to_csv"
           string="RE-generate Export to Barclays CSV Format"
           type="object"
-          attrs="{'invisible': ['|', '|', ('barclay_csv_file', '=', False), ('state', '!=', 'sent'), ('payment_method_code', '!=', 'bacs')]}"
+          attrs="{'invisible': ['|', '|', ('barclay_csv_file', '=', False), ('state', 'not in', ['sent', 'reconciled']), ('payment_method_code', '!=', 'bacs')]}"
         />
                 </xpath>
             </field>
