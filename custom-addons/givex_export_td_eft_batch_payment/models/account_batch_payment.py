@@ -103,11 +103,19 @@ class AccountBatchPayment(models.Model):
                 payment.date and str(payment.date.strftime("%d%m%y")).strip()[:6] or " " * 6
             )
             originator_reference = payment.ref and str(payment.ref).strip()[:19] or " " * 19
-            institution_transit_number = (
-                payment.partner_bank_id.aba_routing
-                and str("0" + payment.partner_bank_id.aba_routing).strip()[:8]
-                or "0" + " " * 8
-            )
+            prefix_transit_number_zero_count = 9 - len(str(payment.partner_bank_id.aba_routing).strip())
+            if prefix_transit_number_zero_count > 0:
+                institution_transit_number = (
+                    payment.partner_bank_id.aba_routing
+                    and str("0" * prefix_transit_number_zero_count + payment.partner_bank_id.aba_routing).strip()[:9]
+                    or "0" + " " * 8
+                )
+            else:
+                institution_transit_number = (
+                        payment.partner_bank_id.aba_routing
+                        and str(payment.partner_bank_id.aba_routing).strip()[:9]
+                        or "0" + " " * 8
+                )
             account_number = (
                 payment.partner_bank_id.acc_number
                 and str(payment.partner_bank_id.acc_number).strip() + " " * 5
