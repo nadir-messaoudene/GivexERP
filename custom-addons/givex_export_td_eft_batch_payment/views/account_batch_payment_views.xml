@@ -16,13 +16,13 @@
           name="generate_td_eft"
           string="Export to TD EFT Format"
           type="object"
-          attrs="{'invisible': ['|', '|', ('td_eft_file', '!=', False), ('state', '!=', 'sent'), ('payment_method_code', '!=', 'td')]}"
+          attrs="{'invisible': ['|', '|', ('td_eft_file', '!=', False), ('state', 'not in', ['sent', 'reconciled']), ('payment_method_code', '!=', 'td')]}"
         />
                     <button
           name="re_generate_td_eft"
           string="Re-generate Export to TD EFT Format"
           type="object"
-          attrs="{'invisible': ['|', '|', ('td_eft_file', '=', False), ('state', '!=', 'sent'), ('payment_method_code', '!=', 'td')]}"
+          attrs="{'invisible': ['|', '|', ('td_eft_file', '=', False), ('state', 'not in', ['sent', 'reconciled']), ('payment_method_code', '!=', 'td')]}"
         />
                 </xpath>
                 <xpath expr="//field[@name='name']" position="after">
