@@ -651,7 +651,7 @@
                             <td style="border: 1px solid black;">                           
                                 <span>
                                     <t t-if="order_id and o.invoice_origin!='New'">
-                                        <t t-esc="order_id.carrier_id.name"/>
+<!--                                        <t t-esc="order_id.carrier_id.name"/>-->
                                     </t>
                                 </span>
                             </td>
