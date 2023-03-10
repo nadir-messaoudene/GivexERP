@@ -693,6 +693,12 @@
                                             <span style="font-family:Arial, Helvetica, sans-serif;"><b t-field="line.name" t-options="{'widget': 'text'}"/></span>
                                         </td>
                                     </t>
+                                    <t t-if="line.display_type == 'line_note'">
+                                        <td colspan="99" style="background-color:white;border: 1px solid black;">
+                                            <span t-field="line.name" t-options="{'widget': 'text'}"/>
+                                        </td>
+                                    </t>
+
                                 </tr>
 
 
