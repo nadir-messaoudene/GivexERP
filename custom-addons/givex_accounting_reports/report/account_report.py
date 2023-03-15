@@ -190,10 +190,16 @@ class AccountReport(models.AbstractModel):
                 print("accounts >>>>>>>>>>>>>>>>>>>>>", account)
                 codes = self.get_account_codes(account)  # id, name
                 print("codes >>>>>>>>>>>>", codes)
-                if previous_codes and previous_codes[0][1] == codes[0][1]:
-                    codes = previous_codes
+                if previous_codes and codes[0][1] in list(dict(previous_codes).values()):
+                    for key, value in dict(previous_codes).items():
+                        if value == codes[0][1]:
+                            codes = [(key, value)]
                 else:
-                    previous_codes = codes
+                    previous_codes += codes
+                # if previous_codes and previous_codes[0][1] == codes[0][1]:
+                #     codes = previous_codes
+                # else:
+                #     previous_codes = codes
                 for code in codes:
                     hierarchy[code[0]]['id'] = self._get_generic_line_id('account.group', code[0], parent_line_id=line['id'])
                     hierarchy[code[0]]['name'] = code[1]
