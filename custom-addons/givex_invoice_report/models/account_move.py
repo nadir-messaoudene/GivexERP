@@ -20,7 +20,7 @@ class AccountMove(models.Model):
             default_template_id = ICPSudo.get_param('givex_invoice_report.ll_mail_template_id')
             if default_template_id  and action.get('context'):
                 action['context']['default_template_id'] = int(default_template_id)
-        elif not self.company_id.id == 30:
+        elif self.company_id.id == 30:
             default_template_id = ICPSudo.get_param('givex_invoice_report.csh_mail_template_id')
             if default_template_id and action.get('context'):
                 action['context']['default_template_id'] = int(default_template_id)
