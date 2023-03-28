@@ -16,6 +16,12 @@ class ResConfigSettings(models.TransientModel):
         ondelete='set null',
         domain=[('model', '=', 'account.move')],
     )
+    csh_mail_template_id = fields.Many2one(
+        string='CSH Mail Template',
+        comodel_name='mail.template',
+        ondelete='set null',
+        domain=[('model', '=', 'account.move')],
+    )
 
 
     @api.model
@@ -23,8 +29,10 @@ class ResConfigSettings(models.TransientModel):
         res = super(ResConfigSettings, self).get_values()
         ICPSudo = self.env['ir.config_parameter'].sudo()
         ll_mail_template_id = ICPSudo.get_param('givex_invoice_report.ll_mail_template_id')
+        csh_mail_template_id = ICPSudo.get_param('givex_invoice_report.csh_mail_template_id')
         if ll_mail_template_id:
             res.update(ll_mail_template_id=int(ll_mail_template_id))
+            res.update(csh_mail_template_id=int(csh_mail_template_id))
         return res
 
     @api.model
@@ -32,3 +40,4 @@ class ResConfigSettings(models.TransientModel):
         super(ResConfigSettings, self).set_values()
         ICPSudo = self.env['ir.config_parameter'].sudo()
         ICPSudo.set_param('givex_invoice_report.ll_mail_template_id', self.ll_mail_template_id.id)
+        ICPSudo.set_param('givex_invoice_report.csh_mail_template_id', self.csh_mail_template_id.id)
