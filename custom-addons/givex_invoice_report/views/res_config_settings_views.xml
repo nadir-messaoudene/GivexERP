@@ -19,6 +19,18 @@
                         <field name="ll_mail_template_id"/>
                     </div>
                 </div>
+                 <div class="col-12 col-lg-6 o_setting_box" id="csh_invoice" >
+                <!-- attrs="{'invisible': [('country_code', '!=', 'US')] }" -->
+                    <div class="o_setting_left_pane">
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="csh_mail_template_id"/>
+                        <div class="text-muted">
+                            Select Mail Template for CSH
+                        </div>
+                        <field name="csh_mail_template_id"/>
+                    </div>
+                </div>
             </xpath>
         </field>
     </record>
