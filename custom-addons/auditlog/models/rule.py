@@ -462,8 +462,8 @@ class AuditlogRule(models.Model):
         def unlink_fast(self, **kwargs):
             self = self.with_context(auditlog_disabled=True)
             rule_model = self.env["auditlog.rule"]
-            if self.env.user in users_to_exclude:
-                return unlink_fast.origin(self, **kwargs)
+            # if self.env.user in users_to_exclude:
+            #     return unlink_fast.origin(self, **kwargs)
             rule_model.sudo().create_logs(
                 self.env.uid,
                 self._name,
