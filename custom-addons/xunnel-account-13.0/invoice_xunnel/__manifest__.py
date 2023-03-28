@@ -29,6 +29,13 @@
     'demo': [
         'demo/res_company.xml',
     ],
+    "assets": {
+        "web.assets_backend": [
+            # "invoice_xunnel/static/src/js/report/action_manager_report.esm.js",
+            "invoice_xunnel/static/src/css/style.css",
+            "invoice_xunnel/static/src/less/main.less",
+        ],
+    },
     # 'qweb': [
     #     'static/src/xml/*.xml'
     # ],
