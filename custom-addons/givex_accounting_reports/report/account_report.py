@@ -149,7 +149,8 @@ class AccountReport(models.AbstractModel):
     @api.model
     def _create_hierarchy(self, lines, options):
         super(AccountReport, self)._create_hierarchy(lines=lines, options=options)
-        lines = list(filter(lambda x: x.get('columns') and bool(x.get('columns')[0].get('no_format')) is not False, lines))
+        # lines = list(filter(lambda x: x.get('columns') and bool(x.get('columns')[0].get('no_format')) is not False, lines))
+        lines = list(filter(lambda x: x.get('columns') and any(list(map(lambda x: x.get('no_format'), x.get('columns')))), lines))
         unfold_all = self.env.context.get('print_mode') and len(options.get('unfolded_lines')) == 0 or options.get('unfold_all')
 
         def add_to_hierarchy(lines, key, level, parent_id, hierarchy):
