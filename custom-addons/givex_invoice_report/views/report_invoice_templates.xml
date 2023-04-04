@@ -1001,6 +1001,34 @@
         </t>
     </template>
 
+    <template id="report_payment_document_csh" inherit_id="account.report_payment_receipt_document">
+
+        <xpath expr="//span[contains(@t-field,'o.date')]" position="replace">
+            <t t-if="'Counter Solutions' in o.company_id.name">
+                <span t-field="o.date" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/>
+            </t>
+            <t t-else="">
+                <span t-field="o.date"/>
+            </t>
+        </xpath>
+        <xpath expr="//span[contains(@t-field,'inv.invoice_date')]" position="replace">
+            <t t-if="'Counter Solutions' in o.company_id.name">
+                <span t-field="inv.invoice_date" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/>
+            </t>
+            <t t-else="">
+                <span t-field="inv.invoice_date"/>
+            </t>
+        </xpath>
+        <xpath expr="//span[contains(@t-field,'payment.date')]" position="replace">
+            <t t-if="'Counter Solutions' in o.company_id.name">
+                <span t-field="payment.date" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/>
+            </t>
+            <t t-else="">
+                <span t-field="payment.date"/>
+            </t>
+        </xpath>
+
+    </template>
 
 
 
