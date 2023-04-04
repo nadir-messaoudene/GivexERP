@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+2,access_zendesk_sync,model_zendesk_sync,base.group_user,1,1,1,1
+3,access_zendesk_autosync,model_zendesk_autosync,base.group_user,1,1,1,1
+4,access_zendesk_settings,model_zendesk_settings,base.group_user,1,1,1,1
+5,access_ticket_restore,model_ticket_restore,base.group_user,1,1,1,1
+6,access_sync_history,model_sync_history,base.group_user,1,1,1,1

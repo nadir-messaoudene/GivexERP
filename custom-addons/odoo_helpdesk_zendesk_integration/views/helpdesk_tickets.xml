@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="Helpdesk_form_inherit">
+        <field name="name">helpdesk.form.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ticket_type_id']" position="attributes">
+                <attribute name="widget">selection</attribute>
+            </xpath>
+            <xpath expr="//field[@name='ticket_type_id']" position="before">
+                <field name="settings_account" string="Company"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id='description_id' model='ir.ui.view'>
+        <field name='model'>helpdesk.ticket</field>
+        <field name='inherit_id' ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name='arch' type='xml'>
+            <xpath expr="//field[@name='description']" position="attributes">
+                <attribute name="required">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='settings_account']" position="attributes">
+                <attribute name="required">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="ticket_id" string="Zendesk Id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

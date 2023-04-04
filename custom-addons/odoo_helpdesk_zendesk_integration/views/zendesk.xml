@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="zendesk_settings" model="ir.actions.act_window">
+            <field name="name">Zendesk Settings</field>
+            <field name="res_model">zendesk.settings</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="zendesk_settings_form" model="ir.ui.view">
+            <field name="name">zendesk.settings.form</field>
+            <field name="model">zendesk.settings</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <div>
+                                    <h1 class="text-primary">Create Connection</h1>
+                                    <hr/>
+                                    <p style="font-size:16px;">
+                                        <b>Company Domain:</b>
+                                        <i>
+                                            <field name="name" class="oe_center"/>
+                                        </i>
+                                    </p>
+                                    <p style="font-size:16px;">
+                                        <b>Company Email:</b>
+                                        <i>
+                                            <field name='email_id' class="oe_center"/>
+                                        </i>
+                                    </p>
+                                    <p style="font-size:16px;">
+                                        <b>Password:</b>
+                                        <i>
+                                            <field name='passw' class="oe_center" password="True"/>
+                                        </i>
+                                    </p>
+                                    <hr/>
+                                    <button name="test_connection" string="Test Connection" type="object"
+                                            icon="fa-plug"/>
+                                </div>
+                            </group>
+                            <!--                            <group string="Delete Options">-->
+                            <!--                                &lt;!&ndash;                                <field name="delete_sync" />&ndash;&gt;-->
+                            <!--                                <field name="delete_zendesk"/>-->
+                            <!--                            </group>-->
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="zendesk_settings_tree" model="ir.ui.view">
+            <field name="name">zendesk.settings.tree</field>
+            <field name="model">zendesk.settings</field>
+            <field name="arch" type="xml">
+                <tree string="Settings">
+                    <field name='name'/>
+                    <field name='email_id'/>
+                    <field name='passw' password='True'/>
+                </tree>
+            </field>
+        </record>
+
+        <!--        <data noupdate="1">-->
+        <!--            <record id="record_01" model="zendesk.sync">-->
+        <!--                <field name="field_name">Sync</field>-->
+        <!--            </record>-->
+        <!--        </data>-->
+
+        <!--        <record id="zendesk_sync" model="ir.actions.act_window">-->
+        <!--            <field name="name">Import/Export</field>-->
+        <!--            <field name="res_model">zendesk.sync</field>-->
+        <!--            &lt;!&ndash;            <field name="res_id" ref="odoo_helpdesk_zendesk_integration.record_01"/>&ndash;&gt;-->
+        <!--            <field name="code">action=model.action_user_form_zendesk()</field>-->
+        <!--            <field name="view_mode">form</field>-->
+        <!--        </record>-->
+
+        <record id="zendesk_sync" model="ir.actions.server">
+            <field name="name">Import/Export</field>
+            <field name="state">code</field>
+            <field name="model_id" ref="model_zendesk_sync"/>
+            <field name="code">action=model.action_user_form_zendesk()</field>
+        </record>
+
+        <!--        <record id="zendesk_sync_tree" model="ir.ui.view">-->
+        <!--            <field name="name">zendesk.sync.tree</field>-->
+        <!--            <field name="model">zendesk.sync</field>-->
+        <!--            <field name="arch" type="xml">-->
+        <!--                <tree string="Sync">-->
+        <!--                    <field name='settings_account' string='Company'/>-->
+        <!--                    <field name="start_date"/>-->
+        <!--                    <field name="end_date"/>-->
+        <!--                </tree>-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+        <record id="zendesk_sync_form" model="ir.ui.view">
+            <field name="name">zendesk.sync.form</field>
+            <field name="model">zendesk.sync</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <div>
+                                    <h1 class="text-primary">Configuration</h1>
+                                    <p style="font-size:16px;">
+                                        <b>Company Domain:</b>
+                                        <i>
+                                            <field name="settings_account" domain="['|',('name', '!=', False),('name', '!=', '')]"/>
+                                        </i>
+                                    </p>
+                                    <hr/>
+                                </div>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group>
+                                <h1 class="text-primary">Zendesk Operations</h1>
+                            </group>
+                            <group>
+                                <group>
+
+                                </group>
+                            </group>
+                        </group>
+                        <group col="4">
+                            <group><h2>Modules</h2></group>
+                            <group><h2>Import</h2></group>
+                            <group><h2>Export</h2></group>
+                            <group><h2>Sync</h2></group>
+                        </group>
+                        <group col="4">
+                            <group><h5>Contacts</h5></group>
+                            <group><field name="contact_active" nolabel="1"/> </group>
+                            <group><field name="exp_contact" nolabel="1"/> </group>
+                            <group></group>
+                        </group>
+                        <group col="4">
+                            <group><strong><h5>Tickets</h5></strong></group>
+                            <group><field name="ticket_active" nolabel="1"/> </group>
+                            <group><field name="export_ticket" nolabel="1"/> </group>
+                            <group></group>
+                        </group>
+                        <group col="4">
+                            <group><strong><h5>Messages</h5></strong></group>
+                            <group></group>
+                            <group></group>
+                            <group><field name="message_active" nolabel="1"/> </group>
+                            <group></group>
+                        </group>
+
+                        <group col="3">
+                            <group>
+                                <field name="custom_sync_active" string="Custom Date Range"/>
+                            </group>
+                            <group>
+                                <field name="start_date" attrs="{'invisible':[('custom_sync_active','=',False)]}"/>
+                            </group>
+                            <group>
+                                <field  name="end_date" attrs="{'invisible':[('custom_sync_active','=',False)]}"/>
+                            </group>
+                        </group>
+                        <group col="3">
+                            <button name="sync_data" string="Execute" type="object" icon="fa-refresh" class="oe_highlight"/>
+                        </group>
+
+                        <notebook colspan="3">
+                            <page string="Sync History" autofocus="autofocus">
+                                <field name="history_line" mode="tree,kanban">
+                                    <form string="Zendesk Support Lines" create="false">
+                                        <group>
+                                            <group>
+                                                <field name="sync_date"/>
+                                                <field name="no_of_contacts"/>
+                                                <field name="no_exp_contacts"/>
+                                                <field name="no_of_tickets"/>
+                                                <field name="no_exp_tickets"/>
+                                                <field name="no_of_messages"/>
+                                            </group>
+                                        </group>
+                                    </form>
+
+                                    <tree string="History Lines" create="false" delete="true" limit="15">
+                                        <field name="sync_date"/>
+                                        <field name="no_of_contacts"/>
+                                        <field name="no_exp_contacts"/>
+                                        <field name="no_of_tickets"/>
+                                        <field name="no_exp_tickets"/>
+                                        <field name="no_of_messages"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <data noupdate="1">
+            <record id="record_01" model="zendesk.autosync">
+                <field name="field_name">Autosync</field>
+            </record>
+        </data>
+
+        <record model="ir.actions.act_window" id="zendesk_auto_action">
+            <field name="name">Zendesk Auto Sync</field>
+            <field name="res_model">zendesk.autosync</field>
+            <field name="res_id" ref="odoo_helpdesk_zendesk_integration.record_01"/>
+            <field name="view_mode">form</field>
+        </record>
+
+        <!--        <record id="zendesk_autosync_tree" model="ir.ui.view">-->
+        <!--            <field name="name">zendesk.autosync.tree</field>-->
+        <!--            <field name="model">zendesk.autosync</field>-->
+        <!--            <field name="arch" type="xml">-->
+        <!--                <tree string="Auto Sync">-->
+        <!--                    <field name='auto_sync_ticket'/>-->
+        <!--                    <field name='zendesk_support'/>-->
+        <!--                    <field name='interval_number'/>-->
+        <!--                    <field name='interval_unit'/>-->
+        <!--                </tree>-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+        <record id="zendesk_support_auto_form" model="ir.ui.view">
+            <field name="name">zendesk.autosync.form</field>
+            <field name="model">zendesk.autosync</field>
+            <field name="arch" type="xml">
+                <form create="0">
+                    <sheet>
+                        <h1 class="text-primary">Autosync Configuration</h1>
+                        <br/>
+                        <br/>
+<!--                        <group>-->
+                            <!--                            <group>-->
+                            <!--&lt;!&ndash;                                <field name="auto_sync_ticket"/>&ndash;&gt;-->
+                            <!--                                &lt;!&ndash;                                    <h1>Automated Actions Settings</h1>&ndash;&gt;-->
+                            <!--                                &lt;!&ndash;                                    <field name="auto_contact" />&ndash;&gt;-->
+                            <!--                                &lt;!&ndash;                                    <field name="auto_ticket" />&ndash;&gt;-->
+                            <!--                                &lt;!&ndash;                                    <field name="auto_message" />&ndash;&gt;-->
+                            <!--                            </group>-->
+                            <group>
+                                <group>
+                                    <field name="auto_sync_active" string="Auto Scheduler"/>
+                                </group>
+                                <group>
+                                    <field name="interval_number" attrs="{'invisible':[('auto_sync_active','=',False)]}"/>
+                                     <field name="interval_unit" attrs="{'invisible':[('auto_sync_active','=',False)]}"/>
+                                </group>
+                            </group>
+                            <group>
+                                <button name="sync_data_scheduler" type="object" string="Activate/Save Scheduler" class="oe_highlight"
+                                        icon="fa-refresh fa-lg"/>
+                                <br/>
+                                <span class="text-success">This may take some time if scheduler is already running</span>
+                            </group>
+                            <!--                        </group>-->
+                            <!--                            <group string="Zendesk Support">-->
+                            <!--                                <field name="zendesk_support" force_save="1"-->
+                            <!--                                       attrs="{'readonly':[('auto_sync_ticket', '=', True)]}"/>-->
+                            <!--                                <field name="interval_number"/>-->
+                            <!--                                <field name="interval_unit"/>-->
+                            <!--                            </group>-->
+
+<!--                        </group>-->
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <data noupdate="1">
+            <record id="restore_01" model="ticket.restore">
+                <field name="field_name">Zendesk Restore</field>
+            </record>
+        </data>
+
+        <record model="ir.actions.act_window" id="zendesk_restore">
+            <field name="name">Zendesk Restore</field>
+            <field name="res_model">ticket.restore</field>
+            <field name="res_id" ref="odoo_helpdesk_zendesk_integration.restore_01"/>
+            <field name="view_mode">form</field>
+        </record>
+
+        <record id="zendesk_restore_form" model="ir.ui.view">
+            <field name="name">ticket.restore.form</field>
+            <field name="model">ticket.restore</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <div>
+                                <hr/>
+                                <h1 class="text-primary">Automated Actions Settings</h1>
+                                <hr/>
+                                <p style="font-size:16px;">
+                                    <b>Restore Tickets</b>
+                                    <i>
+                                        <field name="restore_tickets"/>
+                                    </i>
+                                </p>
+                                <button name="restore" string="Restore" type="object" icon="fa-refresh"/>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id='contact_id' model='ir.ui.view'>
+            <field name='model'>res.partner</field>
+            <field name='inherit_id' ref="base.view_partner_form"/>
+            <field name='arch' type='xml'>
+                <field name="email" position="attributes">
+                    <attribute name="required">True</attribute>
+                </field>
+            </field>
+        </record>
+        <menuitem id="main_zendesk_root" name="Zendesk"
+                  sequence="50"
+                  web_icon="odoo_helpdesk_zendesk_integration,static/description/icons/icon.png"/>
+        <menuitem id="zendesk_sync_menu" name="Import/Export" parent="odoo_helpdesk_zendesk_integration.main_zendesk_root"
+                  action="odoo_helpdesk_zendesk_integration.zendesk_sync" />
+        <menuitem id="zendesk_settings_menu" name="Manual Settings" parent="odoo_helpdesk_zendesk_integration.main_zendesk_root"
+                  action="zendesk_settings"/>
+        <menuitem id="zendesk_auto_menu" name="Scheduler Settings" parent="odoo_helpdesk_zendesk_integration.main_zendesk_root"
+                  action="zendesk_auto_action"/>
+        <!--        <menuitem id="zendesk_restore_menu" name="Tickets Backup" parent="odoo_helpdesk_zendesk_integration.main_zendesk_root"-->
+        <!--                  action="zendesk_restore"/>-->
+    </data>
+</odoo>

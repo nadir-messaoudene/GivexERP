@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--    <record model="ir.ui.view" id="avalara_zendesk">-->
+<!--            <field name="name">res.config.settings.zendesk_setting</field>-->
+<!--            <field name="model">res.config.settings</field>-->
+<!--            <field name="inherit_id" ref="base.res_config_settings_view_form" />-->
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr="//div[hasclass('settings')]" position="inside">-->
+<!--                    <div class="app_settings_block" data-string="Zendesk" string="Zendesk" data-key="odoo_helpdesk_zendesk_integration">-->
+<!--                        <div id="zendesk_settings">-->
+<!--                            <h2>Connection</h2>-->
+<!--                            <div class="row mt16 o_settings_container">-->
+<!--                                <div class="col-12 col-lg-6 o_setting_box">-->
+<!--                                    <div class="o_setting_left_pane">-->
+<!--                                        <h1>Zendesk</h1>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--    </record>-->
+</odoo>
