@@ -1001,8 +1001,11 @@
         </t>
     </template>
 
-    <template id="report_payment_document_csh" inherit_id="account.report_payment_receipt_document">
 
+
+    <!--Vendor Payment Receipt For CSH-->
+    <template id="report_payment_document_csh" inherit_id="account.report_payment_receipt_document">
+<!--        ============================ Date Change to UK format for CSH========================-->
         <xpath expr="//span[contains(@t-field,'o.date')]" position="replace">
             <t t-if="'Counter Solutions' in o.company_id.name">
                 <span t-field="o.date" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/>
@@ -1028,6 +1031,53 @@
             </t>
         </xpath>
 
+<!--        ========================== xxxxxxxxxxxxxxxxxxxxxxxxx ===============================================-->
+<!--        ============================== Vendor Address added Only for vendor payment receipt ======================= -->
+        <xpath expr="//div[@class='row'][2]" position="after">
+            <t t-if="'Counter Solutions' in o.company_id.name and o.partner_type == 'supplier'" >
+                <div class="row">
+                    <div class="col-6" t-if="o.partner_type">
+                        <div class="row">
+                            <div class="col-3">
+                                Address:
+                            </div>
+                            <div class="col-10 text-align:left;">
+                                <t t-if="o.partner_id">
+                                    <t t-if="o.partner_id.parent_id">
+                                        <t t-esc="o.partner_id.parent_id.name"/>,
+                                        <t t-esc="o.partner_id.name"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-esc="o.partner_id.name"/>
+                                    </t>
+                                    <!--                                <t t-esc="o.partner_id.parent_id.name"/>,KL0005-->
+                                    <br>
+                                        <t t-esc="o.partner_id.street"/>
+                                    </br>
+                                     <t t-if="o.partner_id.street2">
+                                    <br>
+                                        <t t-esc="o.partner_id.street2"/>
+                                    </br>
+                                     </t>
+                                    <br>
+                                        <t t-esc="o.partner_id.city"/>,
+                                        <t t-esc="o.partner_id.state_id.code"/>,
+
+                                    </br>
+                                    <br>
+                                        <t t-esc="o.partner_id.zip"/>
+                                        <t t-esc="o.partner_id.country_id.name"/>
+                                    </br>
+                                </t>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </t>
+        </xpath>
     </template>
 
 
