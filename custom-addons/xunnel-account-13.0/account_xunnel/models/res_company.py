@@ -19,7 +19,7 @@ class ResCompany(models.Model):
 
     def _xunnel(self, endpoint, payload=None):
         """_xunnel calls xunnel.com and returns it response.
-            if is there any exception the error message within the API
+            if is there any an exception. The error message within the API
             response will be raised.
         """
         self.ensure_one()
@@ -64,9 +64,9 @@ class ResCompany(models.Model):
             new_info = {
                 'client_id': link.get('provider_account_identifier'),
                 'company_id': self.id,
-                'is_xunnel': True,
                 'auto_sync': False,
                 'last_refresh': fields.Datetime.now(),
+                'is_xunnel': True,
                 'state': 'connected',
                 'name': link.get('name'),
                 'provider_data': 'xunnel',

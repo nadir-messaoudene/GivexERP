@@ -53,11 +53,13 @@ class TestResConfigSettings(TransactionCase):
 
         expected_res = {
             'type': 'ir.actions.client',
-            'tag': 'account_xunnel.syncrhonized_accounts',
+            'tag': 'account_xunnel.synchronized_accounts',
             'name': 'Xunnel response.',
             'target': 'new',
-            'message': 'Success! 2 banks have been synchronized.',
-            'message_class': 'success'}
+            'params': {
+                'message': 'Success! 2 banks have been synchronized.',
+                'message_class': 'success'}
+        }
 
         res = self.config_settings.sync_xunnel_providers()
         self.assertEqual(res, expected_res)

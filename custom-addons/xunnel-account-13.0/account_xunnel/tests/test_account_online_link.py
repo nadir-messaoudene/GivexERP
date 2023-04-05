@@ -28,18 +28,13 @@ class TestAccountOnlineLink(TransactionCase):
         with self.assertRaises(UserError):
             self.link.update_credentials()
 
-    @patch('odoo.addons.account_xunnel.models.res_config_settings.AccountConfigSettings.sync_xunnel_providers')
-    def test_02_sync_xunnel_providers(self, sync_xunnel_providers):
-        self.link.sync_xunnel_providers()
-        sync_xunnel_providers.assert_called_once()
-
     @patch('odoo.addons.account_online_synchronization.models.account_online.AccountOnlineLink._fetch_odoo_fin')
-    def test_03_fetch_odoo_fin(self, _fetch_odoo_fin):
+    def test_02_fetch_odoo_fin(self, _fetch_odoo_fin):
         self.link._fetch_odoo_fin(url='test')
         _fetch_odoo_fin.assert_called_once()
 
     @mock()
-    def test_04_get_journals(self, request=None):
+    def test_03_get_journals(self, request=None):
         request.post('%sget_xunnel_journals' % self.url, text=dumps(dict(response.ERROR)))
         with self.assertRaises(UserError):
             self.link._get_journals()

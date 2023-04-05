@@ -8,7 +8,7 @@ from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 
-class XunnelProviderAccount(models.Model):
+class AccountOnlineLink(models.Model):
     _inherit = 'account.online.link'
 
     is_xunnel = fields.Boolean()
@@ -59,7 +59,9 @@ class XunnelProviderAccount(models.Model):
         """Requests https://wwww.xunnel.com/ to retrive all journals
         related to the indicated provider.
         """
-        res = self.company_id._xunnel('get_xunnel_journals', dict(account_identifier=self.client_id))
+        res = self.company_id._xunnel(
+            'get_xunnel_journals',
+            dict(account_identifier=self.client_id))
         err = res.get('error')
         if err:
             raise UserError(err)
@@ -70,8 +72,16 @@ class XunnelProviderAccount(models.Model):
             'Updating credentials is not allowed here. '
             'Please go to https://www.xunnel.com/ to achieve that.'))
 
-    def sync_xunnel_providers(self):
-        return self.env['res.config.settings'].sync_xunnel_providers()
+    def _retrieve_transactions(self, forced_params=None):
+        self.ensure_one()
+        if not self.account_online_link_id.is_xunnel:
+            return super()._retrieve_transactions()
+        resp_json = self._get_transactions(forced_params)
+        transactions = self._prepare_transactions(resp_json)
+        if not transactions:
+            return 0
+        response = self._process_transactions(transactions)
+        return response
 
     def _open_iframe(self, mode='link'):
         if self.is_xunnel:

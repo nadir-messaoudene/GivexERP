@@ -39,7 +39,6 @@ class TestAccountJournal(TransactionCase):
         })
 
     def test_01_has_synchronized_xunnel(self):
-        currency = self.env['res.currency'].search([], limit=1)
         partner = self.env['res.partner'].search([], limit=1)
         self.statement = self.env['account.bank.statement'].create({
             'name': 'test_statement',
@@ -51,9 +50,7 @@ class TestAccountJournal(TransactionCase):
                     'date': '2019-01-01',
                     'payment_ref': 'line_1',
                     'partner_id': partner.id,
-                    'foreign_currency_id': currency.id,
                     'amount': 1250.0,
-                    'amount_currency': 2500.0,
                     'online_transaction_identifier': 'test',
                 }),
                 (0, 0, {
@@ -139,7 +136,7 @@ class TestAccountJournal(TransactionCase):
     @mock()
     def test_05_duplicate_manual_transactions(self, request):
         """Test to validate if you create more than one equal statement line
-        manually, it should let that records an create new transactions.
+        manually, it should let that records and create new transactions.
         """
         request.post(
             '%sget_xunnel_transactions' % self.url,

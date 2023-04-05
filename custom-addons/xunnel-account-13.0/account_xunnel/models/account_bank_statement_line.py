@@ -8,4 +8,5 @@ from odoo import fields, models
 class AccountBankStatementLine(models.Model):
     _inherit = "account.bank.statement.line"
 
-    card_number = fields.Char(help="Some banks won't provide this data.")
+    card_number = fields.Char(
+        help="Some banks won't provide this data.")

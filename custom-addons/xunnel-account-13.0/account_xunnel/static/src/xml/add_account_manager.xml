@@ -2,6 +2,11 @@
 
 <template xml:space="preserve">
 
+    <t t-name="account_xunnel.no_token">
+        <section class="__css_paybook_widget__ py-5 my-4 text-center">
+            <h6 class="text-center text-muted mt-5">Press (esc) to close</h6>
+        </section>
+    </t>
     <t t-name="account_xunnel.add_account_manager">
         <section class="__css_paybook_widget__ py-5 my-4 text-center">
             <img src="/web/content/account_xunnel.no_content_tree_view" alt="Logo" class="mx-auto logo-xunnel"/>
