@@ -7,6 +7,7 @@
             </button>
         </t>
     </t>
+
     <t t-extend="DocumentViewer.Content">
         <t t-jquery=".o_viewer_pdf" t-operation="after">
             <div

@@ -58,6 +58,7 @@
             </xpath>
         </field>
     </record>
+
     <record model="ir.ui.view" id="documents_search_inherit">
         <field name="name">Documents search view inherit</field>
         <field name="model">documents.document</field>
@@ -69,9 +70,11 @@
                 <separator/>
             </xpath>
             <xpath expr="//separator[3]" position="before">
-                <filter string="Has Vendor Bill" name="has_partner_invoice" domain="[('tag_ids', 'in',%(invoice_xunnel.with_invoice)d)] "/>
-                <filter name="filter_downloaded_xml" domain="[('just_downloaded', '=', True)]" string="Downloaded XMLs" />
+-                <filter string="Has Vendor Bill" name="has_partner_invoice" domain="[('tag_ids', in',%(invoice_xunnel.with_invoice)d)] "/>
+-                <filter name="filter_downloaded_xml" domain="[('just_downloaded', '=', True)]" string="Downloaded MLs" />
             </xpath>
         </field>
     </record>
+
+
 </odoo>
