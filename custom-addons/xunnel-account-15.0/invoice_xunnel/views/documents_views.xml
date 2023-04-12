@@ -65,7 +65,7 @@
         <field name="inherit_id" ref="documents.document_view_search"/>
         <field name="priority">16</field>
         <field name="arch" type="xml">
-            <xpath expr="//separator" position="after">
+            <xpath expr="//separator[4]" position="after">
                 <filter string="Order Date" name="filter_stamp_date" date="stamp_date"/>
                 <separator/>
             </xpath>
