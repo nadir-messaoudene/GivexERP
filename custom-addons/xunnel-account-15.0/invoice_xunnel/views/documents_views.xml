@@ -59,7 +59,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="documents_search_inherit">
+<!--     <record model="ir.ui.view" id="documents_search_inherit">
         <field name="name">Documents search view inherit</field>
         <field name="model">documents.document</field>
         <field name="inherit_id" ref="documents.document_view_search"/>
@@ -74,7 +74,7 @@
                 <filter name="filter_downloaded_xml" domain="[('just_downloaded', '=', True)]" string="Downloaded MLs" />
             </xpath>
         </field>
-    </record>
+    </record> -->
 
 
 </odoo>
