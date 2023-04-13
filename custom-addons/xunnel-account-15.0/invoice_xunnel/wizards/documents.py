@@ -5,8 +5,6 @@ class DocumentsWizard(models.TransientModel):
     _name = 'xunnel.documents.wizard'
     _description = 'Xunnel documents sync'
 
-    company_id = fields.Many2one(
-        'res.company', required=True, default=lambda self: self.env.company)
     date_from = fields.Date(default=lambda self: self.env.company.xunnel_last_sync)
     message = fields.Char(help="Used to show the synchronization status.")
     no_attachment_action = fields.Boolean(help="Used to toggle the redirect to the attachments.")

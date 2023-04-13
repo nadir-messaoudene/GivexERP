@@ -8,7 +8,6 @@ from lxml import objectify
 from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_repr
-# from odoo.addons.l10n_mx_edi.models.account_invoice import CFDI_SAT_QR_STATE
 
 CFDI_SAT_QR_STATE = {
     'No Encontrado': 'not_found',
@@ -63,21 +62,6 @@ class Document(models.Model):
         help="Related CFDI of the XML file",
         store=True,
     )
-    just_downloaded = fields.Boolean(
-        compute="_compute_just_downloaded",
-        search="_search_just_downloaded", store=False,
-        help="""Used to identify the just donwloaded attachments.
- To evaluate if an attachment was just downloaded, we need to
- check the current context.""")
-
-    def _compute_just_downloaded(self):
-        downloaded_ids = self._context.get('downloaded_invoice', [])
-        for rec in self:
-            rec.just_downloaded = rec.id in downloaded_ids
-
-    def _search_just_downloaded(self, operator, value):
-        operator = 'in' if value else 'not int'
-        return [('id', operator, self._context.get('downloaded_invoice', []))]
 
     @api.depends('datas')
     def _compute_emitter_partner_id(self):
