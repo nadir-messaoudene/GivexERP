@@ -39,12 +39,12 @@
     ],
     'assets': {
         'web.assets_backend': [
-            '/account_xunnel/static/src/js/add_account_manager.js',
-            '/account_xunnel/static/src/css/backend.css',
-            '/account_xunnel/static/src/js/synchronized_account.js',
+            'account_xunnel/static/src/js/add_account_manager.js',
+            'account_xunnel/static/src/css/backend.css',
+            'account_xunnel/static/src/js/synchronized_account.js',
         ],
         'web.assets_qweb': [
-            '/account_xunnel/static/src/xml/add_account_manager.xml',
+            'account_xunnel/static/src/xml/add_account_manager.xml',
         ],
     },
     'installable': True,
