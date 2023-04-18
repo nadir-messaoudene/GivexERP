@@ -11,3 +11,4 @@ export CUSTOMER="account_xunnel"
 export COVERAGE_MIN=70
 export COVERAGE_PRECISION=2
 export DOCKER_IMAGE_REPO="quay.io/vauxoo/vauxoo"
+export PHANTOMJS_TESTS="0"
