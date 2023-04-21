@@ -50,18 +50,11 @@ class AccountBatchPayment(models.Model):
                 and batch_payment.payment_method_id.code == "bacs"
             ):
                 for payment in batch_payment.payment_ids:
-                    if payment.partner_id:
-                        destination_account_name = payment.partner_id.name
-                    elif payment.partner_bank_id.acc_holder_name:
-                        destination_account_name = (
-                            payment.partner_bank_id.acc_holder_name
-                        )
-                    elif payment.partner_bank_id.partner_id:
-                        destination_account_name = (
-                            payment.partner_bank_id.partner_id.name
-                        )
+                    destination_account_name = ""
+                    if payment.partner_bank_id and payment.partner_bank_id.acc_holder_name != '':
+                        destination_account_name = payment.partner_bank_id.acc_holder_name
                     else:
-                        destination_account_name = ""
+                        destination_account_name = payment.partner_id.name
                     if payment.amount:
                         amount = round(payment.amount * 100)
                         amount = str(amount)[:11]
