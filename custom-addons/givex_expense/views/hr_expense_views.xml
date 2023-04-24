@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//form/sheet/group/group[1]/field[@name='company_id']" position="before">
                     <field name="is_attachment_required"/>
+                    <field name="is_from_to_address_required"/>
                 </xpath>
             </field>
         </record>
@@ -18,25 +19,26 @@
             <field name="arch" type="xml">
                 <xpath expr="//form/sheet/group/group[1]/div[1]" position="after">
                     <field name="is_attachment_required"/>
-                    <label for="from_street" string="From Address"/>
-                    <div class="o_address_format">
-                        <field name="from_street" placeholder="Street..." class="o_address_street"/>
+                    <field name="is_from_to_address_required" invisible="1"/>
+                    <label for="from_street" string="From Address" attrs="{'invisible': [('is_from_to_address_required', '=', False)]}"/>
+                    <div class="o_address_format" attrs="{'invisible': [('is_from_to_address_required', '=', False)]}">
+                        <field name="from_street" placeholder="Street..." class="o_address_street" attrs="{'required': [('is_from_to_address_required', '=', True)]}"/>
                         <field name="from_street2" placeholder="Street 2..." class="o_address_street"/>
-                        <field name="from_city" placeholder="City" class="o_address_city"/>
-                        <field name="from_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': from_country_id}"/>
-                        <field name="from_zip" placeholder="ZIP" class="o_address_zip"/>
-                        <field name="from_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                        <field name="from_city" placeholder="City" class="o_address_city" attrs="{'required': [('is_from_to_address_required', '=', True)]}"/>
+                        <field name="from_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': from_country_id}" attrs="{'required': [('is_from_to_address_required', '=', True)]}"/>
+                        <field name="from_zip" placeholder="ZIP" class="o_address_zip" attrs="{'required': [('is_from_to_address_required', '=', True)]}"/>
+                        <field name="from_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' attrs="{'required': [('is_from_to_address_required', '=', True)]}"/>
                     </div>
-                    <label for="to_street" string="To Address"/>
-                    <div class="o_address_format">
-                        <field name="to_street" placeholder="Street..." class="o_address_street"/>
+                    <label for="to_street" string="To Address" attrs="{'invisible': [('is_from_to_address_required', '=', False)]}"/>
+                    <div class="o_address_format" attrs="{'invisible': [('is_from_to_address_required', '=', False)]}">
+                        <field name="to_street" placeholder="Street..." class="o_address_street" attrs="{'required': [('is_from_to_address_required', '=', True)]}"/>
                         <field name="to_street2" placeholder="Street 2..." class="o_address_street"/>
-                        <field name="to_city" placeholder="City" class="o_address_city"/>
-                        <field name="to_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': to_country_id}"/>
-                        <field name="to_zip" placeholder="ZIP" class="o_address_zip"/>
-                        <field name="to_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                        <field name="to_city" placeholder="City" class="o_address_city" attrs="{'required': [('is_from_to_address_required', '=', True)]}"/>
+                        <field name="to_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': to_country_id}" attrs="{'required': [('is_from_to_address_required', '=', True)]}"/>
+                        <field name="to_zip" placeholder="ZIP" class="o_address_zip" attrs="{'required': [('is_from_to_address_required', '=', True)]}"/>
+                        <field name="to_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' attrs="{'required': [('is_from_to_address_required', '=', True)]}"/>
                     </div>
-                    <field name="distance"/>
+                    <field name="distance" attrs="{'invisible': [('is_from_to_address_required', '=', False)]}"/>
                 </xpath>
             </field>
         </record>

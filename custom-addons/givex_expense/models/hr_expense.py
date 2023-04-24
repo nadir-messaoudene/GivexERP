@@ -11,30 +11,33 @@ class HrExpense(models.Model):
     is_attachment_required = fields.Boolean(string="Attachment Required", readonly=False,
                                             related="product_id.is_attachment_required", store=True,
                                             help="Specify whether the product need mandatory attachment.")
+    is_from_to_address_required = fields.Boolean(string="From/To Required", readonly=False,
+                                            related="product_id.is_from_to_address_required", store=True,
+                                            help="Specify whether the product need mandatory attachment.")
 
     # from address fields
     from_street = fields.Char()
     from_street2 = fields.Char()
     from_zip = fields.Char(change_default=True)
     from_city = fields.Char()
-    from_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict',
+    from_state_id = fields.Many2one("res.country.state", string=' From State', ondelete='restrict',
                                domain="[('country_id', '=?', from_country_id)]")
-    from_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
-    from_country_code = fields.Char(related='from_country_id.code', string="Country Code")
-    from_latitude = fields.Float(string='Geo Latitude', digits=(10, 7))
-    from_longitude = fields.Float(string='Geo Longitude', digits=(10, 7))
+    from_country_id = fields.Many2one('res.country', string='From Country', ondelete='restrict')
+    from_country_code = fields.Char(related='from_country_id.code', string="From Country Code")
+    from_latitude = fields.Float(string='From Geo Latitude', digits=(10, 7))
+    from_longitude = fields.Float(string='From Geo Longitude', digits=(10, 7))
 
     # to address fields
     to_street = fields.Char()
     to_street2 = fields.Char()
     to_zip = fields.Char(change_default=True)
     to_city = fields.Char()
-    to_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict',
+    to_state_id = fields.Many2one("res.country.state", string='To State', ondelete='restrict',
                                   domain="[('country_id', '=?', to_country_id)]")
-    to_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
-    to_country_code = fields.Char(related='to_country_id.code', string="Country Code")
-    to_latitude = fields.Float(string='Geo Latitude', digits=(10, 7))
-    to_longitude = fields.Float(string='Geo Longitude', digits=(10, 7))
+    to_country_id = fields.Many2one('res.country', string='To Country', ondelete='restrict')
+    to_country_code = fields.Char(related='to_country_id.code', string="To Country Code")
+    to_latitude = fields.Float(string='To Geo Latitude', digits=(10, 7))
+    to_longitude = fields.Float(string='To Geo Longitude', digits=(10, 7))
     distance = fields.Float(string="Distance (KM)")
     payment_mode = fields.Selection(selection_add=[('company_cc', 'Company Credit Card')])
 
