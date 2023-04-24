@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.expense</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="85"/>
+        <field name="inherit_id" ref="hr_expense.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div/div[@name='expenses_setting_container']" position="inside">
+                <div class="col-lg-6 col-12 o_setting_box" id="hr_expense_distance">
+                    <div class="o_setting_left_pane">
+                        <field name="use_per_distance_rate" nolabel="1"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="per_distance_reimbursement_rate" string="Reimbursement per distance(KM) rate"/>
+                        <div class="text-muted">
+                            Reimburse Expenses
+                        </div>
+                        <field name="per_distance_reimbursement_rate" class="oe_inline" attrs="{'invisible': [('use_per_distance_rate', '=', False)]}"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

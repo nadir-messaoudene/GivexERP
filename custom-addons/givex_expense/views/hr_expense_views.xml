@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="product_product_expense_form_inherit_view" model="ir.ui.view">
+            <field name="name">product.product.expense.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="hr_expense.product_product_expense_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group[1]/field[@name='company_id']" position="before">
+                    <field name="is_attachment_required"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_expense_view_form" model="ir.ui.view">
+            <field name="name">hr.expense.view.form</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group[1]/div[1]" position="after">
+                    <field name="is_attachment_required"/>
+                    <label for="from_street" string="From Address"/>
+                    <div class="o_address_format">
+                        <field name="from_street" placeholder="Street..." class="o_address_street"/>
+                        <field name="from_street2" placeholder="Street 2..." class="o_address_street"/>
+                        <field name="from_city" placeholder="City" class="o_address_city"/>
+                        <field name="from_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': from_country_id}"/>
+                        <field name="from_zip" placeholder="ZIP" class="o_address_zip"/>
+                        <field name="from_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                    </div>
+                    <label for="to_street" string="To Address"/>
+                    <div class="o_address_format">
+                        <field name="to_street" placeholder="Street..." class="o_address_street"/>
+                        <field name="to_street2" placeholder="Street 2..." class="o_address_street"/>
+                        <field name="to_city" placeholder="City" class="o_address_city"/>
+                        <field name="to_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': to_country_id}"/>
+                        <field name="to_zip" placeholder="ZIP" class="o_address_zip"/>
+                        <field name="to_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                    </div>
+                    <field name="distance"/>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>
