@@ -144,15 +144,11 @@ class ResCompany(models.Model):
 
     def get_tag_map(self, key):
         default = self.env['documents.tag']
-        message_class = 'success'
-        message = _("%s xml have been downloaded.") % default.get('created')
-        action_params = {'message': message, 'message_class': message_class}
         values = {
             'I': self.env.ref('invoice_xunnel.ingreso_tag'),
             'E': self.env.ref('invoice_xunnel.egreso_tag'),
             'T': self.env.ref('invoice_xunnel.translado_tag'),
             'P': self.env.ref('invoice_xunnel.reception_tag'),
             'N': self.env.ref('invoice_xunnel.nomina_tag'),
-            'params': action_params,
         }
         return values.get(key, default)
