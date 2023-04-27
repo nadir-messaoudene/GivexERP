@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="account_move_lines_unexpected_tax_xlsx" model="ir.actions.report">
+        <field name="name">Unexpected Tax Report</field>
+        <field name="model">account.move.line</field>
+        <field name="binding_model_id" ref="account.model_account_move_line"/>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">report_xlsx.move_line_unexpected_tax_xlsx</field>
+        <field name="report_file">report_xlsx.move_line_unexpected_tax_xlsx</field>
+        <field name="attachment_use">False</field>
+        <field name="binding_view_types">list</field>
+        <field name="print_report_name">'Unexpected Tax Report'</field>
+        <field name="binding_type">report</field>
+    </record>
+
+<!--    <record id="account_move_lines_possible_duplicate_tax_xlsx" model="ir.actions.report">-->
+<!--        <field name="name">Possible Duplicate Tax Report</field>-->
+<!--        <field name="model">account.move.line</field>-->
+<!--        <field name="binding_model_id" ref="account.model_account_move_line"/>-->
+<!--        <field name="report_type">xlsx</field>-->
+<!--        <field name="report_name">report_xlsx.move_line_possible_duplicate_tax_xlsx</field>-->
+<!--        <field name="report_file">report_xlsx.move_line_possible_duplicate_tax_xlsx</field>-->
+<!--        <field name="attachment_use">False</field>-->
+<!--        <field name="binding_view_types">list</field>-->
+<!--        <field name="print_report_name">'Possible Duplicate Tax Report'</field>-->
+<!--        <field name="binding_type">report</field>-->
+<!--    </record>-->
+</odoo>
