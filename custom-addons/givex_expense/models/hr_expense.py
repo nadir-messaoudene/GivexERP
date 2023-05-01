@@ -1,11 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
 from odoo import api, fields, Command, models, _
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools import email_split, float_is_zero, float_repr
-from odoo.tools.misc import clean_context, format_date
+from odoo.exceptions import UserError
+from odoo.tools.misc import format_date
 
 
 class HrExpense(models.Model):
@@ -24,9 +21,10 @@ class HrExpense(models.Model):
                                                         help="Specify "
                                                              "Vehicle"
                                                              " type.")
-    vehicle_allowance_type_id = fields.Many2one("hr.vehicle.allowance.type", string="Vehicle Allowance Type", help="Based on Specify "
-                                                                                      "Vehicle"
-                                                                                      " type.")
+    vehicle_allowance_type_id = fields.Many2one("hr.vehicle.allowance.type", string="Vehicle Allowance Type",
+                                                help="Based on Specify "
+                                                     "Vehicle"
+                                                     " type.")
 
     # from address fields
     from_street = fields.Char()
@@ -77,50 +75,24 @@ class HrExpense(models.Model):
     def _get_default_expense_sheet_values(self):
         if any(expense.is_attachment_required and expense.attachment_number == 0 for expense in self):
             raise UserError(_("You can not create report without attachment."))
-        # todo = self.filtered(lambda x: x.payment_mode == 'company_cc')
-        # if len(todo) == 1:
-        #     expense_name = todo.name
-        # else:
-        #     dates = todo.mapped('date')
-        #     min_date = format_date(self.env, min(dates))
-        #     max_date = format_date(self.env, max(dates))
-        #     expense_name = min_date if max_date == min_date else "%s - %s" % (min_date, max_date)
-        #
-        # values = {
-        #     'default_company_id': self.company_id.id,
-        #     'default_employee_id': self[0].employee_id.id,
-        #     'default_name': expense_name,
-        #     'default_expense_line_ids': [Command.set(todo.ids)],
-        #     'default_state': 'draft',
-        #     'create': False
-        # }
-        # return values
+        todo = self.filtered(lambda x: x.payment_mode == 'company_cc')
+        if todo:
+            if len(todo) == 1:
+                expense_name = todo.name
+            else:
+                dates = todo.mapped('date')
+                min_date = format_date(self.env, min(dates))
+                max_date = format_date(self.env, max(dates))
+                expense_name = min_date if max_date == min_date else "%s - %s" % (min_date, max_date)
 
-        return super()._get_default_expense_sheet_values()
-
-    def _get_default_expense_sheet_values(self):
-        if any(expense.state != 'draft' or expense.sheet_id for expense in self):
-            raise UserError(_("You cannot report twice the same line!"))
-        if len(self.mapped('employee_id')) != 1:
-            raise UserError(_("You cannot report expenses for different employees in the same report."))
-        if any(not expense.product_id for expense in self):
-            raise UserError(_("You can not create report without category."))
-
-        todo = self.filtered(lambda x: x.payment_mode=='own_account') or self.filtered(lambda x: x.payment_mode=='company_account') or self.filtered(lambda x: x.payment_mode=='company_cc')
-        if len(todo) == 1:
-            expense_name = todo.name
+            values = {
+                'default_company_id': self.company_id.id,
+                'default_employee_id': self[0].employee_id.id,
+                'default_name': expense_name,
+                'default_expense_line_ids': [Command.set(todo.ids)],
+                'default_state': 'draft',
+                'create': False
+            }
+            return values
         else:
-            dates = todo.mapped('date')
-            min_date = format_date(self.env, min(dates))
-            max_date = format_date(self.env, max(dates))
-            expense_name = min_date if max_date == min_date else "%s - %s" % (min_date, max_date)
-
-        values = {
-            'default_company_id': self.company_id.id,
-            'default_employee_id': self[0].employee_id.id,
-            'default_name': expense_name,
-            'default_expense_line_ids': [Command.set(todo.ids)],
-            'default_state': 'draft',
-            'create': False
-        }
-        return values
+            return super()._get_default_expense_sheet_values()
