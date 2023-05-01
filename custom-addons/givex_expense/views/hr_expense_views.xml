@@ -22,7 +22,7 @@
                     <field name="is_attachment_required" invisible="1"/>
                     <field name="is_from_to_address_required" invisible="1"/>
                     <field name="is_allowance_based_on_vehicle_type" invisible="1"/>
-                    <field name="vehicle_allowance_type_id" attrs="{'invisible': [('is_allowance_based_on_vehicle_type', '=', False)]}"/>
+                    <field name="vehicle_allowance_type_id" attrs="{'invisible': [('is_allowance_based_on_vehicle_type', '=', False)]}" options="{'no_open': True, 'no_create': True, 'no_edit': True}"/>
                     <label for="from_street" string="From Address" attrs="{'invisible': [('is_from_to_address_required', '=', False)]}"/>
                     <div class="o_address_format" attrs="{'invisible': [('is_from_to_address_required', '=', False)]}">
                         <field name="from_street" placeholder="Street..." class="o_address_street" attrs="{'required': [('is_from_to_address_required', '=', True)]}"/>
