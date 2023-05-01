@@ -10,6 +10,7 @@
         "security/ir.model.access.csv",
         "views/res_config_settings_views.xml",
         "views/hr_expense_views.xml",
+        "views/hr_vehicle_allowance_type_views.xml"
     ],
     "installable": True,
     "application": False,

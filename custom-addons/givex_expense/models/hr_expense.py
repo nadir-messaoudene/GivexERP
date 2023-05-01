@@ -1,19 +1,32 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import UserError
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo import api, fields, Command, models, _
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import email_split, float_is_zero, float_repr
+from odoo.tools.misc import clean_context, format_date
 
 
 class HrExpense(models.Model):
     _inherit = "hr.expense"
     _description = "Expense"
 
-    is_attachment_required = fields.Boolean(string="Attachment Required", readonly=False,
+    is_attachment_required = fields.Boolean(string="Attachment required", readonly=False,
                                             related="product_id.is_attachment_required", store=True,
                                             help="Specify whether the product need mandatory attachment.")
-    is_from_to_address_required = fields.Boolean(string="From/To Required", readonly=False,
-                                            related="product_id.is_from_to_address_required", store=True,
-                                            help="Specify whether the product need mandatory attachment.")
+    is_from_to_address_required = fields.Boolean(string="From/To required", readonly=False,
+                                                 related="product_id.is_from_to_address_required", store=True,
+                                                 help="Specify whether the product need mandatory attachment.")
+    is_allowance_based_on_vehicle_type = fields.Boolean(string="Vehicle type required", readonly=False,
+                                                        related="product_id.is_allowance_based_on_vehicle_type",
+                                                        store=True,
+                                                        help="Specify "
+                                                             "Vehicle"
+                                                             " type.")
+    vehicle_allowance_type_id = fields.Many2one("hr.vehicle.allowance.type", string="Vehicle Allowance Type", help="Based on Specify "
+                                                                                      "Vehicle"
+                                                                                      " type.")
 
     # from address fields
     from_street = fields.Char()
@@ -21,7 +34,7 @@ class HrExpense(models.Model):
     from_zip = fields.Char(change_default=True)
     from_city = fields.Char()
     from_state_id = fields.Many2one("res.country.state", string=' From State', ondelete='restrict',
-                               domain="[('country_id', '=?', from_country_id)]")
+                                    domain="[('country_id', '=?', from_country_id)]")
     from_country_id = fields.Many2one('res.country', string='From Country', ondelete='restrict')
     from_country_code = fields.Char(related='from_country_id.code', string="From Country Code")
     from_latitude = fields.Float(string='From Geo Latitude', digits=(10, 7))
@@ -41,14 +54,14 @@ class HrExpense(models.Model):
     distance = fields.Float(string="Distance (KM)")
     payment_mode = fields.Selection(selection_add=[('company_cc', 'Company Credit Card')])
 
-    @api.depends("quantity", "unit_amount", "distance", "tax_ids", "currency_id")
+    @api.depends("quantity", "unit_amount", "distance", "tax_ids", "currency_id", "vehicle_allowance_type_id")
     def _compute_amount(self):
         res = super(HrExpense, self)._compute_amount()
         for expense in self:
-            if expense.distance >= 0:
+            if expense.distance >= 0 and expense.vehicle_allowance_type_id:
                 distance_amount = (
-                    expense.distance
-                    * expense.company_id.per_distance_reimbursement_rate
+                        expense.distance
+                        * expense.vehicle_allowance_type_id.advisory_fuel_rate
                 )
                 total = expense.unit_amount + distance_amount
                 taxes = expense.tax_ids.compute_all(
@@ -62,6 +75,52 @@ class HrExpense(models.Model):
         return res
 
     def _get_default_expense_sheet_values(self):
-        if any(expense.is_attachment_required and expense.attachment_number ==0 for expense in self):
+        if any(expense.is_attachment_required and expense.attachment_number == 0 for expense in self):
             raise UserError(_("You can not create report without attachment."))
+        # todo = self.filtered(lambda x: x.payment_mode == 'company_cc')
+        # if len(todo) == 1:
+        #     expense_name = todo.name
+        # else:
+        #     dates = todo.mapped('date')
+        #     min_date = format_date(self.env, min(dates))
+        #     max_date = format_date(self.env, max(dates))
+        #     expense_name = min_date if max_date == min_date else "%s - %s" % (min_date, max_date)
+        #
+        # values = {
+        #     'default_company_id': self.company_id.id,
+        #     'default_employee_id': self[0].employee_id.id,
+        #     'default_name': expense_name,
+        #     'default_expense_line_ids': [Command.set(todo.ids)],
+        #     'default_state': 'draft',
+        #     'create': False
+        # }
+        # return values
+
         return super()._get_default_expense_sheet_values()
+
+    def _get_default_expense_sheet_values(self):
+        if any(expense.state != 'draft' or expense.sheet_id for expense in self):
+            raise UserError(_("You cannot report twice the same line!"))
+        if len(self.mapped('employee_id')) != 1:
+            raise UserError(_("You cannot report expenses for different employees in the same report."))
+        if any(not expense.product_id for expense in self):
+            raise UserError(_("You can not create report without category."))
+
+        todo = self.filtered(lambda x: x.payment_mode=='own_account') or self.filtered(lambda x: x.payment_mode=='company_account') or self.filtered(lambda x: x.payment_mode=='company_cc')
+        if len(todo) == 1:
+            expense_name = todo.name
+        else:
+            dates = todo.mapped('date')
+            min_date = format_date(self.env, min(dates))
+            max_date = format_date(self.env, max(dates))
+            expense_name = min_date if max_date == min_date else "%s - %s" % (min_date, max_date)
+
+        values = {
+            'default_company_id': self.company_id.id,
+            'default_employee_id': self[0].employee_id.id,
+            'default_name': expense_name,
+            'default_expense_line_ids': [Command.set(todo.ids)],
+            'default_state': 'draft',
+            'create': False
+        }
+        return values

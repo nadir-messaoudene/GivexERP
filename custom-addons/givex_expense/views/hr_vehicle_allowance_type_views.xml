@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="hr_vehicle_allowance_type_tree" model="ir.ui.view">
+            <field name="name">hr.vehicle.allowance.type.tree</field>
+            <field name="model">hr.vehicle.allowance.type</field>
+            <field name="arch" type="xml">
+                <tree string="Vehicle Allowance Type">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <field name="advisory_fuel_rate"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_vehicle_allowance_type_form" model="ir.ui.view">
+            <field name="name">hr.vehicle.allowance.type.form</field>
+            <field name="model">hr.vehicle.allowance.type</field>
+            <field name="arch" type="xml">
+                <form string="Vehicle Allowance Type">
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="active" invisible="1"/>
+                    <group colspan="2">
+                        <group>
+                            <field name="name" required="1"/>
+                            <field name="company_id"/>
+                            <field name="mean_mpg" required="1"/>
+                            <field name="fuel_rate_per_ltr" required="1"/>
+                            <field name="fuel_rate_per_gal" required="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="rate_per_mile" required="1"/>
+                            <field name="advisory_fuel_rate" required="1"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_vehicle_allowance_type_filter" model="ir.ui.view">
+            <field name="name">hr.vehicle.allowance.type.search</field>
+            <field name="model">hr.vehicle.allowance.type</field>
+            <field name="arch" type="xml">
+                <search string="Vehicle Allowance Type">
+                    <field name="name" string="Vehicle Allowance Type"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="action_hr_vehicle_allowance_type" model="ir.actions.act_window">
+                <field name="name">Vehicle Allowance Type</field>
+                <field name="res_model">hr.vehicle.allowance.type</field>
+                <field name="view_mode">kanban,tree,form</field>
+                <field name="context">{}</field>
+                <field name="help" type="html">
+                  <p class="o_view_nocontent_smiling_face">
+                    No Vehicle Allowance Type found. Let's create one!
+                  </p>
+                </field>
+            </record>
+
+        <menuitem id="menu_hr_vehicle_allowance_type" name="Vehicle Allowance Type" parent="hr_expense.menu_hr_expense_configuration"
+            action="action_hr_vehicle_allowance_type" groups="hr_expense.group_hr_expense_manager" sequence="11"/>
+
+</odoo>
