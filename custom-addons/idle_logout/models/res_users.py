@@ -9,5 +9,6 @@ class ResUsers(models.Model):
 
     def idle_times(self):
         print("\n\n\n", self.idle_timer)
-        return self.idle_timer
+        res = self.idle_timer * 1000
+        return res
 
