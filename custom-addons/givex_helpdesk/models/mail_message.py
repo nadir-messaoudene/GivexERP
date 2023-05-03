@@ -18,7 +18,7 @@ class Message(models.Model):
         for mail in mails:
             if mail.model == 'helpdesk.ticket':
                 ticket = self.env['helpdesk.ticket'].search([('id','=',mail.res_id)])
-                if ticket and ticket.stage_id.is_close and ticket.partner_id == mail.author_id:
+                if ticket and ticket.stage_id.is_close and (ticket.partner_id == mail.author_id or mail.author_id.id in ticket.message_follower_ids.ids):
                     reopen_stage = self.env['helpdesk.stage'].search([('name','=','Reopen')])
                     ticket.stage_id = reopen_stage
         return mails
