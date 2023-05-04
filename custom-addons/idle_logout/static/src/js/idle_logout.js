@@ -18,11 +18,17 @@ BasicController.include({
             method: 'idle_times',
             args: [[session.uid]],
         });
+        console.log("limitTime >>>>>>>>>>>>>>>>>", limitTime)
         if (limitTime !== 0){
             $( document ).idleTimer( limitTime );
+            console.log("limitTime <<<<<<<<<<<<<<<<<", limitTime)
             $( document ).on( "idle.idleTimer", function(event, elem, obj){
-                session.session_logout();
-                location.reload();
+                // session.session_logout();
+                // location.reload();
+                setInterval(function () {
+                    session.session_logout();
+                    location.reload();
+                }, limitTime);
             });
         }
     }
