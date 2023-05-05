@@ -65,6 +65,6 @@
             </record>
 
         <menuitem id="menu_hr_vehicle_allowance_type" name="Vehicle Allowance Type" parent="hr_expense.menu_hr_expense_configuration"
-            action="action_hr_vehicle_allowance_type" groups="hr_expense.group_hr_expense_manager" sequence="11"/>
+            action="action_hr_vehicle_allowance_type" groups="account.group_account_user,hr_expense.group_hr_expense_manager" sequence="11"/>
 
 </odoo>

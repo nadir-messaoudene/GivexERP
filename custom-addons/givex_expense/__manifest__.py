@@ -5,7 +5,7 @@
     "website": "https://www.syncoria.com",
     "category": "Human Resources/Expenses",
     "version": "1.0",
-    "depends": ["base", "hr_expense"],
+    "depends": ["base", "account", "hr_expense"],
     "data": [
         "security/ir.model.access.csv",
         "views/res_config_settings_views.xml",
