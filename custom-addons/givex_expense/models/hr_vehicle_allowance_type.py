@@ -18,5 +18,5 @@ class VehicleAllowanceType(models.Model):
     mean_mpg = fields.Float("Mean MPG", digits=(16, 2))
     fuel_rate_per_ltr = fields.Float("Fuel Price (Per Litre)", digits=(16, 2))
     fuel_rate_per_gal = fields.Float("Fuel Price (Per Gallon)", digits=(16, 2))
-    rate_per_mile = fields.Float("Fuel Price (Per Gallon)", digits=(16, 2))
+    rate_per_mile = fields.Float("Rate Per Mile", digits=(16, 2))
     advisory_fuel_rate = fields.Float("Advisory Rate", digits=(16, 2))
