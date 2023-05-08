@@ -16,9 +16,10 @@ class Message(models.Model):
     def create(self, values_list):
         mails = super(Message, self).create(values_list)
         for mail in mails:
-            if mail.model == 'helpdesk.ticket':
+            if mail.model == 'helpdesk.ticket' and mail.message_type != 'notification':
                 ticket = self.env['helpdesk.ticket'].search([('id','=',mail.res_id)])
-                if ticket and ticket.stage_id.is_close and (ticket.partner_id == mail.author_id or mail.author_id.id in ticket.message_follower_ids.ids):
+                if ticket and ticket.stage_id.is_close and (ticket.partner_id == mail.author_id or mail.author_id.id in ticket.message_follower_ids.partner_id.ids):
                     reopen_stage = self.env['helpdesk.stage'].search([('name','=','Reopen')])
                     ticket.stage_id = reopen_stage
         return mails
+
