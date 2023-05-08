@@ -22,4 +22,3 @@ class Message(models.Model):
                     reopen_stage = self.env['helpdesk.stage'].search([('name','=','Reopen')])
                     ticket.stage_id = reopen_stage
         return mails
-
