@@ -72,6 +72,20 @@ class AccountInvoice(models.Model):
         vendor_bills.l10n_mx_edi_update_sat_status()
         return res
 
+    @api.model
+    def l10n_mx_edi_get_tfd_etree(self, cfdi):
+        '''Get the TimbreFiscalDigital node from the cfdi.
+
+        :param cfdi: The cfdi as etree
+        :return: the TimbreFiscalDigital node
+        '''
+        if not hasattr(cfdi, 'Complemento'):
+            return None
+        attribute = 'tfd:TimbreFiscalDigital[1]'
+        namespace = {'tfd': 'http://www.sat.gob.mx/TimbreFiscalDigital'}
+        node = cfdi.Complemento.xpath(attribute, namespaces=namespace)
+        return node[0] if node else None
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
