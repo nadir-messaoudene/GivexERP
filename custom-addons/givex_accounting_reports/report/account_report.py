@@ -11,6 +11,20 @@ from collections import defaultdict
 from odoo import models, api, _
 
 
+# class ReportAccountFinancialReport(models.Model):
+#     _inherit = "account.financial.html.report"
+class AccountFinancialReportLine(models.Model):
+    _inherit = "account.financial.html.report.line"
+
+    def _compute_amls_results(self, options_list, calling_financial_report, sign=1, operator=None):
+        print("_compute_amls_results _inherit>>>>>>>>>>>>>>>", self, options_list, calling_financial_report, sign, operator)
+        print("_compute_amls_results >>>>>>>>>>>>>>>>>>>", self, options_list, calling_financial_report, sign, operator)
+        res = super(AccountFinancialReportLine, self)._compute_amls_results(options_list, calling_financial_report, sign, operator)
+        print("res _inherit>>>>>>>>>>>>>>>>>>>>>>>>>>", res)
+        # res = list(filter(lambda x: 0 not in list(x[-1].values()), res))
+        res = list(filter(lambda x: any(list(x[-1].values())), res))
+        return res
+
 class AccountReport(models.AbstractModel):
     _inherit = 'account.report'
 
