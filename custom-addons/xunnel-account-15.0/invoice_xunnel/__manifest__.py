@@ -41,8 +41,8 @@
             'invoice_xunnel/static/src/js/documents_inspector.js',
             'invoice_xunnel/static/src/js/document_viewer.js',
             'invoice_xunnel/static/src/js/documents_dashboard.js',
-            "invoice_xunnel/static/src/css/style.css",
-            "invoice_xunnel/static/src/less/main.less",
+            # 'invoice_xunnel/static/src/css/style.css',
+            'invoice_xunnel/static/src/less/main.less',
             ],
         'web.assets_qweb': [
             'invoice_xunnel/static/src/xml/*.xml',
