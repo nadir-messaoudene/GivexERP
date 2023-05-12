@@ -364,7 +364,7 @@ class AttachXmlsWizard(models.TransientModel):
             invoices.update({key: invoice_status})
             return {'wrongfiles': wrongfiles, 'invoices': invoices}
 
-        inv.l10n_mx_edi_cfdi = xml_str.decode('UTF-8')
+        # inv.l10n_mx_edi_cfdi = xml_str.decode('UTF-8')
         inv.generate_xml_attachment()
         inv.payment_reference = '%s|%s' % (xml_serie_folio, xml_uuid.split('-')[0])
         invoices.update({key: {'invoice_id': inv.id}})
@@ -577,7 +577,7 @@ class AttachXmlsWizard(models.TransientModel):
 
             line_tax_ids = [tax['id'] for tax in taxes.get(idx, [])]
             code_sat = sat_code_obj.search([('code', '=', uom_code)], limit=1)
-            domain_uom = [('l10n_mx_edi_code_sat_id', '=', code_sat.id)]
+            # domain_uom = [('l10n_mx_edi_code_sat_id', '=', code_sat.id)]
             uom_id = uom_obj.with_context(
                 lang='es_MX').search(domain_uom, limit=1)
 
@@ -629,7 +629,7 @@ class AttachXmlsWizard(models.TransientModel):
                 currency_id.id or self.env.company.currency_id.id),
             'invoice_line_ids': invoice_line_ids,
             'move_type': type_invoice,
-            'l10n_mx_edi_time_invoice': date_inv[1],
+            # 'l10n_mx_edi_time_invoice': date_inv[1],
             'journal_id': journal.id,
         })
 
@@ -677,7 +677,7 @@ class AttachXmlsWizard(models.TransientModel):
                 percent = discount_amount * 100 / sub_total_amount
                 invoice_id.invoice_line_ids.write({'discount': percent})
 
-        invoice_id.l10n_mx_edi_cfdi = xml_str.decode('UTF-8')
+        # invoice_id.l10n_mx_edi_cfdi = xml_str.decode('UTF-8')
         invoice_id.generate_xml_attachment()
         if xml_type_doc == 'E' and hasattr(xml, 'CfdiRelacionados'):
             xml_related_uuid = xml.CfdiRelacionados.CfdiRelacionado.get('UUID')

@@ -257,7 +257,7 @@ class AttachXmlsWizard(models.TransientModel):
             inv.write(self.prepare_invoice_data(xml))
             self._assign_cfdi_related(xml, inv)
 
-        inv.l10n_mx_edi_cfdi = xml_str.decode('UTF-8')
+        # inv.l10n_mx_edi_cfdi = xml_str.decode('UTF-8')
         inv.generate_xml_attachment()
         if tag_folio:
             inv.payment_reference = '%s|%s' % (
@@ -342,7 +342,8 @@ class AttachXmlsWizard(models.TransientModel):
             domain_uom = [('name', '=ilike', uom)]
             line_taxes = [tax['id'] for tax in taxes.get(index, [])]
             code_sat = sat_code_obj.search([('code', '=', uom_code)], limit=1)
-            domain_uom = [('l10n_mx_edi_code_sat_id', '=', code_sat.id)]
+            # domain_uom = [('l10n_mx_edi_code_sat_id', '=', code_sat.id)]
+            domain_uom = []
             uom_id = uom_obj.with_context(
                 lang='es_MX').search(domain_uom, limit=1)
 
@@ -415,7 +416,7 @@ class AttachXmlsWizard(models.TransientModel):
             'l10n_mx_edi_payment_method_id': payment_method_id.id,
             'l10n_mx_edi_usage': xml.Receptor.get('UsoCFDI', 'P01'),
             'invoice_date': date_inv[0],
-            'l10n_mx_edi_time_invoice': date_inv[1],
+            # 'l10n_mx_edi_time_invoice': date_inv[1],
             'name': '%s%s%s' % (
                 xml.get('Serie', ''), xml_folio,
                 '|' + uuid.split('-')[0] if tag_folio else ''),
@@ -505,7 +506,7 @@ class AttachXmlsWizard(models.TransientModel):
             if discount_amount and sub_total_amount:
                 percent = discount_amount * 100 / sub_total_amount
                 invoice_id.invoice_line_ids.write({'discount': percent})
-        invoice_id.l10n_mx_edi_cfdi = xml_str.decode('UTF-8')
+        # invoice_id.l10n_mx_edi_cfdi = xml_str.decode('UTF-8')
         invoice_id.generate_xml_attachment()
         self._assign_cfdi_related(xml, invoice_id)
         total_xml = float(xml.get('Total', xml.get('total')))

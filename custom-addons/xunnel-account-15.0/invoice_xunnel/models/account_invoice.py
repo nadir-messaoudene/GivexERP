@@ -19,16 +19,16 @@ class AccountInvoice(models.Model):
 
     def generate_xml_attachment(self):
         self.ensure_one()
-        if not self.l10n_mx_edi_cfdi:
-            return False
+        # if not self.l10n_mx_edi_cfdi:
+        #     return False
         fname = ("%s-%s-MX-Bill-%s.xml" % (
             self.journal_id.code, self.payment_reference,
             self.company_id.partner_id.vat or '')).replace('/', '')
         data_attach = {
             'name': fname,
-            'datas': base64.encodestring(
-                self.l10n_mx_edi_cfdi and
-                self.l10n_mx_edi_cfdi.lstrip() or ''),
+            # 'datas': base64.encodestring(
+            #     self.l10n_mx_edi_cfdi and
+            #     self.l10n_mx_edi_cfdi.lstrip() or ''),
             'description': _('XML signed from Invoice %s.') % self.name,
             'res_model': self._name,
             'res_id': self.id,
@@ -63,8 +63,8 @@ class AccountInvoice(models.Model):
                 lambda inv: inv.state == 'draft' and inv.l10n_mx_edi_pac_status == 'signed')
             attachs = [(inv, inv.l10n_mx_edi_retrieve_last_attachment()) for inv in attach_invoices]
             res = super().post()
-            for inv, att in attachs:
-                att.name = inv.l10n_mx_edi_cfdi_name
+            # for inv, att in attachs:
+            #     att.name = inv.l10n_mx_edi_cfdi_name
             return res
         # Sync SAT status if not set yet (Vendor Bills)
         res = super(AccountInvoice, self).post()
