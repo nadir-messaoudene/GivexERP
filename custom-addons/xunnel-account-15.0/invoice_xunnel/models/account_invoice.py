@@ -22,7 +22,7 @@ class AccountInvoice(models.Model):
         if not self.l10n_mx_edi_cfdi:
             return False
         fname = ("%s-%s-MX-Bill-%s.xml" % (
-            self.journal_id.code, self.invoice_payment_ref,
+            self.journal_id.code, self.payment_reference,
             self.company_id.partner_id.vat or '')).replace('/', '')
         data_attach = {
             'name': fname,
@@ -33,7 +33,7 @@ class AccountInvoice(models.Model):
             'res_model': self._name,
             'res_id': self.id,
         }
-        self.l10n_mx_edi_cfdi_name = fname
+        # self.l10n_mx_edi_cfdi_name = fname
         res = self.env['ir.attachment'].with_context({}).create(data_attach)
         if self._context.get('l10n_mx_edi_invoice_type') == 'out':
             self.l10n_mx_edi_pac_status = 'signed'
@@ -68,7 +68,8 @@ class AccountInvoice(models.Model):
             return res
         # Sync SAT status if not set yet (Vendor Bills)
         res = super(AccountInvoice, self).post()
-        vendor_bills = self.filtered(lambda inv: inv.is_purchase_document() and inv.l10n_mx_edi_cfdi_name)
+        # vendor_bills = self.filtered(lambda inv: inv.is_purchase_document() and inv.l10n_mx_edi_cfdi_name)
+        vendor_bills = self.filtered(lambda inv: inv.is_purchase_document())
         vendor_bills.l10n_mx_edi_update_sat_status()
         return res
 

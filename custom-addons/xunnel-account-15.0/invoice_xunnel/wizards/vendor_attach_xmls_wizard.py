@@ -281,8 +281,9 @@ class AttachXmlsWizard(models.TransientModel):
         inv_vat_emitter = (
             inv and inv.commercial_partner_id.vat or '').upper()
         inv_amount = inv.amount_total
-        inv_folio = inv.invoice_payment_ref or ''
-        domain = [('l10n_mx_edi_cfdi_name', '!=', False)]
+        inv_folio = inv.payment_reference or ''
+        # domain = [('l10n_mx_edi_cfdi_name', '!=', False)]
+        domain = []
         if exist_supplier:
             domain += [('partner_id', 'child_of', exist_supplier.id)]
         if xml_type_of_document == 'I':
@@ -302,7 +303,7 @@ class AttachXmlsWizard(models.TransientModel):
         if xml_type_of_document == 'E' and hasattr(xml, 'CfdiRelacionados'):
             xml_related_uuid = xml.CfdiRelacionados.CfdiRelacionado.get('UUID')
             related_invoice = xml_related_uuid in inv_obj.search([
-                ('l10n_mx_edi_cfdi_name', '!=', False),
+                # ('l10n_mx_edi_cfdi_name', '!=', False),
                 ('move_type', '=', 'in_invoice')]).mapped('l10n_mx_edi_cfdi_uuid')
         omit_cfdi_related = self._context.get('omit_cfdi_related')
         force_save = False
@@ -316,7 +317,7 @@ class AttachXmlsWizard(models.TransientModel):
             ((inv_vat_receiver != xml_vat_receiver),
              {'rfc': (xml_vat_receiver, inv_vat_receiver)}),
             ((not inv_id and exist_reference),
-             {'invoice_payment_ref': (xml_name_supplier, xml_serie_folio)}),
+             {'payment_reference': (xml_name_supplier, xml_serie_folio)}),
             (version != '3.3', {'version': True}),
             ((not inv_id and not exist_supplier),
              {'supplier': xml_name_supplier}),
@@ -365,7 +366,7 @@ class AttachXmlsWizard(models.TransientModel):
 
         inv.l10n_mx_edi_cfdi = xml_str.decode('UTF-8')
         inv.generate_xml_attachment()
-        inv.invoice_payment_ref = '%s|%s' % (xml_serie_folio, xml_uuid.split('-')[0])
+        inv.payment_reference = '%s|%s' % (xml_serie_folio, xml_uuid.split('-')[0])
         invoices.update({key: {'invoice_id': inv.id}})
         if not float_is_zero(float(inv.amount_total) - xml_amount,
                              precision_digits=0):
@@ -407,13 +408,13 @@ class AttachXmlsWizard(models.TransientModel):
             'l10n_mx_force_only_folio', '')
         if serie_folio and force_folio:
             domain.append('|')
-            domain.append(('invoice_payment_ref', '=ilike', folio))
+            domain.append(('payment_reference', '=ilike', folio))
         if serie_folio:
-            domain.append(('invoice_payment_ref', '=ilike', serie_folio))
+            domain.append(('payment_reference', '=ilike', serie_folio))
             return inv_obj.search(domain, limit=1)
         domain.append(('amount_total', '>=', amount - 1))
         domain.append(('amount_total', '<=', amount + 1))
-        domain.append(('l10n_mx_edi_cfdi_name', '=', False))
+        # domain.append(('l10n_mx_edi_cfdi_name', '=', False))
         domain.append(('state', '!=', 'cancel'))
         return inv_obj.search(domain, limit=1)
 
@@ -617,7 +618,7 @@ class AttachXmlsWizard(models.TransientModel):
         uuid = False if xml_tfd is None else xml_tfd.get('UUID', '')
         invoice_id = inv_obj.create({
             'partner_id': supplier.id,
-            'invoice_payment_ref': '%s|%s' % (
+            'payment_reference': '%s|%s' % (
                 self.get_xml_folio(xml),
                 uuid.split('-')[0]),
             'invoice_payment_term_id': acc_pay_term.id,

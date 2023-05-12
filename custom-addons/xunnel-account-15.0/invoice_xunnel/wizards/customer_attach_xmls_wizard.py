@@ -188,8 +188,10 @@ class AttachXmlsWizard(models.TransientModel):
             inv and inv.commercial_partner_id.vat or '').upper()
         inv_amount = inv.amount_total
         inv_folio = inv.invoice_origin
-        domain = [('l10n_mx_edi_cfdi_name', '!=', False),
-                  ('move_type', '=', 'out_invoice'),
+        # domain = [('l10n_mx_edi_cfdi_name', '!=', False),
+        #           ('move_type', '=', 'out_invoice'),
+        #           ('id', '!=', inv_id)]
+        domain = [('move_type', '=', 'out_invoice'),
                   ('id', '!=', inv_id)]
         if exist_supplier:
             domain += [('partner_id', 'child_of', exist_supplier.id)]
@@ -258,7 +260,7 @@ class AttachXmlsWizard(models.TransientModel):
         inv.l10n_mx_edi_cfdi = xml_str.decode('UTF-8')
         inv.generate_xml_attachment()
         if tag_folio:
-            inv.invoice_payment_ref = '%s|%s' % (
+            inv.payment_reference = '%s|%s' % (
                 xml_folio, xml_uuid.split('-')[0])
         inv.action_post()
         inv.l10n_mx_edi_update_sat_status()
@@ -408,7 +410,7 @@ class AttachXmlsWizard(models.TransientModel):
             'invoice_payment_term_id': acc_pay_term.id,
             'invoice_origin': '%s|%s' % (
                 xml_folio, uuid.split('-')[0]) if tag_folio else xml_folio,
-            'invoice_payment_ref': '%s|%s' % (
+            'payment_reference': '%s|%s' % (
                 self.get_xml_folio(xml), uuid.split('-')[0]),
             'l10n_mx_edi_payment_method_id': payment_method_id.id,
             'l10n_mx_edi_usage': xml.Receptor.get('UsoCFDI', 'P01'),
