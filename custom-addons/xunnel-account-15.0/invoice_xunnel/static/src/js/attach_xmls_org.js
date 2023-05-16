@@ -70,9 +70,11 @@ var attachXmlsWizard = FieldChar.extend({
             e.preventDefault();
             this.$el.find('.alert-warning.dnd-alert').remove();
             if(Object.keys(this.files).length <= 0){
-                this.do_warn(_t('There is no files selected'));
+                // this.do_warn(_t('There is no files selected'));
+                this.displayNotification({ message: _t('There is no files selected'), type: 'danger' });
             }else if(Object.keys(this.files).length > 1 && this.getParent().state.context.active_ids){
-                this.do_warn(_t('You cannot attach more than one xml to an invoice'));
+                // this.do_warn(_t('You cannot attach more than one xml to an invoice'));
+                this.displayNotification({ message: _t('You cannot attach more than one xml to an invoice'), type: 'danger' });
             }else{
                 this.$el.find("#dragandrophandler").hide();
                 this.$el.find('#dndfooter button#save').attr('disabled', true);
@@ -138,7 +140,8 @@ var attachXmlsWizard = FieldChar.extend({
         file is not the correct one or the file is already uploaded */
         var self = this;
         if(self.uploading_files){
-            self.do_warn(_t('There are files uploading'));
+            // self.do_warn(_t('There are files uploading'));
+            this.displayNotification({ message: _t('There are files uploading'), type: 'danger' });
         }else{
             self.uploading_files = true;
             var files_used = [];
@@ -257,7 +260,8 @@ var attachXmlsWizard = FieldChar.extend({
                 }
                 self.alerts_in_queue.total -= 1;
                 self.$el.find('#filescontent div[title="'+key+'"]').remove();
-                self.do_warn(_t('XML removed, the TipoDeComprobante is not I or E.'));
+                // self.do_warn(_t('XML removed, the TipoDeComprobante is not I or E.'));
+                this.displayNotification({ message: _t('XML removed, the TipoDeComprobante is not I or E.'), type: 'danger' });
             }else{
                 var alert_parts = self.prepareWrongAlert(key, file);
 
