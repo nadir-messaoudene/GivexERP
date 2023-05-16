@@ -141,7 +141,7 @@ var attachXmlsWizard = FieldChar.extend({
         var self = this;
         if(self.uploading_files){
             // self.do_warn(_t('There are files uploading'));
-            this.displayNotification({ message: _t('There are files uploading'), type: 'danger' });
+            self.displayNotification({ message: _t('There are files uploading'), type: 'danger' });
         }else{
             self.uploading_files = true;
             var files_used = [];
@@ -261,7 +261,7 @@ var attachXmlsWizard = FieldChar.extend({
                 self.alerts_in_queue.total -= 1;
                 self.$el.find('#filescontent div[title="'+key+'"]').remove();
                 // self.do_warn(_t('XML removed, the TipoDeComprobante is not I or E.'));
-                this.displayNotification({ message: _t('XML removed, the TipoDeComprobante is not I or E.'), type: 'danger' });
+                self.displayNotification({ message: _t('XML removed, the TipoDeComprobante is not I or E.'), type: 'danger' });
             }else{
                 var alert_parts = self.prepareWrongAlert(key, file);
 
