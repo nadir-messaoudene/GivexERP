@@ -5,7 +5,3 @@
 ###############################################################################
 
 from . import payment_moneris_checkout
-from . import odoo_bambora_checkout
-
-from . import payment_moneris_cloud
-from . import odoo_clover_cloud
