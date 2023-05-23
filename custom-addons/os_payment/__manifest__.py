@@ -22,36 +22,6 @@
         'payment_apps/payment_moneris_checkout/views/payment_moneris_templates.xml',
         'payment_apps/payment_moneris_checkout/views/payment_views.xml',
 
-        # 2. Payment: Bambora Checkout
-        # 'os_payment/payment_apps/odoo_bambora_checkout/security/ir.model.access.csv',
-        'payment_apps/odoo_bambora_checkout/views/payment_bambora_templates.xml',
-        'payment_apps/odoo_bambora_checkout/views/sale_order.xml',
-        'payment_apps/odoo_bambora_checkout/views/payment_views.xml',
-        'payment_apps/odoo_bambora_checkout/views/response_status.xml',
-        'payment_apps/odoo_bambora_checkout/data/account_payment_methods.xml',
-
-
-        # ======================================================================================
-        # =============================POS Payment Methods======================================
-        # ======================================================================================
-        # 1. Clover Cloud Invoice Part
-        'payment_apps/odoo_clover_cloud/security/ir.model.access.csv',
-        'payment_apps/odoo_clover_cloud/views/clover_device.xml',
-        'payment_apps/odoo_clover_cloud/views/account_journal.xml',
-        'payment_apps/odoo_clover_cloud/views/account_move.xml',
-        'payment_apps/odoo_clover_cloud/views/account_payment_register.xml',
-        'payment_apps/odoo_clover_cloud/views/account_payment.xml',
-
-
-        # 2. Clover Cloud Invoice Part
-        'payment_apps/payment_moneris_cloud/views/account_move.xml',
-        'payment_apps/payment_moneris_cloud/views/account_journal.xml',
-        'payment_apps/payment_moneris_cloud/views/account_payment.xml',
-        'payment_apps/payment_moneris_cloud/views/account_payment_register.xml',
-        'payment_apps/payment_moneris_cloud/wizard/sh_message_wizard.xml',
-        
-
-
     ],
     'assets':
         {
@@ -59,8 +29,6 @@
                 [
                     'os_payment/payment_apps/payment_moneris_checkout/static/src/css/style.css',
                     'os_payment/payment_apps/payment_moneris_checkout/static/src/js/payment_form_inherit.js',
-                    "os_payment/payment_apps/odoo_bambora_checkout/static/src/js/payment_form.js",
-                    "os_payment/payment_apps/odoo_bambora_checkout/static/src/css/style.css",
                 ],
     },
 

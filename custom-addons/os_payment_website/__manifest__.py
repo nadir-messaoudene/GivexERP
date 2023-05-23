@@ -26,7 +26,6 @@
         # Moneris Checkout Website Part
         'payment_apps/payment_moneris_checkout/views/payment_moneris_templates.xml',
         # Bambora Checkout Website Part
-        'payment_apps/odoo_bambora_checkout/views/payment_bambora_checkout_template.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
