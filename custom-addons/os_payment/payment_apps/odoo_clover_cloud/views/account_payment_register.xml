@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_payment_register_form_inherited" model="ir.ui.view">
+            <field name="name">account_payment_invoice inherited</field>
+            <field name="model">account.payment.register</field>
+            <field name="inherit_id" ref="account.view_account_payment_register_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='journal_id']" position="after">
+                    <field name="use_clover_terminal" attrs="{'invisible':[ ('support_clover_terminal','=',False) ]}" />
+                    <field name="clover_device_id" attrs="{'invisible':[ ('use_clover_terminal','!=',True) ]}" />
+                    <field name="clover_x_pos_id" attrs="{'invisible':[ ('use_clover_terminal','!=',True) ]}" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='amount']" position="after">
+                    <field name="id" invisible="1"/>
+                </xpath>
+                <xpath expr="//form" position="inside">
+                    <field name="use_clover_terminal" invisible="1"/>
+                    <field name="support_clover_terminal" invisible="1"/>
+                    <field name="payment_type_inbound" invisible="1"/>
+                    <field name="payment_type_outbound" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='communication']" position="after">
+                    <field name="clover_idempotency_id" readonly="1" attrs="{'invisible':[('use_clover_terminal','=',False) ]}" invisible="0"/>
+                    <field name="clover_order_id" readonly="1" attrs="{'invisible':['|', ('use_clover_terminal','=',False), ('payment_type_inbound','=',True) ]}" invisible="0"/>
+                    <field name="clover_payment_id" readonly="1" attrs="{'invisible':['|', ('use_clover_terminal','=',False), ('payment_type_inbound','=',True) ]}" invisible="0"/>
+                </xpath>
+                <xpath expr="//field[@name='payment_token_id']" position="replace">
+                    <field name="payment_token_id" attrs="{'invisible':[ ('use_clover_terminal','=',True) ]}" />
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

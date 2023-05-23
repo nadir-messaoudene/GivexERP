@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Odoo Clover Connector</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="oe_styling_v8">
+      <section
+        class="oe_container pt16 mt16"
+        style="margin-left: calc(-42vw + 50%); width: 84vw"
+      >
+        <div
+          class="row o_equal_col_sm"
+          style="
+            max-width: 1540px;
+            margin: 30px auto 0 auto;
+            background-color: #cbddeb;
+            border-top: 1px solid #c5d1da;
+            padding-bottom: 120px;
+            border-radius: 15px 15px 4px 4px;
+          "
+        >
+          <div style="display: block; margin: 0 auto; text-align: center">
+            <img
+              class="img img-responsive mt24 mb8"
+              src="images/logo.png"
+              style="display: block; margin: 43px auto 0 auto; max-width: 100%"
+            />
+          </div>
+        </div>
+      </section>
+      <div class="container">
+        <section
+          class="oe_container bg-transparent fixed-top position-relative"
+          style="margin: -5rem 0 0"
+        >
+          <div class="o_equal_col_sm">
+            <div
+              class="shadow bg-white px-2"
+              style="
+                box-shadow: -40px 40px 160px 0 rgba(0, 0, 0, 0.08),
+                  -8px 8px 15px 0 rgba(120, 120, 120, 0.04),
+                  3px 3px 30px 0 rgba(0, 0, 0, 0.04) !important;
+                border-radius: 15px;
+                padding-top: 32px;
+                padding-bottom: 60px;
+                border-top: 2px solid #a8b8c4;
+              "
+            >
+              <h3
+                class="oe_slogan"
+                style="
+                  color: #254a67;
+                  font-family: 'Roboto', arial, sans-serif;
+                  font-weight: 700;
+                  text-align: center;
+                  opacity: 1;
+                  font-size: 30px;
+                  line-height: 40px;
+                  margin-bottom: 10px;
+                  margin-top: 18px;
+                "
+              >
+                Odoo Clover Connector
+              </h3>
+              <h4
+                class="oe_slogan"
+                style="
+                  padding-bottom: 30px;
+                  color: #536e82;
+                  font-family: 'Roboto', arial, sans-serif;
+                  font-weight: 400;
+                  text-align: center;
+                  font-size: 18px;
+                  line-height: 24px;
+                "
+              >
+                Odoo POS Payment using Clover Cloud Pay
+              </h4>
+              <p
+                style="
+                  padding: 0 40px 10px 40px;
+                  text-align: center;
+                  font-family: 'Roboto', arial, sans-serif;
+                  font-weight: normal;
+                  color: #000000;
+                  font-size: 15px;
+                  line-height: 24px;
+                "
+              >
+                The only Odoo Clover Connector approved by Clover. Integration
+                with Odoo POS and Invoicing.
+              </p>
+              <div
+                style="
+                  font-size: 14px;
+                  line-height: 20px;
+                  color: #666;
+                  padding-bottom: 20px;
+                  text-align: center;
+                "
+              >
+                Disclaimer: It is a base application and not functional by
+                itself. Please contact the vendor for full integration
+              </div>
+              <p>
+                <img
+                  class="img img-responsive"
+                  src="images/linehr.png"
+                  style="max-width: 100%; display: block; margin: auto"
+                />
+              </p>
+              <div class="text-center mb-3">
+                <div
+                  style="
+                    color: #474c50;
+                    font-family: 'Roboto', arial, sans-serif;
+                    font-weight: 600;
+                    text-align: center;
+                    font-size: 17px;
+                    opacity: 1;
+                    margin: 8px 0 16px;
+                  "
+                >
+                  Book a Demo
+                </div>
+                <div
+                  style="
+                    width: 30%;
+                    font-weight: 500;
+                    font-size: 15px;
+                    margin: 0 auto;
+                    border: 1px solid #0074ff;
+                    display: flex;
+                    border-radius: 10px;
+                    min-width: 400px;
+                  "
+                >
+                  <div
+                    class="text-center"
+                    style="color: #0074ff; padding: 0; min-width: 100%"
+                  >
+                    <span
+                      class="bg-white position-relative shadow"
+                      style="
+                        padding: 18px 0 0 0;
+                        color: #0f1e40;
+                        float: left;
+                        font-weight: 600;
+                        width: 85px;
+                        vertical-align: middle;
+                        border-bottom-left-radius: 9px;
+                        border-top-left-radius: 9px;
+                        font-size: 10px;
+                        height: 100%;
+                      "
+                    >
+                      <span class="text-left d-inline-block pl-2"
+                        >COPY LINK</span
+                      >
+                    </span>
+                    <p
+                      style="
+                        font-size: 12px;
+                        margin-bottom: 0;
+                        vertical-align: middle;
+                        border-top-right-radius: 9px;
+                        border-bottom-right-radius: 9px;
+                        line-height: 50px;
+                        color: #0074ff;
+                        font-weight: 500;
+                        padding: 0 15px 0 80px;
+                      "
+                      class="text-center mb0"
+                    >
+                      https://odoo.syncoria.com/calendar/clover-demo-1
+                    </p>
+                  </div>
+                </div>
+                <p
+                  class="text-center my-2"
+                  style="color: #091e42; font-size: 18px; font-weight: 500"
+                >
+                  or
+                </p>
+
+                <a
+                  href="mailto:clover@syncoria.com"
+                  target="_blank"
+                  style="
+                    text-decoration: none;
+                    background-color: #ffffff;
+                    color: #0074ff;
+                    display: inline-block;
+                    padding: 7px 30px;
+                    border: 1px solid #0074ff;
+                    border-radius: 6px;
+                  "
+                >
+                  <span
+                    style="
+                      color: #0074ff;
+                      font-weight: 600;
+                      font-size: 15px;
+                      line-height: 34px;
+                      vertical-align: middle;
+                    "
+                    >Email Us</span
+                  >
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="oe_container pb-5">
+          <div class="mt64 mb64">
+            <h2
+              style="
+                color: #254a67;
+                font-family: 'Roboto', arial, sans-serif;
+                text-align: center;
+                margin: 75px auto 15px auto;
+              "
+              class="oe_slogan"
+            >
+              Video
+            </h2>
+            <div class="row">
+              <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                <div style="text-align: center; padding: 15px 15px 35px 15px">
+                  <!-- <iframe
+                    width="560"
+                    height="315"
+                    src="https://www.youtube.com/embed/mTtnXf0gZrc"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen
+                  ></iframe> -->
+                  <!-- <div class="embed-responsive embed-responsive-16by9">
+                    <iframe
+                      class="embed-responsive-item"
+                      src="https://www.youtube.com/embed/mTtnXf0gZrc?autoplay=1"
+                      frameborder="0"
+                      allowfullscreen="true"
+                    ></iframe>
+                  </div> -->
+                  <a
+                    style="position: relative"
+                    href="https://youtu.be/mTtnXf0gZrc"
+                    target="_blank"
+                  >
+                    <img
+                      style="
+                        height: 60px;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%); ;
+                      "
+                      src="images/play.png"
+                      alt="play"
+                    />
+                    <img
+                      src="https://i.ytimg.com/vi/mTtnXf0gZrc/sddefault.jpg"
+                      class="img img-fluid"
+                      style="object-fit: fill; height: 400"
+                      alt="thumb"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt64 mb64">
+            <h2
+              style="
+                color: #254a67;
+                font-family: 'Roboto', arial, sans-serif;
+                text-align: center;
+                margin: 45px auto 45px auto;
+              "
+              class="oe_slogan"
+            >
+              Highlights
+            </h2>
+            <div class="row">
+              <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                <div
+                  style="
+                    border-radius: 6px;
+                    margin-bottom: 30px;
+                    text-align: center;
+                    padding: 35px 15px 35px 15px;
+                    box-shadow: 0 0 5px #cdcbd6;
+                    border: 1px solid #ddd;
+                  "
+                >
+                  <h3
+                    style="
+                      font-family: 'Roboto', arial, sans-serif;
+                      font-weight: 700;
+                      line-height: 30px;
+                      font-size: 20px;
+                      color: #254a67;
+                    "
+                  >
+                    Payment through Clover Cloud Pay
+                  </h3>
+                  <img
+                    class="img img-responsive"
+                    src="images/v1-1.png"
+                    style="max-width: 100%; display: block; margin: auto"
+                  />
+                </div>
+              </div>
+              <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                <div
+                  style="
+                    border-radius: 6px;
+                    margin-bottom: 30px;
+                    text-align: center;
+                    padding: 35px 15px 35px 15px;
+                    box-shadow: 0 0 5px #cdcbd6;
+                    border: 1px solid #ddd;
+                  "
+                >
+                  <h3
+                    style="
+                      font-family: 'Roboto', arial, sans-serif;
+                      font-weight: 700;
+                      line-height: 30px;
+                      font-size: 20px;
+                      color: #254a67;
+                    "
+                  >
+                    Refund in Odoo POS
+                  </h3>
+                  <img
+                    class="img img-responsive"
+                    src="images/v1-2.png"
+                    style="max-width: 100%; display: block; margin: auto"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt64 mb64">
+            <h2
+              style="
+                color: #254a67;
+                font-family: 'Roboto', arial, sans-serif;
+                text-align: center;
+                margin: 45px auto 45px auto;
+              "
+              class="oe_slogan"
+            >
+              Features
+            </h2>
+            <section style="border-radius: 6px; background-color: #f7f7f7">
+              <h3
+                style="
+                  padding: 10px 0;
+                  font-size: 18px;
+                  line-height: 26px;
+                  font-family: 'Roboto', arial, sans-serif;
+                  font-weight: 500;
+                  color: #091e42;
+                  text-align: center;
+                  margin-bottom: 10px;
+                "
+              >
+                PAYMENTS
+              </h3>
+            </section>
+            <div class="row">
+              <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                <div
+                  style="
+                    border-radius: 6px;
+                    margin-bottom: 30px;
+                    text-align: center;
+                    padding: 35px 15px 35px 15px;
+                    box-shadow: 0 0 5px #cdcbd6;
+                    border: 1px solid #ddd;
+                  "
+                >
+                  <h4
+                    style="
+                      font-family: 'Roboto', arial, sans-serif;
+                      font-weight: 700;
+                      line-height: 30px;
+                      font-size: 20px;
+                      color: #254a67;
+                    "
+                  >
+                    Select Payment Method
+                  </h4>
+                  <img
+                    class="img img-responsive"
+                    src="images/V1-01.jpg"
+                    style="max-width: 100%; display: block; margin: auto"
+                  />
+                </div>
+              </div>
+              <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                <div
+                  style="
+                    border-radius: 6px;
+                    margin-bottom: 30px;
+                    text-align: center;
+                    padding: 35px 15px 35px 15px;
+                    box-shadow: 0 0 5px #cdcbd6;
+                    border: 1px solid #ddd;
+                  "
+                >
+                  <h4
+                    style="
+                      font-family: 'Roboto', arial, sans-serif;
+                      font-weight: 700;
+                      line-height: 30px;
+                      font-size: 20px;
+                      color: #254a67;
+                    "
+                  >
+                    Payment Processing
+                  </h4>
+                  <img
+                    class="img img-responsive"
+                    src="images/V1-02.jpg"
+                    style="max-width: 100%; display: block; margin: auto"
+                  />
+                </div>
+              </div>
+            </div>
+            <section style="border-radius: 6px; background-color: #f7f7f7">
+              <h3
+                style="
+                  padding: 10px 0;
+                  font-size: 18px;
+                  line-height: 26px;
+                  font-family: 'Roboto', arial, sans-serif;
+                  font-weight: 500;
+                  color: #091e42;
+                  text-align: center;
+                  margin-bottom: 10px;
+                "
+              >
+                REFUNDS
+              </h3>
+            </section>
+            <div class="row">
+              <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                <div
+                  style="
+                    border-radius: 6px;
+                    margin-bottom: 30px;
+                    text-align: center;
+                    padding: 35px 15px 35px 15px;
+                    box-shadow: 0 0 5px #cdcbd6;
+                    border: 1px solid #ddd;
+                  "
+                >
+                  <h4
+                    style="
+                      font-family: 'Roboto', arial, sans-serif;
+                      font-weight: 700;
+                      line-height: 30px;
+                      font-size: 20px;
+                      color: #254a67;
+                    "
+                  >
+                    Payment Refund Processing
+                  </h4>
+                  <img
+                    class="img img-responsive"
+                    src="images/V1-03.jpg"
+                    style="max-width: 100%; display: block; margin: auto"
+                  />
+                </div>
+              </div>
+              <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                <div
+                  style="
+                    border-radius: 6px;
+                    margin-bottom: 30px;
+                    text-align: center;
+                    padding: 35px 15px 35px 15px;
+                    box-shadow: 0 0 5px #cdcbd6;
+                    border: 1px solid #ddd;
+                  "
+                >
+                  <h4
+                    style="
+                      font-family: 'Roboto', arial, sans-serif;
+                      font-weight: 700;
+                      line-height: 30px;
+                      font-size: 20px;
+                      color: #254a67;
+                    "
+                  >
+                    How to request a Refund
+                  </h4>
+                  <img
+                    class="img img-responsive"
+                    src="images/V1-04.jpg"
+                    style="max-width: 100%; display: block; margin: auto"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script defer>
+      var video = document.querySelector("#demo_video");
+
+      if (video.hasAttribute("controls")) {
+        video.removeAttribute("controls");
+      } else {
+        video.setAttribute("controls", "controls");
+      }
+    </script>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
