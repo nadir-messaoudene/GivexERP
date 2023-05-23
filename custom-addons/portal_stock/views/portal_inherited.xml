@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <template id="portal_product_on_hand_inherit" name="Portal Product on-Hand" customize_show="True"
+              inherit_id="portal.portal_my_home" priority="100">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Products On-Hand</t>
+                <t t-set="url" t-value="'/my/products_on_hand'"/>
+            </t>
+        </xpath>
+    </template>
+
+     <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="portal.portal_breadcrumbs" priority="40">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li class="breadcrumb-item #{'active ' if not products_on_hand else ''}"><t t-if="products_on_hand">Products On-Handy</t></li>
+        </xpath>
+     </template>
+
+    <template id="portal_product_on_hand" name="Portal on-Hand">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Products On-Handy</t>
+            </t>
+            <t t-call="portal.portal_table">
+                <thead>
+                    <tr t-attf-class="{{'thead-light' if not groupby == 'none' else ''}}">
+                        <th class="text-left">Product</th>
+                        <th class="text-left">Quantity</th>
+                        <th class="text-left">UOM</th>
+                        <th class="text-left">Company</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="move_line" t-as="line">
+                        <tr>
+                            <td class="text-left">
+                                <span t-esc="line[0].product_id.display_name"/>
+                            </td>
+                            <td class="text-left">
+                                <span t-esc="sum(line.filtered(lambda l: l.picking_code == 'outgoing').mapped('qty_done')) - sum(line.filtered(lambda l: l.picking_code == 'incoming').mapped('qty_done'))"/>
+                            </td>
+                            <td class="text-left">
+                                <span t-esc="line[0].product_uom_id.display_name"/>
+                            </td>
+                            <td class="text-left">
+                                <span t-esc="line[0].company_id.display_name"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+            <!-- <form class="s_website_form form-horizontal container-fluid mt32">
+                <label class="col-md-3 col-sm-4 control-label" for="name">Products On-Hand</label>
+                <div class="col-sm-4 col-md-6 o_website_product_search">
+                    <input type="text" class="form-control o_portal_product_input" id="product_name_input"
+                           name="products_search" required="" placeholder="Search products..."/>
+                    <div aria-label="Search" title="Search" clickable="1" class="btn oe_search_button btn-primary"
+                         style="position: absolute;top: 0;right: 16px;background: transparent;border: none;">
+                        <i class="fa fa-search" style="color: black;"/>
+                    </div>
+                </div>
+                <div>
+                    <div class="product_results_table col-sm-4 col-md-6"/>
+                </div>
+            </form> -->
+        </t>
+    </template>
+</odoo>
