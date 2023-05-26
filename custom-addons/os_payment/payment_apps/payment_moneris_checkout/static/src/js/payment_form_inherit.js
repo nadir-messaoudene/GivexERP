@@ -49,7 +49,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
         var inputsForm = $("input", acquirerForm);
         var formData = this.getMonerisFormData(inputsForm);
       } catch (error) {
-        console.log("error ===>>>", error);
+        //console.log("error ===>>>", error);
         var formData = this.getMonerisFormData(inputs);
 
       }
@@ -67,7 +67,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
      * @return {Promise}
      */
     _prepareInlineForm: function (provider, paymentOptionId, flow) {
-      console.log("_prepareInlineForm");
+      //console.log("_prepareInlineForm");
       if (provider !== "monerischeckout") {
         return this._super(...arguments);
       }
@@ -155,9 +155,9 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
      * @return {Promise}
      */
     _processDirectPayment: function (provider, acquirerId, processingValues) {
-      console.log("provider ===>>>", provider);
-      console.log("acquirerId ===>>>", acquirerId);
-      console.log("processingValues ===>>>", processingValues);
+      //console.log("provider ===>>>", provider);
+      //console.log("acquirerId ===>>>", acquirerId);
+      //console.log("processingValues ===>>>", processingValues);
 
       if (provider !== "monerischeckout") {
         return this._super(...arguments);
@@ -191,7 +191,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
       }
 
       // Create the transaction and retrieve the processing values
-      console.log("--------------------");
+      //console.log("--------------------");
       return this._rpc({
         route: this.txContext.transactionRoute,
         params: this._prepareTransactionRouteParams(
@@ -230,9 +230,9 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
      * @return {boolean} - Whether all elements pass the validation constraints
      */
     _validateFormInputs: function (acquirerId) {
-      console.log("_validateFormInputs ===>>>");
+      //console.log("_validateFormInputs ===>>>");
       const inputs = Object.values(this._getInlineFormInputs(acquirerId));
-      console.log("inputs ===>>>", inputs);
+      //console.log("inputs ===>>>", inputs);
       return inputs.every((element) => element.reportValidity());
     },
 
@@ -282,7 +282,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
      * @param {Boolean} addPmEvent
      */
     _createMonerisToken: function (ev, checked_radio, addPmEvent) {
-      console.log("_createMonerisToken");
+      //console.log("_createMonerisToken");
       this.txContext = ev.txContext;
 
       var acquirerForm = this.$(".moneris_form");
@@ -296,11 +296,11 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
       }
       var checked_radio = this.$('input[name="o_payment_radio"]:checked');
       var acquirer_id = this.getMonerisAcquirerIdFromRadio(checked_radio);
-      console.log("acquirer_id ===>>>", acquirer_id);
+      //console.log("acquirer_id ===>>>", acquirer_id);
       this.txContext.acquirerId = acquirer_id;
 
       function myPageLoad(data) {
-        console.log("myPageLoad::data ==>>>", data);
+        //console.log("myPageLoad::data ==>>>", data);
         data = JSON.parse(data);
         if (data.handler == "page_loaded") {
           if (data.response_code == "001") {
@@ -313,7 +313,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
               btnCheckout.style.display = "none";
             }
           } else {
-            console.log("myPageLoad failure--->", data.response_code);
+            //console.log("myPageLoad failure--->", data.response_code);
             if (data.ticket) {
               myCheckout.closeCheckout([data.ticket]);
             }
@@ -353,29 +353,29 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
       }
 
       function myErrorEvent(data) {
-        console.log("myErrorEvent::data ==>>>", data);
+        //console.log("myErrorEvent::data ==>>>", data);
         // When an error occurs during the checkout process. This requires the Moneris Checkout
         // session to be closed using the closeCheckout function
         myCheckout.closeCheckout([data.ticket]);
       }
 
       function myCancelTransaction(data) {
-        console.log("myCancelTransaction::data ==>>>", data);
+        //console.log("myCancelTransaction::data ==>>>", data);
         myCheckout.closeCheckout([data.ticket]);
         var btnPay = document.getElementById("o_payment_form_pay");
         btnPay.disabled = false;
       }
 
       function myPaymentReceipt(data) {
-        console.log("myPaymentReceipt:data--->", data);
+        //console.log("myPaymentReceipt:data--->", data);
 
         var response = JSON.parse(data);
-        console.log("response--->", response);
+        //console.log("response--->", response);
 
         if (response.response_code == "001") {
           formData.ticket_no = response.ticket;
           var checked_radio = $('input[name="o_payment_radio"]:checked');
-          console.log("checked_radio--->", checked_radio);
+          //console.log("checked_radio--->", checked_radio);
 
           if (checked_radio.length > 0) {
             var acquirer = checked_radio[0];
@@ -389,12 +389,12 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
               }
             }
 
-            console.log("acquirer--->", acquirer);
-            console.log("provider--->", acquirer.dataset.provider);
+            //console.log("acquirer--->", acquirer);
+            //console.log("provider--->", acquirer.dataset.provider);
 
             if (acquirer.dataset.provider == "monerischeckout") {
               var acquirer_id = acquirer.dataset.acquirerID;
-              console.log("acquirer_id--->", acquirer_id);
+              //console.log("acquirer_id--->", acquirer_id);
 
               if (typeof data == "string") {
                 data = JSON.parse(data);
@@ -402,7 +402,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
 
               if (data.ticket || data.name) {
                 var ticket = data.name || data.ticket;
-                console.log("ticket--->", ticket);
+                //console.log("ticket--->", ticket);
                 data.ticket = ticket;
                 var request = {
                   acquirer_id: acquirer.dataset.acquirerID,
@@ -410,7 +410,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
                   preload_response: data,
                   formData: formData,
                 };
-                console.log("request--->", request);
+                //console.log("request--->", request);
 
                 self
                   ._rpc({
@@ -418,7 +418,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
                     params: request,
                   })
                   .then(function (receipt) {
-                    console.log("receipt response", receipt);
+                    //console.log("receipt response", receipt);
                     if (receipt) {
                       if (receipt.response.success != "true") {
                         let error = "";
@@ -436,20 +436,20 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
                       if (window.location.href.indexOf("asda") > -1) {
                         location.reload();
                       }else{
-                        debugger
+                         //debugger
                         var acquirerId = self.txContext.acquirerId;
                         var params = self._prepareMonericCheckoutTransactionRouteParams('monerischeckout', acquirerId, 'direct');
 
-                        console.log("acquirerId", self.txContext.acquirerId);
-                        console.log("transactionRoute", self.txContext.transactionRoute);
-                        console.log("params", params);
+                        //console.log("acquirerId", self.txContext.acquirerId);
+                        //console.log("transactionRoute", self.txContext.transactionRoute);
+                        //console.log("params", params);
                         // Create the transaction and retrieve the processing values
 
                         return self._rpc({
                             route: self.txContext.transactionRoute,
                             params: self._prepareMonericCheckoutTransactionRouteParams('monerischeckout', acquirerId, 'direct'),
                         }).then(processingValues => {
-                            console.log("processingValues", processingValues);
+                            //console.log("processingValues", processingValues);
                             // Initiate the payment
                             return self._rpc({
                                 route: '/payment/monerischeckout/payment',
@@ -517,14 +517,14 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
       }
 
       function myErrorEvent(data) {
-        console.log("myErrorEvent::data ==>>>", data);
+        //console.log("myErrorEvent::data ==>>>", data);
         // When an error occurs during the checkout process. This requires the Moneris Checkout
         // session to be closed using the closeCheckout function
         myCheckout.closeCheckout([data.ticket]);
       }
 
       function myPaymentComplete(data) {
-        debugger
+         //debugger
         var self = this;
         self.myPaymentReceipt(data);
       }
@@ -546,7 +546,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
           if (data.response_code == "001") {
             msg =
               "Cardholder clicked Checkout button and payment processing is started.";
-            console.log(msg);
+            //console.log(msg);
           }
         }
       }
@@ -561,16 +561,16 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
             window.location.href.includes("/my/payment_method") ||
             window.location.href.includes("/website_payment")
           ) {
-            console.log("monerischeckout ===>>>>", checked_radio[0].dataset.provider)
-            debugger
+            //console.log("monerischeckout ===>>>>", checked_radio[0].dataset.provider)
+             //debugger
             var myCheckout = new monerisCheckout();
             var self = this;
 
-            console.log("Create  myCheckout==>>>");
-            console.log(
-              "  formData.acquirer_state==>>>",
-              formData.acquirer_state
-            );
+            //console.log("Create  myCheckout==>>>");
+            // console.log(
+            //   "  formData.acquirer_state==>>>",
+            //   formData.acquirer_state
+            // );
 
             if (formData.acquirer_state === "test") {
               myCheckout.setMode("qa");
@@ -609,9 +609,9 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
               ajax
                   .jsonRpc("/payment/monerischeckout/preload", "call", data)
                   .then(function (result) {
-                    debugger
+                     //debugger
                     var result = JSON.parse(result);
-                    console.log("result", result);
+                    //console.log("result", result);
                     if (result.errors_message){
                         throw (result.errors_message)
                     }
@@ -619,7 +619,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
                       var ticket = result.response.ticket;
                       self._enableButton();
 
-                      console.log("remove class[d-none]");
+                      //console.log("remove class[d-none]");
                       $.unblockUI();
 
                       const $submitButton = $('button[name="o_payment_submit_button"]');
@@ -645,7 +645,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
 
                     if (result.response.success == "false") {
                       try {
-                        console.log("payment_method", window.location.href.includes("/my/payment_method"));
+                        //console.log("payment_method", window.location.href.includes("/my/payment_method"));
                         if (window.location.href.includes("/my/payment_method")) {
                         } else {
                           var monerisBtnCncl = document.getElementById("monerisBtnCncl");
@@ -654,7 +654,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
                           }
                         }
 
-                        console.log("**********ENDS**************");
+                        //console.log("**********ENDS**************");
 
 
                       } catch (error) {
@@ -676,7 +676,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
                     }
 
                   }).guardedCatch(function(error) {
-                    debugger
+                     //debugger
                     self._displayError(
                         _t("Server Error"),
                         _t("An error occurred when displayed this payment form ."),
@@ -685,7 +685,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
                 });;
             }
             catch (e) {
-              debugger
+               //debugger
                self._displayError(
                         _t("Server Error"),
                         _t("An error occurred when displayed this payment form."),
@@ -695,7 +695,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
           }
         }
       }else{
-        console.log("Not Moneris Checkout")
+        //console.log("Not Moneris Checkout")
       }
     },
 
@@ -708,7 +708,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
     },
 
     payMonerisEvent: function (ev) {
-      console.log("payMonerisEvent");
+      //console.log("payMonerisEvent");
       ev.preventDefault();
       var checked_radio = this.$('input[name="o_payment_radio"]:checked');
 
@@ -770,7 +770,7 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
 });
 
   function monerisCancel() {
-    debugger
+     //debugger
     // var btnPay = document.getElementById("o_payment_form_pay");
     // if (window.location.href.includes('/my/payment_method')) {} else {
     //     btnPay.disabled = false;

@@ -3,6 +3,7 @@ import base64
 import requests
 
 from odoo.http import request
+from odoo import fields
 
 
 def image_processing(image_path):
