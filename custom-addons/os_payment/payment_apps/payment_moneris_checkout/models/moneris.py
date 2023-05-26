@@ -1064,8 +1064,8 @@ class TxMoneris(models.Model):
                                 '/my/invoices/')[1].split('?')[0]
                             move_id = self.env['account.move'].sudo().browse(
                                 int(invoice_id))
-                            # if '/my/invoices/' in href and self.state == "done":
-                            #     self._reconcile_after_done()
+                            if '/my/invoices/' in href and self.state == "done":
+                                self._reconcile_after_done()
                         if '/pay/invoice' in href:
                             invoice_id = href.split(
                                 '/pay/invoice')[1].split('?')[0]
