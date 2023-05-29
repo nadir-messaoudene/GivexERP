@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     "name": "Purchase Order request Approved after lock",
-    "summary": "Enable PO approval after being locked",
+    "summary": "Enable Purchase Order approval after being locked",
     "version": "15.0.1.0.0",
     "category": "purchase_stock",
     'category': 'purchase',
@@ -11,4 +11,7 @@
     "application": False,
     "installable": True,
     "depends": ["purchase"],
+    "data": [
+        "views/purchase_order_view.xml",
+    ],
 }

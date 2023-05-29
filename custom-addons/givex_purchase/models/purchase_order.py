@@ -1,10 +1,21 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
+
 
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
+
+    editing = fields.Boolean(default=False)
+
+    @api.onchange('order_line', 'order_line.price_unit', 'order_line.product_qty')
+    def onchangeOrderLine(self):
+        self.editing = True
+
+    def button_confirm(self):
+        self.editing = False
+        return super(PurchaseOrder, self).button_confirm()
 
     def write(self, values):
         new_status = False
@@ -24,5 +35,4 @@ class PurchaseOrder(models.Model):
                 if new_status:
                     values['state'] = 'draft'
                     return super(PurchaseOrder, self).write(values)
-
         return super(PurchaseOrder, self).write(values)
