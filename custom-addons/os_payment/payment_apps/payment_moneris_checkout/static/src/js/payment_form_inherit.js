@@ -612,8 +612,9 @@ odoo.define("payment_moneris_checkout.payment_form", function (require) {
                      //debugger
                     var result = JSON.parse(result);
                     //console.log("result", result);
-                    if (result.errors_message){
-                        throw (result.errors_message)
+                    let response_error = result.errors_message || result.errors
+                    if (response_error){
+                        throw (response_error)
                     }
                     if (result.response.ticket) {
                       var ticket = result.response.ticket;

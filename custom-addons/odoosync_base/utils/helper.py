@@ -22,9 +22,9 @@ def is_module_installed(module_name):
     return False
 
 def convert_curency(acq,amount,order_currency):
-    currency_object = request.env['res.currency'].sudo().with_context(company_id=acq.company_id).search([('name','=','CAD')],limit=1)
+    # currency_object = request.env['res.currency'].sudo().with_context(company_id=acq.company_id).search([('name','=','CAD')],limit=1)
     company_currency = acq.company_id.currency_id
-    company_currency = currency_object
+    # company_currency = currency_object
     final_amount =  round(order_currency._convert(float(amount),company_currency,acq.company_id,fields.Date.today()),4)
     final_amount_string = f'{final_amount:.2f}'
     return final_amount_string
