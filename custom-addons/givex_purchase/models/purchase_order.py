@@ -30,9 +30,8 @@ class PurchaseOrder(models.Model):
             curr_state = self.env.cr.execute("SELECT state FROM purchase_order WHERE id = {0}".format(active_id))
             if curr_state != 'purchase':
                 for order in purchase_order:
-                    if order.state == 'purchase':
+                    if order.state == 'purchase' and self.editing == True:
                         new_status = True
                 if new_status:
                     values['state'] = 'draft'
-                    return super(PurchaseOrder, self).write(values)
         return super(PurchaseOrder, self).write(values)
