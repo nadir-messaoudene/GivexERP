@@ -7,7 +7,7 @@ from odoo import api, fields, models, _
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
-    editing = fields.Boolean(default=True, dtore=True)
+    editing = fields.Boolean(default=True)
 
     @api.onchange('order_line', 'order_line.price_unit', 'order_line.product_qty')
     def onchangeOrderLine(self):
