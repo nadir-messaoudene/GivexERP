@@ -91,7 +91,7 @@ class AccountBatchPayment(models.Model):
                             or "",
                             payment.ref and payment.ref[:18] or "",
                             destination_account_name
-                            and destination_account_name[:25]
+                            and destination_account_name
                             or "",
                             payment.date or "",
                         ]
