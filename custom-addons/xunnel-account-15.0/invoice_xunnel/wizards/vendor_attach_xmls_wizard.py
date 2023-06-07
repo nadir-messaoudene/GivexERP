@@ -29,7 +29,7 @@ class AttachXmlsWizard(models.TransientModel):
         type_inv = 'in_invoice' if self._context.get(
             'l10n_mx_edi_invoice_type') == 'in' else 'out_invoice'
         return self.env['account.move'].with_context(
-            default_type=type_inv)._get_default_journal()
+            default_company_id=self.env.company.id, default_move_type=type_inv)._get_default_journal()
 
     @api.model
     def _get_journal_domain(self):
