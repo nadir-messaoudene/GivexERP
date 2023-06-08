@@ -43,6 +43,13 @@
                     </div>
                     <field name="distance" attrs="{'invisible': [('is_from_to_address_required', '=', False)]}"/>
                 </xpath>
+
+                <xpath expr="//field[@name='tax_ids']" position="after">
+                    <field
+                        name="amount_tax"
+                        attrs="{'invisible': [('tax_ids', '=', [])]}"
+                    />
+                </xpath>
             </field>
         </record>
 
@@ -54,6 +61,21 @@
                 <xpath expr="//form/sheet/group/group[@name='employee_details']/field[@name='bank_journal_id']" position="attributes">
                     <attribute name="attrs">{'invisible': [('payment_mode', 'not in', ('company_account', 'company_cc'))]}</attribute>
                 </xpath>
+                <xpath expr="//form/sheet/notebook/page[@name='expenses']/field[@name='expense_line_ids']/tree/field[@name='tax_ids']" position="after">
+                    <field
+                        name="amount_tax"
+                        attrs="{'invisible': [('tax_ids', '=', [])]}"
+                    />
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[@name='expenses']/group[@name='expense_total']/div" position="before">
+                    <field name="tax_adjust" invisible="1" force_save="1" />
+                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                        <label for="total_amount_tax"/>
+                    </div>
+
+                    <field name="total_amount_tax" attrs="{'readonly': [('is_editable', '=', False)]}" nolabel="1" class="oe_subtotal_footer_separator"/>
+                </xpath>
+
             </field>
         </record>
 
