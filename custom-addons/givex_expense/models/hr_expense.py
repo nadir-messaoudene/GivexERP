@@ -242,8 +242,8 @@ class HrExpenseSheet(models.Model):
     def _compute_total_amount_tax(self):
         total_tax = 0.0
         for sheet in self:
-            # if sheet.tax_adjust:
-            #     continue
+            if sheet.tax_adjust:
+                continue
             for expense_line in sheet.expense_line_ids:
                 total_tax += expense_line.amount_tax
             sheet.total_amount_tax = total_tax
