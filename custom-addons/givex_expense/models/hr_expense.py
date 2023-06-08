@@ -204,6 +204,7 @@ class HrExpenseSheet(models.Model):
     _inherit = "hr.expense.sheet"
 
     total_amount_tax = fields.Monetary(string='Tax', store=True, readonly=True,
+                                       inverse='_set_total_amount_tax',
                                        compute='_compute_total_amount_tax')
     tax_adjust = fields.Boolean(
         help="trigger line with adjust tax"
@@ -230,20 +231,29 @@ class HrExpenseSheet(models.Model):
             total_amount_tax += sum(t.get("amount", 0.0) for t in taxes.get("taxes", []))
         return total_amount_tax
 
-    @api.onchange("total_amount_tax")
+    @api.onchange("total_amount_tax", "expense_line_ids.tax_ids")
     def _onchange_amount_tax(self):
         for sheet in self:
-            if sheet.total_amount_tax != sheet._get_expense_total_amount_tax():
+            # if sheet.total_amount_tax != sheet._get_expense_total_amount_tax():
+            if sheet.total_amount_tax != sheet._origin.total_amount_tax:
                 sheet.tax_adjust = True
             else:
                 sheet.tax_adjust = False
+
+    @api.depends("expense_line_ids.amount_tax", "tax_adjust")
+    def _set_total_amount_tax(self):
+        total_tax = 0.0
+        for sheet in self:
+            if sheet.tax_adjust:
+                continue
+            for expense_line in sheet.expense_line_ids:
+                total_tax += expense_line.amount_tax
+            sheet.total_amount_tax = total_tax
 
     @api.depends("expense_line_ids.amount_tax")
     def _compute_total_amount_tax(self):
         total_tax = 0.0
         for sheet in self:
-            if sheet.tax_adjust:
-                continue
             for expense_line in sheet.expense_line_ids:
                 total_tax += expense_line.amount_tax
             sheet.total_amount_tax = total_tax
