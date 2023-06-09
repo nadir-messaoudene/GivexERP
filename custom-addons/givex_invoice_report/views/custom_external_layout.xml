@@ -454,24 +454,7 @@
       </div>
 
       <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
-          <div class="row last-page">
-              <div class="col-6">
-                  <div >
-                                    <p><br>GST/HST #: 88992 7851 RT0001</br>
-                                    <br>BC PST #: 1006-1954</br>
-                                    <br>MB RST #: 084893-7</br>
-                                    <br>QC QST #: 1216979512 TQ0001</br>
-                                    <br>SK PST #: 2424794</br>
-                                    </p>
-                                </div>
-              </div>
-              <div class="col-6">
-                  <table class="table table-sm" style="page-break-inside: avoid; border: 1px solid; font-size: 10pt">
-                                <t t-set="tax_totals" t-value="json.loads(o.tax_totals_json)"/>
-                                    <t t-call="account.document_tax_totals"/>
-                            </table>
-              </div>
-          </div>
+
           <div class="text-center" style="border-top: 1px solid black;">
               <div name="financial_infos">
                   <span t-field="company.report_footer"/>
