@@ -14,9 +14,10 @@ class ProductsController(http.Controller):
     @http.route('/my/products_on_hand', type='http', auth="user", website=True)
     def portal_products(self, **kw):
         partner = request.env['res.users'].browse(request.uid).partner_id
+        parent_partner = request.env['res.users'].browse(request.uid).partner_id.partner_id
         # move_line = request.env['stock.move.line'].sudo().read_group([('picking_id.partner_id', '=', partner.id)], ['product_id:count'], ['product_uom_id', 'qty_done', 'company_id'], lazy=False, orderby='qty_done asc')
         # def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        move_line = request.env['stock.move.line'].sudo().search([('picking_id.partner_id', '=', partner.id)])
+        move_line = request.env['stock.move.line'].sudo().search([('picking_id.partner_id', 'in', (partner.id, parent_partner.id))])
         print("move_line >>>>>>>>>>>>>>>>>>", move_line, len(move_line))
         move_line_list_by_product = []
         move_line_list_by_product_company = []
