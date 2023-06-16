@@ -801,7 +801,7 @@
 
                     </tbody>
                 </table>
-                Reference: <span t-esc="ref"/>
+                Reference: <span t-esc="o.ref"/>
                 <div class="mt-4 row last-page" style="page-break-inside: avoid;" >
               <div class="col-6">
                   <div >
