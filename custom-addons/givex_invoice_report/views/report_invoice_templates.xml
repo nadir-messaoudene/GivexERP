@@ -801,7 +801,8 @@
 
                     </tbody>
                 </table>
-                 <div class="row last-page" style="page-break-inside: avoid;" >
+                Reference: <span t-esc="ref"/>
+                <div class="mt-4 row last-page" style="page-break-inside: avoid;" >
               <div class="col-6">
                   <div >
                                     <p><br>GST/HST #: 88992 7851 RT0001</br>
