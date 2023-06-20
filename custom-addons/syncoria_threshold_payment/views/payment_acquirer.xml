@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+        <record id="acquirer_form_syncoria_threshold_payment" model="ir.ui.view">
+            <field name="name">payment.acquirer.form.inherit.syncoria.threshold.payment</field>
+            <field name="model">payment.acquirer</field>
+            <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="acquirer"]' position='inside'>
+                    <group string="Threshold">
+                        <field name="threshold_value"/>
+                        <field name="apply_threshold_website_portal"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

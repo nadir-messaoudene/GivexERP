@@ -1,0 +1,22 @@
+<odoo>
+
+    <template id="portal_invoice_page_inherit_syncoria_threshold_payment" name="Payment on My Invoices" inherit_id="account_payment.portal_invoice_page_inherit_payment">
+        <xpath expr="//li[hasclass('list-group-item')][1]/div[1]" position="replace">
+            <a href="#" t-if="not over_threshold and invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total and invoice.move_type == 'out_invoice' and (pending_manual_txs or not tx_ids or invoice.amount_residual)"
+
+                class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#pay_with">
+                <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now
+            </a>
+        </xpath>
+        <xpath expr="//div[@id='portal_pay']" position="after">
+            <t t-if="over_threshold">
+                <div class="alert alert-warning" role="alert">
+                    Can not process a payment over the threshold.
+                </div>
+            </t>
+        </xpath>
+
+        
+    </template>
+    
+</odoo>
