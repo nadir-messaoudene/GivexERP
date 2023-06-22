@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hr_vehicle_allowance_type_manager,access_hr_vehicle_allowance_type manager,givex_expense.model_hr_vehicle_allowance_type,hr_expense.group_hr_expense_manager,1,1,1,1
 access_hr_vehicle_allowance_type_account_user,access_hr_vehicle_allowance_type account user,givex_expense.model_hr_vehicle_allowance_type,account.group_account_user,1,1,1,1
+access_hr_vehicle_allowance_type_user,access_hr_vehicle_allowance_type user,givex_expense.model_hr_vehicle_allowance_type,base.group__user,1,0,0,0
 
