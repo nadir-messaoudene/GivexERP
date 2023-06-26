@@ -17,10 +17,12 @@ class ProductsController(http.Controller):
         partner_ids = []
         if partner:
             partner_ids.append(partner.id)
-            child_ids = request.env['res.partner']
+            child_ids = request.env['res.partner'].sudo().search(([('parent_id', '=', partner.id)]))
+            print("child_ids >>>>>>>>>>>>>>", child_ids)
             if partner.parent_id:
                 partner_ids.append(partner.parent_id.id)
-                child_ids = request.env['res.partner'].sudo(([('parent_id', '=', partner.parent_id.id)]))
+                child_ids = request.env['res.partner'].sudo().search(([('parent_id', '=', partner.parent_id.id)]))
+                print("child_ids >>>>>>>>>>>>>><<<<<<<<<<<<", child_ids)
             if child_ids:
                 partner_ids += child_ids.ids
         # move_line = request.env['stock.move.line'].sudo().read_group([('picking_id.partner_id', '=', partner.id)], ['product_id:count'], ['product_uom_id', 'qty_done', 'company_id'], lazy=False, orderby='qty_done asc')
